@@ -66,7 +66,6 @@ public class BetterGrassifyConfig {
     @SerialEntry
     public List<String> moreBlocks = Lists.newArrayList();
 
-    //? if >1.20.6 {
     @SerialEntry(comment = "\nBetter Snow\nOFF/OPTIFINE/LAMBDA (default: OPTIFINE)")
     public BetterSnowMode betterSnowMode = BetterSnowMode.OPTIFINE;
 
@@ -102,7 +101,6 @@ public class BetterGrassifyConfig {
             "polished_blackstone_pressure_plate",
             "stone_pressure_plate"
     );
-    //?}
 
     public static ConfigClassHandler<BetterGrassifyConfig> handler() {
         return GSON;

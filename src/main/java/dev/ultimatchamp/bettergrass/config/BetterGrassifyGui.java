@@ -140,7 +140,6 @@ public class BetterGrassifyGui {
                                         .insertEntriesAtEnd(true)
                                         .build())
                                 .build())
-                        //? if >1.20.6 {
                         .category(ConfigCategory.createBuilder()
                                 .name(Text.translatable("bettergrass.betterSnow"))
                                 .option(Option.<BetterGrassifyConfig.BetterSnowMode>createBuilder()
@@ -178,7 +177,6 @@ public class BetterGrassifyGui {
                                         .insertEntriesAtEnd(true)
                                         .build())
                                 .build())
-                        //?}
                         .save(BetterGrassifyConfig.handler()::save)
                 )
                 .generateScreen(parent);

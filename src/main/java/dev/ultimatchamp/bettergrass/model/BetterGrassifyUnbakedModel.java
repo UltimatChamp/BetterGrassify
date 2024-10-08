@@ -1,4 +1,4 @@
-package dev.ultimatchamp.bettergrass;
+package dev.ultimatchamp.bettergrass.model;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;

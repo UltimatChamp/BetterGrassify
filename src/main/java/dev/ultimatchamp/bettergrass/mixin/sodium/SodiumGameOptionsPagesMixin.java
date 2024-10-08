@@ -117,7 +117,6 @@ public class SodiumGameOptionsPagesMixin {
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
-                //? if >1.20.6 {
                 ).add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterSnowMode.class, SodiumOptionsStorage.INSTANCE)
                 .setName(Text.translatable("bettergrass.betterSnowMode"))
                 .setTooltip(Text.translatable("bettergrass.betterSnowMode.desc"))
@@ -131,7 +130,6 @@ public class SodiumGameOptionsPagesMixin {
                 .setImpact(OptionImpact.VARIES)
                 .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                 .build()
-                //?}
                 )
                 .build()
         );

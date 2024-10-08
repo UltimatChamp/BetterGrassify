@@ -1,7 +1,6 @@
 /*
  This code is based on work by PepperCode1 and is distributed under the terms of the GNU Lesser General Public License (LGPL), Version 3.0.
  A copy of the LGPLv3 is available here: https://www.gnu.org/licenses/lgpl-3.0.txt
-    1) Using calculateSprite() from Continuity's SpriteCalculator class
 */
 
 package dev.ultimatchamp.bettergrass.util;

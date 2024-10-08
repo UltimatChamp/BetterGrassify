@@ -14,7 +14,7 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "dev.ultimatchamp.bettergrass.BetterGrassify"
+      "dev.ultimatchamp.bettergrass.loaders.fabric.BetterGrassifyFabric"
     ],
     "modmenu" : ["dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"]
   },

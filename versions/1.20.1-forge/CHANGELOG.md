@@ -1,6 +1,8 @@
-🗃️**Detailed Changelog: [1.2.0+forge.1.20.1 --> 1.2.1+forge.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.0+forge.1.20.1...1.2.1+forge.1.20.1)**
+🗃️**Detailed Changelog: [1.2.2+forge.1.20.1 --> 1.2.3+forge.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.2+forge.1.20.1...1.2.3+forge.1.20.1)**
 
 ### 🛠️Changes
 
-- Some visual changes to the config screen.
+- **Better Snowy Grass** is now also applied to grass blocks with **Better Snow**!
+
+  <img src="https://github.com/user-attachments/assets/479b4170-4137-4488-a2d9-f88895fb26a5" width="200px" />
 - Help **translate** the mod to your language! [**[GitHub]**](https://github.com/UltimatChamp/BetterGrassify)

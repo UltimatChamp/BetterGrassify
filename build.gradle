@@ -70,6 +70,8 @@ dependencies {
         forge "net.minecraftforge:forge:${property("deps.fml")}"
 
         modImplementation "dev.su5ed.sinytra.fabric-api:fabric-api:${property("deps.fapi_version")}"
+        compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
+        modImplementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
         modImplementation "maven.modrinth:embeddium:${property("deps.embeddium_version")}"
     }
 
@@ -128,11 +130,10 @@ processResources {
     }
 }
 
-def targetJavaVersion
-if ("${project.version}".contains("1.20.1"))
+def targetJavaVersion = 21
+if ("${project.version}".contains("1.20.1")) {
     targetJavaVersion = 17
-else
-    targetJavaVersion = 21
+}
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = targetJavaVersion
@@ -174,9 +175,13 @@ publishMods {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
             requires(deps[0], deps[1])
-            minecraftVersionRange {
-                start = "1.20"
-                end = "1.20.4"
+            if (isFabric) {
+                minecraftVersionRange {
+                    start = "1.20"
+                    end = "1.20.4"
+                }
+            } else {
+                minecraftVersions.add("1.20.1")
             }
 
             // Discord
@@ -187,9 +192,13 @@ publishMods {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
             requires(deps[0], deps[1])
-            minecraftVersionRange {
-                start = "1.20"
-                end = "1.20.4"
+            if (isFabric) {
+                minecraftVersionRange {
+                    start = "1.20"
+                    end = "1.20.4"
+                }
+            } else {
+                minecraftVersions.add("1.20.1")
             }
 
             // Discord
