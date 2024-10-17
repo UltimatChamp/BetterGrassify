@@ -1,5 +1,5 @@
 //? if neo {
-/*package dev.ultimatchamp.bettergrass;
+/*package dev.ultimatchamp.bettergrass.loaders.neo;
 
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.loader.api.FabricLoader;

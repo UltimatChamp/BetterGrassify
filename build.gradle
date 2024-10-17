@@ -1,11 +1,13 @@
 plugins {
     id "dev.architectury.loom" version "1.7.+"
-    id "me.modmuss50.mod-publish-plugin" version "0.6.3"
+    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 
 def loader = property("loom.platform")
-if (property("loom.platform") == "neoforge")
+if (property("loom.platform") == "neoforge") {
     loader = "neo"
+}
+
 def isFabric = loader == "fabric"
 def isNeo = loader == "neo"
 def isForge = loader == "forge"
@@ -128,10 +130,25 @@ processResources {
         }
         exclude(["fabric.mod.json", "META-INF/neoforge.mods.toml"])
     }
+
+    def packFormat
+    if (project.property("deps.minecraft_version") == "1.20.1") {
+        packFormat = 15
+    } else if (project.property("deps.minecraft_version") == "1.20.6") {
+        packFormat = 32
+    } else if (project.property("deps.minecraft_version") == "1.21.1") {
+        packFormat = 34
+    } else {
+        packFormat = 42
+    }
+
+    filesMatching("pack.mcmeta") {
+        expand("pack_format": packFormat)
+    }
 }
 
 def targetJavaVersion = 21
-if ("${project.version}".contains("1.20.1")) {
+if (project.property("deps.minecraft_version").contains("1.20.1")) {
     targetJavaVersion = 17
 }
 
@@ -170,8 +187,8 @@ publishMods {
         modLoaders.add("forge")
     }
 
-    if ("${project.version}".contains("1.20.1")) {
-        modrinth("m1.20.x") {
+    if (project.property("deps.minecraft_version") == "1.20.1") {
+        modrinth("m1.20.1") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
             requires(deps[0], deps[1])
@@ -188,7 +205,7 @@ publishMods {
             announcementTitle = "Download from Modrinth"
         }
 
-        curseforge("c1.20.x") {
+        curseforge("c1.20.1") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
             requires(deps[0], deps[1])
@@ -207,7 +224,7 @@ publishMods {
         }
     }
 
-    if ("${project.version}".contains("1.20.6")) {
+    if (project.property("deps.minecraft_version") == "1.20.6") {
         modrinth("m1.20.6") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
@@ -236,8 +253,8 @@ publishMods {
         }
     }
 
-    if ("${project.version}".contains("1.21")) {
-        modrinth("m1.21") {
+    if (project.property("deps.minecraft_version") == "1.21.1") {
+        modrinth("m1.21.1") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
             requires(deps[0], deps[1])
@@ -250,7 +267,7 @@ publishMods {
             announcementTitle = "Download from Modrinth"
         }
 
-        curseforge("c1.21") {
+        curseforge("c1.21.1") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
             requires(deps[0], deps[1])

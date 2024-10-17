@@ -1,3 +1,4 @@
+//? if <1.21.2 {
 package dev.ultimatchamp.bettergrass.mixin;
 
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedModel;
@@ -42,19 +43,9 @@ public class BetterGrassifyModelLoaderMixin {
     *///?}
         if (id instanceof ModelIdentifier modelId) {
             if (!modelId.getVariant().equals("inventory")) {
-                BetterGrassifyConfig.instance().moreBlocks.forEach(s -> {
-                    if (modelId.toString().startsWith(s.split("\\[")[0]) && !modelId.toString().contains("snowy=true")) {
-                        var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
-                        //? if >1.20.6 {
-                        this.modelsToBake.put(id, newModel);
-                        //?} else {
-                        /*this.unbakedModels.put(id, newModel);
-                        this.modelsToLoad.addAll(newModel.getModelDependencies());
-                        *///?}
-                        ci.cancel();
-                    }
+                for (String path : BetterGrassifyConfig.instance().moreBlocks) {
                     if (BetterGrassifyConfig.instance().snowy) {
-                        if (modelId.toString().startsWith(s.split("\\[")[0]) && modelId.toString().contains("snowy=true")) {
+                        if (modelId.toString().startsWith(path) && modelId.toString().contains("snowy=true")) {
                             var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
                             //? if >1.20.6 {
                             this.modelsToBake.put(id, newModel);
@@ -64,11 +55,20 @@ public class BetterGrassifyModelLoaderMixin {
                             *///?}
                             ci.cancel();
                         }
+                    } else if (modelId.toString().startsWith(path) && !modelId.toString().contains("snowy=true")) {
+                        var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
+                        //? if >1.20.6 {
+                        this.modelsToBake.put(id, newModel);
+                        //?} else {
+                        /*this.unbakedModels.put(id, newModel);
+                        this.modelsToLoad.addAll(newModel.getModelDependencies());
+                        *///?}
+                        ci.cancel();
                     }
-                });
+                }
 
                 if (BetterGrassifyConfig.instance().grassBlocks) {
-                    if (modelId.toString().startsWith("minecraft:grass_block".split("\\[")[0]) && !modelId.toString().contains("snowy=true")) {
+                    if (modelId.toString().startsWith("minecraft:grass_block") && !modelId.toString().contains("snowy=true")) {
                         var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
                         //? if >1.20.6 {
                         this.modelsToBake.put(id, newModel);
@@ -188,3 +188,4 @@ public class BetterGrassifyModelLoaderMixin {
         }
     }
 }
+//?}

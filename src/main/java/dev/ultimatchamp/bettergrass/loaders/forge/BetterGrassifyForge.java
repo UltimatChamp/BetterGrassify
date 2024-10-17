@@ -1,5 +1,5 @@
 //? if forge {
-/*package dev.ultimatchamp.bettergrass;
+/*package dev.ultimatchamp.bettergrass.loaders.forge;
 
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.loader.api.FabricLoader;

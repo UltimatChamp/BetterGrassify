@@ -18,5 +18,5 @@
   "bettergrass.betterSnowMode.lambda": "LambdaBetterGrass-benzeri",
   "bettergrass.excludedTags": "Dışlanan Etiketler",
   "bettergrass.excludedBlocks": "Dışlanan Bloklar",
-  "bettergrass.noconfig.warn": "§cBetterGrassify (Neo)Forge 1.20.1 için Forge'daki bir sınırlama nedeniyle bir konfigürasyon ekranı görüntülenemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!“§r\n\nEğer Embeddium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü.\" üzerinden değiştirebilirsiniz."
+  "bettergrass.noconfig.warn": "§cBetterGrassify (Neo)Forge 1.20.1 için Forge'daki bir sınırlama nedeniyle bir konfigürasyon ekranı görüntülenemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!“§r\n\nEğer Embeddium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz."
 }

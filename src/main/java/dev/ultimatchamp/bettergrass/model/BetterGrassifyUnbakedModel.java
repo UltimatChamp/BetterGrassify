@@ -6,11 +6,14 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.function.Function;
+
+//? if <1.21.2 {
+import net.minecraft.util.Identifier;
+import java.util.Collection;
+//?}
 
 public class BetterGrassifyUnbakedModel implements UnbakedModel {
     private final UnbakedModel baseModel;
@@ -19,7 +22,12 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
         this.baseModel = unbakedModel;
     }
 
-
+    //? if >1.21.1 {
+    /*@Override
+    public void resolve(Resolver resolver) {
+        this.baseModel.resolve(resolver);
+    }
+    *///?} else {
     @Override
     public Collection<Identifier> getModelDependencies() {
         return this.baseModel.getModelDependencies();
@@ -29,6 +37,7 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.baseModel.setParents(modelLoader);
     }
+    //?}
 
     @Nullable
     @Override
