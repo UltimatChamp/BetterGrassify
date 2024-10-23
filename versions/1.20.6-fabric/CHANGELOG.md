@@ -1,8 +1,21 @@
-🗃️**Detailed Changelog: [1.2.2+fabric.1.20.6 --> 1.2.3+fabric.1.20.6](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.2+fabric.1.20.6...1.2.3+fabric.1.20.6)**
+🗃️**Detailed Changelog: [1.2.3+fabric.1.20.6 --> 1.2.4+fabric.1.20.6](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+fabric.1.20.6...1.2.4+fabric.1.20.6)**
+
+<hr>
+
+### 📢Announcement
+
+[![RocketNode Server Hosting: Use code `CHAMP`](https://cdn.modrinth.com/data/m5T5xmUy/images/ccc929118d7f2420e2ca6edd973233031ddfd692.png)](http://www.rocketnode.com/champ)
+
+🚀 **Big News, Everyone!** 🚀<br>
+I'm thrilled to announce my partnership with **RocketNode**! 🥳<br>
+If you're looking to buy a reliable server, look no further. Use code `CHAMP` for a **25% discount**!<br>
+RocketNode offers better performance, fantastic support, and outshines many other popular hosting services. Moreover, it is cheaper than most hosting services.<br>
+Don't miss out—grab your server now!
+
+[**[LINK]**](https://www.rocketnode.com/champ)
+
+<hr>
 
 ### 🛠️Changes
 
-- **Better Snowy Grass** is now also applied to grass blocks with **Better Snow**!
-
-  <img src="https://github.com/user-attachments/assets/479b4170-4137-4488-a2d9-f88895fb26a5" width="200px" />
-- Help **translate** the mod to your language! [**[GitHub]**](https://github.com/UltimatChamp/BetterGrassify)
+- Update **Italian** Translation. [**[#33]**](https://github.com/UltimatChamp/BetterGrassify/pull/33) [**[#34]**](https://github.com/UltimatChamp/BetterGrassify/pull/34)
