@@ -11,9 +11,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 //? if <1.21.2 {
-import net.minecraft.util.Identifier;
+/*import net.minecraft.util.Identifier;
 import java.util.Collection;
-//?}
+*///?}
 
 public class BetterGrassifyUnbakedModel implements UnbakedModel {
     private final UnbakedModel baseModel;
@@ -23,12 +23,12 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
     }
 
     //? if >1.21.1 {
-    /*@Override
+    @Override
     public void resolve(Resolver resolver) {
         this.baseModel.resolve(resolver);
     }
-    *///?} else {
-    @Override
+    //?} else {
+    /*@Override
     public Collection<Identifier> getModelDependencies() {
         return this.baseModel.getModelDependencies();
     }
@@ -37,7 +37,7 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.baseModel.setParents(modelLoader);
     }
-    //?}
+    *///?}
 
     @Nullable
     @Override

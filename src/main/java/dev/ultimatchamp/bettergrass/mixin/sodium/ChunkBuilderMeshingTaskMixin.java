@@ -75,19 +75,19 @@ public class ChunkBuilderMeshingTaskMixin {
                 var newState = ctx.state().with(Properties.SNOWY, true);
                 var newModel = cache.getBlockModels().getModel(newState);
                 //? if fabric {
-                /^ctx.update(ctx.pos(), modelOffset, newState, newModel, ctx.seed());
-                ^///?} else {
-                ctx.update(ctx.pos(), modelOffset, newState, newModel, ctx.seed(), ctx.modelData(), ctx.renderLayer());
-                //?}
+                ctx.update(ctx.pos(), modelOffset, newState, newModel, ctx.seed());
+                //?} else {
+                /^ctx.update(ctx.pos(), modelOffset, newState, newModel, ctx.seed(), ctx.modelData(), ctx.renderLayer());
+                ^///?}
 
                 var context = new BlockRenderContext(slice);
                 var snow = Blocks.SNOW.getDefaultState();
                 var model = cache.getBlockModels().getModel(snow);
                 //? if fabric {
-                /^context.update(ctx.pos().up(), modelOffset.up(), snow, model, ctx.seed());
-                ^///?} else {
-                context.update(ctx.pos().up(), modelOffset.up(), snow, model, ctx.seed(), ctx.modelData(), ctx.renderLayer());
-                //?}
+                context.update(ctx.pos().up(), modelOffset.up(), snow, model, ctx.seed());
+                //?} else {
+                /^context.update(ctx.pos().up(), modelOffset.up(), snow, model, ctx.seed(), ctx.modelData(), ctx.renderLayer());
+                ^///?}
                 cache.getBlockRenderer().renderModel(context, buffers);
             }
         }

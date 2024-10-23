@@ -1,5 +1,5 @@
 plugins {
-    id "dev.architectury.loom" version "1.7.+"
+    id "dev.architectury.loom" version "1.7-SNAPSHOT"
     id "me.modmuss50.mod-publish-plugin" version "0.7.4"
 }
 
@@ -12,7 +12,14 @@ def isFabric = loader == "fabric"
 def isNeo = loader == "neo"
 def isForge = loader == "forge"
 
-version = project.mod_version + "+" + loader + "." + property("deps.minecraft_version")
+def isSnapshot = false
+def mcVer = property("deps.minecraft_version")
+if (mcVer.contains("-") || mcVer.contains("w")) {
+    isSnapshot = true
+    mcVer.replaceAll("-", "")
+}
+
+version = project.mod_version + "+" + loader + "." + mcVer
 group = project.maven_group
 
 base {
@@ -148,7 +155,7 @@ processResources {
 }
 
 def targetJavaVersion = 21
-if (project.property("deps.minecraft_version").contains("1.20.1")) {
+if (project.property("deps.minecraft_version") == "1.20.1") {
     targetJavaVersion = 17
 }
 
@@ -165,18 +172,25 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}"}
+        rename { "${it}_${project.base.archivesName.get()}" }
     }
 }
 
 publishMods {
+    if (project.property("deps.minecraft_version").contains("alpha")) {
+        type = ALPHA
+    } else if (project.property("deps.minecraft_version").contains("beta") || isSnapshot) {
+        type = BETA
+    } else {
+        type = STABLE
+    }
+
     changelog = "# ${project.version}\n" + file("CHANGELOG.md").text
-    type = STABLE
     file = remapJar.archiveFile
     displayName = "BetterGrassify ${project.version}"
     def deps
 
-    if (isFabric){
+    if (isFabric) {
         deps = ["fabric-api", "yacl"]
         modLoaders.addAll("fabric", "quilt")
     } else if (isNeo) {
@@ -275,6 +289,29 @@ publishMods {
                 start = "1.21"
                 end = "1.21.1"
             }
+
+            // Discord
+            announcementTitle = "Download from CurseForge"
+            projectSlug = "bettergrassify"
+        }
+    }
+
+    if (project.property("deps.minecraft_version") == "1.21.2-rc2") {
+        modrinth("m1.21.2") {
+            projectId = "m5T5xmUy"
+            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            requires(deps[0], deps[1])
+            minecraftVersions.add("1.21.2-rc2")
+
+            // Discord
+            announcementTitle = "Download from Modrinth"
+        }
+
+        curseforge("c1.21.2") {
+            projectId = "1026394"
+            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+            requires(deps[0], deps[1])
+            minecraftVersions.add("1.21.2-Snapshot")
 
             // Discord
             announcementTitle = "Download from CurseForge"

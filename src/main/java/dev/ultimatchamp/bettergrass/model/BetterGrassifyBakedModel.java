@@ -169,10 +169,10 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             Identifier identifier = Identifier.tryParse(block);
 
             //? if >1.21.1 {
-            /*var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
-            *///?} else {
-            var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
-            //?}
+            var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
+            //?} else {
+            /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
+            *///?}
 
             if (blockCheck.isPresent()) {
                 if (self.getBlock().equals(blockCheck.get())) {

@@ -1,5 +1,5 @@
 //? if >1.21.1 {
-/*package dev.ultimatchamp.bettergrass.mixin;
+package dev.ultimatchamp.bettergrass.mixin;
 
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedModel;
@@ -76,4 +76,4 @@ public class ReferencedModelsCollectorMixin {
         return model;
     }
 }
-*///?}
+//?}
