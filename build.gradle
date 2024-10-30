@@ -139,14 +139,18 @@ processResources {
     }
 
     def packFormat
-    if (project.property("deps.minecraft_version") == "1.20.1") {
-        packFormat = 15
-    } else if (project.property("deps.minecraft_version") == "1.20.6") {
-        packFormat = 32
-    } else if (project.property("deps.minecraft_version") == "1.21.1") {
-        packFormat = 34
-    } else {
-        packFormat = 42
+    switch (project.property("deps.minecraft_version")) {
+        case "1.20.1":
+            packFormat = 15;
+            break;
+        case "1.20.6":
+            packFormat = 32;
+            break;
+        case "1.21.1":
+            packFormat = 34;
+            break;
+        default:
+            packFormat = 42;
     }
 
     filesMatching("pack.mcmeta") {
@@ -154,20 +158,14 @@ processResources {
     }
 }
 
-def targetJavaVersion = 21
-if (project.property("deps.minecraft_version") == "1.20.1") {
-    targetJavaVersion = 17
-}
-
-tasks.withType(JavaCompile).configureEach {
-    it.options.release = targetJavaVersion
-}
-
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    def java = stonecutter.eval(project.property("deps.minecraft_version"), ">=1.20.5")
+            ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
+
+    sourceCompatibility = java
+    targetCompatibility = java
 }
 
 jar {

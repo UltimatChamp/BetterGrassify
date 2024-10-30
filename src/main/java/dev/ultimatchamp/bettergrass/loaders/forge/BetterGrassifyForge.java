@@ -33,7 +33,14 @@ public final class BetterGrassifyForge {
         }
 
         if (!FabricLoader.getInstance().isModLoaded("embeddium")) {
+            BetterGrassifyConfig.instance().betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
             LOGGER.warn("[BetterGrassify] Embeddium is not installed. 'Better Snow' feature has been disabled.");
+        }
+
+        if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
+            BetterGrassifyConfig.instance().snowy = false;
+            BetterGrassifyConfig.instance().betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
+            LOGGER.warn("[BetterGrassify] WilderWild detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.");
         }
     }
 }

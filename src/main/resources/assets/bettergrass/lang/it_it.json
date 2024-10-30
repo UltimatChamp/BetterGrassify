@@ -16,6 +16,7 @@
   "bettergrass.betterSnowMode.desc": "§4No §r- Non verrà generato alcun livello di neve.\n§3Simile a OptiFine §r- Mostra uno strato di neve sotto blocchi specifici che hanno almeno uno strato di neve o un blocco di neve vicino a loro.\n§dSimile a LambdaBetterGrass § r- Mostra uno strato di neve sotto blocchi specifici che hanno almeno \"due\" strati di neve o blocchi di neve vicino a loro.",
   "bettergrass.betterSnowMode.optifine": "Simile a OptiFine",
   "bettergrass.betterSnowMode.lambda": "Simile a LambdaBetterGrass",
+  "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Tag Esclusi",
   "bettergrass.excludedBlocks": "Blocchi Esclusi",
   "bettergrass.noconfig.warn": "§cBetterGrassify per (Neo)Forge 1.20.1 non è in grado di visualizzare una schermata di configurazione a causa di una limitazione in Forge. Utilizzare invece il file di configurazione. Ci scusiamo per l'inconveniente!§r\n\nSe utilizzi Embeddium, puoi modificare la maggior parte delle configurazioni nel \"Menu Impostazioni video\"."

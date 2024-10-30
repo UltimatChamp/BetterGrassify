@@ -13,14 +13,12 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(ReferencedModelsCollector.class)
 public class ReferencedModelsCollectorMixin {
     @ModifyVariable(method = "addTopLevelModel", at = @At("HEAD"), argsOnly = true)
-    private UnbakedModel onAddTopLevelModel(UnbakedModel model, ModelIdentifier modelId) {
+    private UnbakedModel bettergrass$onAddTopLevelModel(UnbakedModel model, ModelIdentifier modelId) {
         if (!modelId.getVariant().equals("inventory")) {
             for (String path : BetterGrassifyConfig.instance().moreBlocks) {
-                if (BetterGrassifyConfig.instance().snowy) {
-                    if (modelId.toString().startsWith(path) && modelId.toString().contains("snowy=true")) {
-                        return new BetterGrassifyUnbakedModel(model);
-                    }
-                } else if (modelId.toString().startsWith(path) && !modelId.toString().contains("snowy=true")) {
+                if (modelId.toString().startsWith(path) && !modelId.toString().contains("snowy=true")) {
+                    return new BetterGrassifyUnbakedModel(model);
+                } else if (modelId.toString().startsWith(path) && modelId.toString().contains("snowy=true") && BetterGrassifyConfig.instance().snowy) {
                     return new BetterGrassifyUnbakedModel(model);
                 }
             }

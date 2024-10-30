@@ -21,7 +21,7 @@ import java.util.Set;
 ^///?}
 
 @Mixin(ModelLoader.class)
-public class BetterGrassifyModelLoaderMixin {
+public class ModelLoaderMixin {
     @Shadow
     @Final
     //? if >1.20.6 {
@@ -36,26 +36,24 @@ public class BetterGrassifyModelLoaderMixin {
 
     //? if >1.20.6 {
     @Inject(method = "addModelToBake", at = @At("HEAD"), cancellable = true)
-    private void onAddModelToBake(ModelIdentifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
+    private void bettergrass$onAddModelToBake(ModelIdentifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
     //?} else {
     /^@Inject(method = "putModel", at = @At("HEAD"), cancellable = true)
-    private void onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
+    private void bettergrass$onPutModel(Identifier id, UnbakedModel unbakedModel, CallbackInfo ci) {
     ^///?}
         if (id instanceof ModelIdentifier modelId) {
             if (!modelId.getVariant().equals("inventory")) {
                 for (String path : BetterGrassifyConfig.instance().moreBlocks) {
-                    if (BetterGrassifyConfig.instance().snowy) {
-                        if (modelId.toString().startsWith(path) && modelId.toString().contains("snowy=true")) {
-                            var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
-                            //? if >1.20.6 {
-                            this.modelsToBake.put(id, newModel);
-                            //?} else {
-                            /^this.unbakedModels.put(id, newModel);
-                            this.modelsToLoad.addAll(newModel.getModelDependencies());
-                            ^///?}
-                            ci.cancel();
-                        }
-                    } else if (modelId.toString().startsWith(path) && !modelId.toString().contains("snowy=true")) {
+                    if (modelId.toString().startsWith(path) && !modelId.toString().contains("snowy=true")) {
+                        var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
+                        //? if >1.20.6 {
+                        this.modelsToBake.put(id, newModel);
+                        //?} else {
+                        /^this.unbakedModels.put(id, newModel);
+                        this.modelsToLoad.addAll(newModel.getModelDependencies());
+                        ^///?}
+                        ci.cancel();
+                    } if (modelId.toString().startsWith(path) && modelId.toString().contains("snowy=true") && BetterGrassifyConfig.instance().snowy) {
                         var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
                         //? if >1.20.6 {
                         this.modelsToBake.put(id, newModel);

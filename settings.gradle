@@ -15,17 +15,17 @@ plugins {
 
 stonecutter {
     shared {
-        vers("1.20.1-fabric", "1.20.1")
-        vers("1.20.1-forge", "1.20.1")
-
-        vers("1.20.6-fabric", "1.20.6")
+        vers("1.21.3-fabric", "1.21.3")
 
         vers("1.21.1-fabric", "1.21.1")
         vers("1.21.1-neo", "1.21.1")
 
-        vers("1.21.2-fabric", "1.21.2")
+        vers("1.20.6-fabric", "1.20.6")
 
-        vcsVersion = "1.21.2-fabric"
+        vers("1.20.1-fabric", "1.20.1")
+        vers("1.20.1-forge", "1.20.1")
+
+        vcsVersion = "1.21.3-fabric"
     }
 
     create rootProject
