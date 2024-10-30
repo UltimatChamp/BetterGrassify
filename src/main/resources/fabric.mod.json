@@ -16,7 +16,9 @@
     "client": [
       "dev.ultimatchamp.bettergrass.loaders.fabric.BetterGrassifyFabric"
     ],
-    "modmenu" : ["dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"]
+    "modmenu" : [
+      "dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"
+    ]
   },
   "mixins": [
     "bettergrass.mixins.json"

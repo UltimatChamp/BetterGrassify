@@ -16,7 +16,8 @@
   "bettergrass.betterSnowMode.desc": "§4Não §r- Nenhuma camada de neve será gerada.\n§3Tipo-OptiFine §r- Mostra neve embaixo de blocos específicos que tenham ao menos uma camada de neve ou bloco de neve perto.\n§dTipo-LambdaBetterGrass §r- Mostra neve embaixo de blocos específicos que tenham ao menos \"duas\" camadas de neve ou blocos de neve perto.",
   "bettergrass.betterSnowMode.optifine": "Tipo-OptiFine",
   "bettergrass.betterSnowMode.lambda": "Tipo-LambdaBetterGrass",
+  "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Excluded Tags",
   "bettergrass.excludedBlocks": "Excluded Blocks",
-  "bettergrass.noconfig.warn": "§cBetterGrassify para (Neo)Forge 1.20.1 está indisponivel para mostrar a tela de configuração devido à uma limitação no Forge. Por favor, utilize os arquivos de configuração no lugar. Desculpe pela inconveniência!§r\n\nIf you're using Embeddium, you can change most of the configurations in the \"Video Settings Menu.\""
+  "bettergrass.noconfig.warn": "§cBetterGrassify para (Neo)Forge 1.20.1 está indisponivel para mostrar a tela de configuração devido à uma limitação no Forge. Por favor, utilize os arquivos de configuração no lugar. Desculpe pela inconveniência!§r\n\nIf you're using Embeddium, you can change most of the configurations in the \"Video Settings Menu\"."
 }

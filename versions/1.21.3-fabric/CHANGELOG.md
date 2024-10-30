@@ -1,4 +1,4 @@
-🗃️**Detailed Changelog: [1.2.3+fabric.1.20.1 --> 1.2.4+fabric.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+fabric.1.20.1...1.2.4+fabric.1.20.1)**
+🗃️**Detailed Changelog: [1.2.3+fabric.1.21.1 --> 1.2.4+fabric.1.21.2](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+fabric.1.21.1...1.2.4+fabric.1.21.2)**
 
 <hr>
 
@@ -18,4 +18,5 @@ Don't miss out—grab your server now!
 
 ### 🛠️Changes
 
+- Update to **1.21.2**!
 - Update **Italian** Translation. [**[#33]**](https://github.com/UltimatChamp/BetterGrassify/pull/33) [**[#34]**](https://github.com/UltimatChamp/BetterGrassify/pull/34)

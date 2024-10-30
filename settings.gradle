@@ -10,20 +10,22 @@ pluginManagement {
 }
 
 plugins {
-    id "dev.kikugie.stonecutter" version "0.4.3"
+    id "dev.kikugie.stonecutter" version "0.4.5"
 }
 
 stonecutter {
     shared {
-        vers("1.20.1-fabric", "1.20.1")
-        vers("1.20.1-forge", "1.20.1")
+        vers("1.21.3-fabric", "1.21.3")
+
+        vers("1.21.1-fabric", "1.21.1")
+        vers("1.21.1-neo", "1.21.1")
 
         vers("1.20.6-fabric", "1.20.6")
 
-        vers("1.21-fabric", "1.21")
-        vers("1.21-neo", "1.21")
+        vers("1.20.1-fabric", "1.20.1")
+        vers("1.20.1-forge", "1.20.1")
 
-        vcsVersion = "1.21-fabric"
+        vcsVersion = "1.21.3-fabric"
     }
 
     create rootProject

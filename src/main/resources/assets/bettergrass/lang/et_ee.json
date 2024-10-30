@@ -16,7 +16,8 @@
   "bettergrass.betterSnowMode.desc": "§4Off §r- No snow layer will be generated.\n§3OptiFine-like §r- Shows a snow layer beneath specific blocks that have at-least one snow layer or snow block near them.\n§dLambdaBetterGrass-like §r- Shows a snow layer beneath specific blocks that have at-least \"two\" snow layers or snow blocks near them.",
   "bettergrass.betterSnowMode.optifine": "OptiFine-like",
   "bettergrass.betterSnowMode.lambda": "LambdaBetterGrass-like",
+  "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Excluded Tags",
   "bettergrass.excludedBlocks": "Excluded Blocks",
-  "bettergrass.noconfig.warn": "§cBetterGrassify for (Neo)Forge 1.20.1 is unable to display a configuration screen due to a limitation in Forge. Please use the configuration file instead. Sorry for the inconvenience!§r\n\nIf you're using Embeddium, you can change most of the configurations in the \"Video Settings Menu.\""
+  "bettergrass.noconfig.warn": "§cBetterGrassify for (Neo)Forge 1.20.1 is unable to display a configuration screen due to a limitation in Forge. Please use the configuration file instead. Sorry for the inconvenience!§r\n\nIf you're using Embeddium, you can change most of the configurations in the \"Video Settings Menu\"."
 }

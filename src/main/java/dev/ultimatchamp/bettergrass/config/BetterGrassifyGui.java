@@ -4,6 +4,7 @@ package dev.ultimatchamp.bettergrass.config;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.gui.controllers.cycling.EnumController;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -51,6 +52,7 @@ public class BetterGrassifyGui {
                                                         () -> config.snowy,
                                                         (value) -> config.snowy = value
                                                 )
+                                                .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
                                                 .controller(TickBoxControllerBuilder::create)
                                                 .build())
                                         .option(Option.<Boolean>createBuilder()
@@ -152,7 +154,23 @@ public class BetterGrassifyGui {
                                                 () -> config.betterSnowMode,
                                                 (value) -> config.betterSnowMode = value
                                         )
+                                        //? if >1.20.6 {
+                                        .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
+                                        //?} else {
+                                        /*.available(!(!FabricLoader.getInstance().isModLoaded("sodium") || FabricLoader.getInstance().isModLoaded("wilderwild")))
+                                        *///?}
                                         .customController(opt -> new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
+                                        .build())
+                                .group(ListOption.<String>createBuilder()
+                                        .name(Text.translatable("bettergrass.snowLayers"))
+                                        .binding(
+                                                defaults.snowLayers,
+                                                () -> config.snowLayers,
+                                                val -> config.snowLayers = val
+                                        )
+                                        .controller(StringControllerBuilder::create)
+                                        .initial("")
+                                        .insertEntriesAtEnd(true)
                                         .build())
                                 .group(ListOption.<String>createBuilder()
                                         .name(Text.translatable("bettergrass.excludedTags"))

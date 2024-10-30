@@ -64,7 +64,9 @@ public class BetterGrassifyConfig {
     public boolean warpedNylium = true;
 
     @SerialEntry
-    public List<String> moreBlocks = Lists.newArrayList();
+    public List<String> moreBlocks = Lists.newArrayList(
+            "minecraft:sculk_catalyst" // Example
+    );
 
     @SerialEntry(comment = "\nBetter Snow\nOFF/OPTIFINE/LAMBDA (default: OPTIFINE)")
     public BetterSnowMode betterSnowMode = BetterSnowMode.OPTIFINE;
@@ -85,6 +87,13 @@ public class BetterGrassifyConfig {
             return Text.translatable(displayName);
         }
     }
+
+    @SerialEntry
+    public List<String> snowLayers = Lists.newArrayList(
+            "snow",
+            "moss_carpet",
+            "pale_moss_carpet"
+    );
 
     @SerialEntry
     public List<String> excludedTags = Lists.newArrayList(

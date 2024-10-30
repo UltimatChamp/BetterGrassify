@@ -1,4 +1,4 @@
-🗃️**Detailed Changelog: [1.2.3+fabric.1.20.1 --> 1.2.4+fabric.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+fabric.1.20.1...1.2.4+fabric.1.20.1)**
+🗃️**Detailed Changelog: [1.2.3+neo.1.21.1 --> 1.2.4+neo.1.21.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+neo.1.21.1...1.2.4+neo.1.21.1)**
 
 <hr>
 

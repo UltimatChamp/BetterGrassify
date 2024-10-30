@@ -1,5 +1,5 @@
 //? if neo {
-/*package dev.ultimatchamp.bettergrass;
+/*package dev.ultimatchamp.bettergrass.loaders.neo;
 
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.loader.api.FabricLoader;
@@ -29,8 +29,10 @@ public final class BetterGrassifyNeo {
             LOGGER.info("[BetterGrassify] [{}] Gamers can finally touch grass!?", BetterGrassifyConfig.instance().betterGrassMode.toString());
         }
 
-        if (!FabricLoader.getInstance().isModLoaded("sodium")) {
-            LOGGER.warn("[BetterGrassify] Sodium is not installed. 'Better Snow' feature has been disabled.");
+        if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
+            BetterGrassifyConfig.instance().snowy = false;
+            BetterGrassifyConfig.instance().betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
+            LOGGER.warn("[BetterGrassify] WilderWild detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.");
         }
     }
 }
