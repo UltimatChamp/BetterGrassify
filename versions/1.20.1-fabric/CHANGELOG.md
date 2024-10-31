@@ -1,21 +1,15 @@
-🗃️**Detailed Changelog: [1.2.3+fabric.1.20.1 --> 1.2.4+fabric.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.3+fabric.1.20.1...1.2.4+fabric.1.20.1)**
-
-<hr>
-
-### 📢Announcement
-
-[![RocketNode Server Hosting: Use code `CHAMP`](https://cdn.modrinth.com/data/m5T5xmUy/images/ccc929118d7f2420e2ca6edd973233031ddfd692.png)](http://www.rocketnode.com/champ)
-
-🚀 **Big News, Everyone!** 🚀<br>
-I'm thrilled to announce my partnership with **RocketNode**! 🥳<br>
-If you're looking to buy a reliable server, look no further. Use code `CHAMP` for a **25% discount**!<br>
-RocketNode offers better performance, fantastic support, and outshines many other popular hosting services. Moreover, it is cheaper than most hosting services.<br>
-Don't miss out—grab your server now!
-
-[**[LINK]**](https://www.rocketnode.com/champ)
+🗃️**Detailed Changelog: [1.2.4+fabric.1.20.1 --> 1.3.0+fabric.1.20.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.2.4+fabric.1.20.1...1.3.0+fabric.1.20.1)**
 
 <hr>
 
 ### 🛠️Changes
 
-- Update **Italian** Translation. [**[#33]**](https://github.com/UltimatChamp/BetterGrassify/pull/33) [**[#34]**](https://github.com/UltimatChamp/BetterGrassify/pull/34)
+- Big changes to **Better Snow**!
+    - **Better Snow** can now be applied, by default, with `snow`, `moss_carpet` and `pale_moss_carpet`.
+    - You can now add more blocks to **Better Snow**.
+    - **Better Snow** can now, also be applied on non-grass blocks.
+- Target `1.21.3`.
+- Fix various issues with **WilderWild** _(by disabling some features if the mod is detected)_.
+- Better-grassify `sculk_catalyst` by default, as an example for adding more grass blocks.
+- Other minor changes...
+- Update **Turkish** Translation. [**[#35]**](https://github.com/UltimatChamp/BetterGrassify/pull/35)
