@@ -65,7 +65,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                                 spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
                             } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && isSnowy(blockView, pos.offset(face).down())) {
                                 spriteBake(quad, blockView.getBlockState(pos.offset(face)), randomSupplier);
-                            } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && canHaveSnowLayer(blockView, pos.offset(face)) && canHaveSnowLayer(blockView, pos.offset(face))) {
+                            } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && canHaveSnowLayer(blockView, pos.offset(face))) {
                                 spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
                             }
                         }
@@ -121,7 +121,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             var isSnow = new boolean[4];
 
             for (BlockPos direction : directions) {
-                isSnow[directions.indexOf(direction)] = world.getBlockState(direction).isOf(layer.get()) || (id.equals("snow") && world.getBlockState(direction).isOf(Blocks.SNOW_BLOCK));
+                isSnow[directions.indexOf(direction)] = world.getBlockState(direction).isOf(layer.get()) || (id.equals("snow") && (world.getBlockState(direction).isOf(Blocks.SNOW_BLOCK) || world.getBlockState(direction).isOf(Blocks.POWDER_SNOW)));
             }
 
             var layerCheck = false;
