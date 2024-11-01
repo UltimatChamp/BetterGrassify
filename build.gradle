@@ -294,22 +294,28 @@ publishMods {
         }
     }
 
-    if (project.property("deps.minecraft_version") == "1.21.2") {
-        modrinth("m1.21.2") {
+    if (project.property("deps.minecraft_version") == "1.21.3") {
+        modrinth("m1.21.3") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
             requires(deps[0], deps[1])
-            minecraftVersions.add("1.21.2")
+            minecraftVersionRange {
+                start = "1.21.2"
+                end = "1.21.3"
+            }
 
             // Discord
             announcementTitle = "Download from Modrinth"
         }
 
-        curseforge("c1.21.2") {
+        curseforge("c1.21.3") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
             requires(deps[0], deps[1])
-            minecraftVersions.add("1.21.2")
+            minecraftVersionRange {
+                start = "1.21.2"
+                end = "1.21.3"
+            }
 
             // Discord
             announcementTitle = "Download from CurseForge"
