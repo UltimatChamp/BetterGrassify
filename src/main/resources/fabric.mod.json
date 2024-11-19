@@ -4,19 +4,21 @@
   "version": "${mod_version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
-  "authors": ["${mod_authors}"],
+  "authors": [
+    "${mod_authors}"
+  ],
   "contact": {
     "homepage": "https://github.com/UltimatChamp/BetterGrassify",
     "issues": "https://github.com/UltimatChamp/BetterGrassify/issues"
   },
   "license": "${mod_license}",
   "icon": "assets/bettergrass/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "dev.ultimatchamp.bettergrass.loaders.fabric.BetterGrassifyFabric"
     ],
-    "modmenu" : [
+    "modmenu": [
       "dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"
     ]
   },

@@ -97,19 +97,25 @@ public class BetterGrassifyConfig {
 
     @SerialEntry
     public List<String> excludedTags = Lists.newArrayList(
-            "leaves",
             "buttons",
-            "rails",
-            "wooden_pressure_plates"
+            "doors",
+            "fire",
+            "leaves",
+            "pressure_plates",
+            "rails"
     );
 
     @SerialEntry
     public List<String> excludedBlocks = Lists.newArrayList(
-            "heavy_weighted_pressure_plate",
-            "light_weighted_pressure_plate",
-            "polished_blackstone_pressure_plate",
-            "stone_pressure_plate"
+            "redstone_wall_torch",
+            "wall_torch"
     );
+
+    @SerialEntry
+    public List<String> whitelistedTags = Lists.newArrayList();
+
+    @SerialEntry
+    public List<String> whitelistedBlocks = Lists.newArrayList();
 
     public static ConfigClassHandler<BetterGrassifyConfig> handler() {
         return GSON;

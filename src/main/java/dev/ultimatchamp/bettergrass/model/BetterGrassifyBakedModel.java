@@ -100,7 +100,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                     self == self.with(Properties.SNOWY, true);
         }
 
-        return snowyCheck;
+        return snowyCheck && !world.getBlockState(selfPos.up()).isAir();
     }
 
     public static Block snowNeighbour(BlockRenderView world, BlockPos selfPos) {
@@ -126,8 +126,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
             var layerCheck = false;
             switch (BetterGrassifyConfig.instance().betterSnowMode) {
-                case OPTIFINE ->
-                        layerCheck = isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
+                case OPTIFINE -> layerCheck = isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
                 case LAMBDA ->
                         layerCheck = ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) || (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]);
                 default -> {
@@ -157,29 +156,55 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 snowNeighbour(world, selfPos) != null;
 
         var isExcludedTag = false;
-        for (String tag : BetterGrassifyConfig.instance().excludedTags) {
-            Identifier identifier = Identifier.tryParse(tag);
+        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
+            for (String tag : BetterGrassifyConfig.instance().excludedTags) {
+                var identifier = Identifier.tryParse(tag);
+                var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
 
-            var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
+                if (self.isIn(tagKey)) {
+                    isExcludedTag = true;
+                }
+            }
+        } else {
+            for (String tag : BetterGrassifyConfig.instance().whitelistedTags) {
+                var identifier = Identifier.tryParse(tag);
+                var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
 
-            if (self.isIn(tagKey)) {
-                isExcludedTag = true;
+                if (!self.isIn(tagKey)) {
+                    isExcludedTag = true;
+                }
             }
         }
 
         var isExcludedBlock = false;
-        for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
-            Identifier identifier = Identifier.tryParse(block);
+        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
+            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
+                var identifier = Identifier.tryParse(block);
+                //? if >1.21.1 {
+                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
 
-            //? if >1.21.1 {
-            var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
-            //?} else {
-            /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
-            *///?}
+                if (blockCheck.isPresent()) {
+                    if (self.getBlock().equals(blockCheck.get())) {
+                        isExcludedBlock = true;
+                    }
+                }
+            }
+        } else {
+            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
+                var identifier = Identifier.tryParse(block);
+                //? if >1.21.1 {
+                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
 
-            if (blockCheck.isPresent()) {
-                if (self.getBlock().equals(blockCheck.get())) {
-                    isExcludedBlock = true;
+                if (blockCheck.isPresent()) {
+                    if (!self.getBlock().equals(blockCheck.get())) {
+                        isExcludedBlock = true;
+                    }
                 }
             }
         }

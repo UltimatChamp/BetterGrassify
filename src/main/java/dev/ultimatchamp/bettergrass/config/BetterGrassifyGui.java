@@ -179,6 +179,7 @@ public class BetterGrassifyGui {
                                                 () -> config.excludedTags,
                                                 val -> config.excludedTags = val
                                         )
+                                        .available(config.whitelistedTags.isEmpty())
                                         .controller(StringControllerBuilder::create)
                                         .initial("")
                                         .insertEntriesAtEnd(true)
@@ -190,6 +191,7 @@ public class BetterGrassifyGui {
                                                 () -> config.excludedBlocks,
                                                 val -> config.excludedBlocks = val
                                         )
+                                        .available(config.whitelistedBlocks.isEmpty())
                                         .controller(StringControllerBuilder::create)
                                         .initial("")
                                         .insertEntriesAtEnd(true)
