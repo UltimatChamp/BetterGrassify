@@ -183,7 +183,7 @@ publishMods {
         type = STABLE
     }
 
-    changelog = "# ${project.version}\n" + file("CHANGELOG.md").text
+    changelog = "# ${project.version}\n" + file("../../CHANGELOG.md").text
     file = remapJar.archiveFile
     displayName = "BetterGrassify ${project.version}"
     def deps
