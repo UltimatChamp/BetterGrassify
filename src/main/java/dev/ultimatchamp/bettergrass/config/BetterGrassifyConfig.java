@@ -107,7 +107,10 @@ public class BetterGrassifyConfig {
 
     @SerialEntry
     public List<String> excludedBlocks = Lists.newArrayList(
+            "lantern[hanging]",
             "redstone_wall_torch",
+            "soul_lantern[hanging]",
+            "soul_wall_torch",
             "wall_torch"
     );
 

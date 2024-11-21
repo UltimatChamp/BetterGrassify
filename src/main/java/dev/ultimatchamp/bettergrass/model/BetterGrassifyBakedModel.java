@@ -155,6 +155,85 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         var isLayer =
                 snowNeighbour(world, selfPos) != null;
 
+        var isExcludedBlock = false;
+        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
+            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
+                var hasAttribute = block.contains("[");
+                var withoutAttribute = block;
+                var attribute = "";
+                var attributeEnabled = true;
+                if (hasAttribute) {
+                    withoutAttribute = block.substring(0, block.indexOf("["));
+                    if (block.contains("=")) {
+                        attribute = block.substring(block.indexOf("[") + 1, block.indexOf("="));
+                    } else {
+                        attribute = block.substring(block.indexOf("[") + 1, block.indexOf("]"));
+                    }
+                    attributeEnabled = !block.contains("=false");
+                }
+
+                var identifier = Identifier.tryParse(withoutAttribute);
+                //? if >1.21.1 {
+                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
+
+                if (blockCheck.isEmpty()) {
+                    continue;
+                }
+
+                if (self.getBlock().equals(blockCheck.get())) {
+                    if (hasAttribute) {
+                        if (self.toString().contains(attribute + "=" + attributeEnabled)) {
+                            isExcludedBlock = true;
+                        }
+                    } else {
+                        isExcludedBlock = true;
+                    }
+                }
+            }
+        } else {
+            isExcludedBlock = true;
+
+            for (String block : BetterGrassifyConfig.instance().whitelistedBlocks) {
+                var hasAttribute = block.contains("[");
+                var withoutAttribute = block;
+                var attribute = "";
+                var attributeEnabled = true;
+                if (hasAttribute) {
+                    withoutAttribute = block.substring(0, block.indexOf("["));
+                    if (block.contains("=")) {
+                        attribute = block.substring(block.indexOf("[") + 1, block.indexOf("="));
+                    } else {
+                        attribute = block.substring(block.indexOf("[") + 1, block.indexOf("]"));
+                    }
+                    attributeEnabled = !block.contains("=false");
+                }
+
+                var identifier = Identifier.tryParse(withoutAttribute);
+                //? if >1.21.1 {
+                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
+
+                if (blockCheck.isEmpty()) {
+                    continue;
+                }
+
+                if (self.getBlock().equals(blockCheck.get())) {
+                    if (hasAttribute) {
+                        if (self.toString().contains(attribute + "=" + attributeEnabled)) {
+                            isExcludedBlock = false;
+                        }
+                    } else {
+                        isExcludedBlock = false;
+                    }
+                }
+            }
+        }
+
         var isExcludedTag = false;
         if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
             for (String tag : BetterGrassifyConfig.instance().excludedTags) {
@@ -166,50 +245,22 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 }
             }
         } else {
+            isExcludedTag = true;
+
             for (String tag : BetterGrassifyConfig.instance().whitelistedTags) {
                 var identifier = Identifier.tryParse(tag);
                 var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
 
-                if (!self.isIn(tagKey)) {
-                    isExcludedTag = true;
+                if (self.isIn(tagKey)) {
+                    isExcludedTag = false;
+                    isExcludedBlock = false;
+                } else if (!isExcludedBlock) {
+                    isExcludedTag = false;
                 }
             }
         }
 
-        var isExcludedBlock = false;
-        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
-            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
-                var identifier = Identifier.tryParse(block);
-                //? if >1.21.1 {
-                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
-                //?} else {
-                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
-                *///?}
-
-                if (blockCheck.isPresent()) {
-                    if (self.getBlock().equals(blockCheck.get())) {
-                        isExcludedBlock = true;
-                    }
-                }
-            }
-        } else {
-            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
-                var identifier = Identifier.tryParse(block);
-                //? if >1.21.1 {
-                var blockCheck = Registries.BLOCK.getOptionalValue(identifier);
-                //?} else {
-                /*var blockCheck = Registries.BLOCK.getOrEmpty(identifier);
-                *///?}
-
-                if (blockCheck.isPresent()) {
-                    if (!self.getBlock().equals(blockCheck.get())) {
-                        isExcludedBlock = true;
-                    }
-                }
-            }
-        }
-
-        return isLayer && !self.isAir() && !self.isOf(Blocks.WATER) && !(isExcludedTag || isExcludedBlock) && !self.isSideSolidFullSquare(world, selfPos, Direction.DOWN);
+        return isLayer && !self.isAir() && !self.isOf(Blocks.WATER) && !self.isSideSolidFullSquare(world, selfPos, Direction.DOWN) && world.getBlockState(selfPos.down()).isOpaqueFullCube(/*? if <1.21.3 {*//*world, selfPos.down()*//*?}*/) && !(isExcludedTag || isExcludedBlock);
     }
 
     private static void spriteBake(MutableQuadView quad, BlockState state, Supplier<Random> randomSupplier) {
