@@ -35,42 +35,54 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     @Override
     @SuppressWarnings("ConstantConditions")
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
-        context.pushTransform(quad ->
-                switch (BetterGrassifyConfig.instance().betterGrassMode) {
-                    case OFF:
-                        yield true;
-                    case FAST:
-                        if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+        context.pushTransform(quad -> {
+            switch (BetterGrassifyConfig.instance().betterGrassMode) {
+                case OFF:
+                    break;
+                case FAST:
+                    if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+                        if (state.getBlock().equals(Blocks.DIRT)) {
+                            if (isBelowNonFullBlock(blockView, state, pos, quad.nominalFace())) {
+                                dirtSpriteBake(quad, blockView, pos, randomSupplier);
+                                break;
+                            }
+                        } else if (isSnowy(blockView, pos)) {
+                            spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
+                            break;
+                        } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up())) {
+                            spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
+                            break;
+                        }
+                        spriteBake(quad, blockView.getBlockState(pos), randomSupplier);
+                    }
+                    break;
+                case FANCY:
+                    if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+                        Direction face = quad.nominalFace();
+
+                        if (state.getBlock().equals(Blocks.DIRT)) {
+                            if (isBelowNonFullBlock(blockView, state, pos, quad.nominalFace())) {
+                                dirtSpriteBake(quad, blockView, pos, randomSupplier);
+                                break;
+                            }
+                        } else if (canFullyConnect(blockView, state, pos, face)) {
                             if (isSnowy(blockView, pos)) {
                                 spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
-                                yield true;
-                            } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up())) {
-                                spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
-                                yield true;
+                                break;
                             }
-                            spriteBake(quad, blockView.getBlockState(pos), randomSupplier);
+                            spriteBake(quad, state, randomSupplier);
+                        } else if (isSnowy(blockView, pos) && canHaveSnowLayer(blockView, pos.offset(face)) && isNeighbourSnow(blockView, pos.offset(face))) {
+                            spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
+                        } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && isSnowy(blockView, pos.offset(face).down())) {
+                            spriteBake(quad, blockView.getBlockState(pos.offset(face)), randomSupplier);
+                        } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && canHaveSnowLayer(blockView, pos.offset(face))) {
+                            spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
                         }
-                        yield true;
-                    case FANCY:
-                        if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
-                            Direction face = quad.nominalFace();
-
-                            if (canFullyConnect(blockView, state, pos, face)) {
-                                if (isSnowy(blockView, pos)) {
-                                    spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
-                                    yield true;
-                                }
-                                spriteBake(quad, state, randomSupplier);
-                            } else if (isSnowy(blockView, pos) && canHaveSnowLayer(blockView, pos.offset(face)) && isNeighbourSnow(blockView, pos.offset(face))) {
-                                spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
-                            } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && isSnowy(blockView, pos.offset(face).down())) {
-                                spriteBake(quad, blockView.getBlockState(pos.offset(face)), randomSupplier);
-                            } else if (canHaveSnowLayer(blockView, pos.up()) && isNeighbourSnow(blockView, pos.up()) && canHaveSnowLayer(blockView, pos.offset(face))) {
-                                spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
-                            }
-                        }
-                        yield true;
-                });
+                    }
+                    break;
+            }
+            return true;
+        });
         super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
         context.popTransform();
     }
@@ -89,6 +101,29 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     private static boolean canConnect(BlockState self, BlockState adjacent) {
         return self == adjacent;
+    }
+
+    private static boolean isBelowNonFullBlock(BlockRenderView world, BlockState self, BlockPos selfPos, Direction direction) {
+        var upPos = selfPos.up();
+        var up = world.getBlockState(upPos);
+
+        if (up.getBlock().equals(Blocks.DIRT_PATH)) {
+            if (!BetterGrassifyConfig.instance().dirtPaths) {
+                return false;
+            }
+        }
+
+        if (up.getBlock().equals(Blocks.FARMLAND)) {
+            if (!BetterGrassifyConfig.instance().farmLands) {
+                return false;
+            }
+        }
+
+        if (!(up.getBlock().equals(Blocks.DIRT_PATH) || up.getBlock().equals(Blocks.FARMLAND))) {
+            return false;
+        }
+
+        return canFullyConnect(world, up, upPos, direction);
     }
 
     private static boolean isSnowy(BlockRenderView world, BlockPos selfPos) {
@@ -267,6 +302,17 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     private static void spriteBake(MutableQuadView quad, BlockState state, Supplier<Random> randomSupplier) {
         var sprite = SpriteCalculator.calculateSprite(state, Direction.UP, randomSupplier);
+
+        if (sprite != null) {
+            quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
+        }
+    }
+
+    private static void dirtSpriteBake(MutableQuadView quad, BlockRenderView world, BlockPos selfPos, Supplier<Random> randomSupplier) {
+        var upPos = selfPos.up();
+        var up = world.getBlockState(upPos);
+
+        var sprite = SpriteCalculator.calculateSprite(up, Direction.UP, randomSupplier);
 
         if (sprite != null) {
             quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);

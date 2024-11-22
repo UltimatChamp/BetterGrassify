@@ -29,6 +29,12 @@ public class ReferencedModelsCollectorMixin {
                     }
                 }
             }
+
+            if (blocks.contains("minecraft:dirt_path") || blocks.contains("minecraft:farmland")) {
+                if (modelId.id().toString().equals("minecraft:dirt")) {
+                    return new BetterGrassifyUnbakedModel(model);
+                }
+            }
         }
 
         return model;

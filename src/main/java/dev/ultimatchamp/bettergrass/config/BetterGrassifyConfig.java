@@ -45,11 +45,11 @@ public class BetterGrassifyConfig {
     @SerialEntry(comment = "\nConnected Blocks\n(default: true)")
     public boolean grassBlocks = true;
 
-    @SerialEntry(comment = "(default: false)")
-    public boolean dirtPaths = false;
+    @SerialEntry(comment = "(default: true)")
+    public boolean dirtPaths = true;
 
-    @SerialEntry(comment = "(default: false)")
-    public boolean farmLands = false;
+    @SerialEntry(comment = "(default: true)")
+    public boolean farmLands = true;
 
     @SerialEntry(comment = "(default: true)")
     public boolean podzol = true;

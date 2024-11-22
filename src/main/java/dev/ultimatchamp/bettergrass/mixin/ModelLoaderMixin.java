@@ -71,6 +71,23 @@ public class ModelLoaderMixin {
                         }
                     }
                 }
+
+                if (blocks.contains("minecraft:dirt_path") || blocks.contains("minecraft:farmland")) {
+                    //? if >1.20.6 {
+                    if (modelId.id().toString().equals("minecraft:dirt")) {
+                    //?} else {
+                    /^if ((modelId.getNamespace() + ":" + modelId.getPath()).toString().equals("minecraft:dirt")) {
+                    ^///?}
+                        var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
+                        //? if >1.20.6 {
+                        this.modelsToBake.put(id, newModel);
+                        //?} else {
+                        /^this.unbakedModels.put(id, newModel);
+                        this.modelsToLoad.addAll(newModel.getModelDependencies());
+                        ^///?}
+                        ci.cancel();
+                    }
+                }
             }
         }
     }
