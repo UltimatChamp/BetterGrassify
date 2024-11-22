@@ -254,9 +254,11 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 if (self.isIn(tagKey)) {
                     isExcludedTag = false;
                     isExcludedBlock = false;
-                } else if (!isExcludedBlock) {
-                    isExcludedTag = false;
                 }
+            }
+
+            if (!isExcludedBlock) {
+                isExcludedTag = false;
             }
         }
 
