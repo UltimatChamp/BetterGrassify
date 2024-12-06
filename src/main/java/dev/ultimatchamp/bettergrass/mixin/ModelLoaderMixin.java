@@ -50,7 +50,7 @@ public class ModelLoaderMixin {
                     //? if >1.20.6 {
                     if (modelId.id().toString().equals(block)) {
                     //?} else {
-                    /^if (id.toString().equals(block)) {
+                    /^if ((id.getNamespace() + ":" + id.getPath()).toString().equals(block)) {
                     ^///?}
                         if (modelId.getVariant().contains("snowy=true")) {
                             if (BetterGrassifyConfig.load().snowy) {

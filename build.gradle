@@ -16,7 +16,7 @@ def isSnapshot = false
 def mcVer = property("deps.minecraft_version")
 if (mcVer.contains("-") || mcVer.contains("w")) {
     isSnapshot = true
-    mcVer.replaceAll("-", "")
+    mcVer.replace("-", "")
 }
 
 version = project.mod_version + "+" + loader + "." + mcVer
@@ -180,9 +180,9 @@ jar {
 }
 
 publishMods {
-    if (project.property("deps.minecraft_version").contains("alpha")) {
+    if (mod_version.contains("alpha")) {
         type = ALPHA
-    } else if (project.property("deps.minecraft_version").contains("beta") || isSnapshot) {
+    } else if (mod_version.contains("beta") || mod_version.contains("rc") || isSnapshot) {
         type = BETA
     } else {
         type = STABLE
@@ -191,16 +191,16 @@ publishMods {
     changelog = "# ${project.version}\n" + file("../../CHANGELOG.md").text
     file = remapJar.archiveFile
     displayName = "BetterGrassify ${project.version}"
-    def deps
 
+    def fapi
     if (isFabric) {
-        deps = ["fabric-api", "yacl"]
+        fapi = "fabric-api"
         modLoaders.addAll("fabric", "quilt")
     } else if (isNeo) {
-        deps = ["forgified-fabric-api", "yacl"]
+        fapi = "forgified-fabric-api"
         modLoaders.add("neoforge")
     } else {
-        deps = ["forgified-fabric-api", "yacl"]
+        fapi = "forgified-fabric-api"
         modLoaders.add("forge")
     }
 
@@ -208,7 +208,8 @@ publishMods {
         modrinth("m1.20.1") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             if (isFabric) {
                 minecraftVersionRange {
                     start = "1.20"
@@ -225,7 +226,8 @@ publishMods {
         curseforge("c1.20.1") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             if (isFabric) {
                 minecraftVersionRange {
                     start = "1.20"
@@ -245,7 +247,8 @@ publishMods {
         modrinth("m1.20.6") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.20.5"
                 end = "1.20.6"
@@ -258,7 +261,8 @@ publishMods {
         curseforge("c1.20.6") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.20.5"
                 end = "1.20.6"
@@ -274,7 +278,8 @@ publishMods {
         modrinth("m1.21.1") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.21"
                 end = "1.21.1"
@@ -287,7 +292,8 @@ publishMods {
         curseforge("c1.21.1") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.21"
                 end = "1.21.1"
@@ -303,7 +309,8 @@ publishMods {
         modrinth("m1.21.3") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.21.2"
                 end = "1.21.3"
@@ -316,7 +323,8 @@ publishMods {
         curseforge("c1.21.3") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersionRange {
                 start = "1.21.2"
                 end = "1.21.3"
@@ -332,7 +340,8 @@ publishMods {
         modrinth("m1.21.4") {
             projectId = "m5T5xmUy"
             accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersions.add("1.21.4")
 
             // Discord
@@ -342,7 +351,8 @@ publishMods {
         curseforge("c1.21.4") {
             projectId = "1026394"
             accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            requires(fapi)
+            optional("yacl")
             minecraftVersions.add("1.21.4")
 
             // Discord
