@@ -3,8 +3,6 @@ package dev.ultimatchamp.bettergrass.model;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -22,10 +20,27 @@ import net.minecraft.world.BlockRenderView;
 import java.util.List;
 import java.util.function.Supplier;
 
+//? if >1.21.3 {
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.minecraft.client.render.model.WrapperBakedModel;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Predicate;
+
+public class BetterGrassifyBakedModel extends WrapperBakedModel implements FabricBakedModel {
+    public BetterGrassifyBakedModel(BakedModel baseModel) {
+        super(baseModel);
+    }
+//?} else {
+/*import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+
 public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     public BetterGrassifyBakedModel(BakedModel baseModel) {
         this.wrapped = baseModel;
     }
+*///?}
 
     @Override
     public boolean isVanillaAdapter() {
@@ -34,9 +49,14 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     @Override
     @SuppressWarnings("ConstantConditions")
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    //? if >1.21.3 {
+    public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+        emitter.pushTransform(quad -> {
+    //?} else {
+    /*public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         context.pushTransform(quad -> {
-            switch (BetterGrassifyConfig.instance().betterGrassMode) {
+    *///?}
+            switch (BetterGrassifyConfig.load().betterGrassMode) {
                 case OFF:
                     break;
                 case FAST:
@@ -53,6 +73,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                             spriteBake(quad, snowNeighbour(blockView, pos.up()).getDefaultState(), randomSupplier);
                             break;
                         }
+
                         spriteBake(quad, blockView.getBlockState(pos), randomSupplier);
                     }
                     break;
@@ -70,6 +91,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                                 spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
                                 break;
                             }
+
                             spriteBake(quad, state, randomSupplier);
                         } else if (isSnowy(blockView, pos) && canHaveSnowLayer(blockView, pos.offset(face)) && isNeighbourSnow(blockView, pos.offset(face))) {
                             spriteBake(quad, blockView.getBlockState(pos.up()), randomSupplier);
@@ -83,8 +105,13 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             }
             return true;
         });
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+        //? if >1.21.3 {
+        wrapped.emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
+        emitter.popTransform();
+        //?} else {
+        /*super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
         context.popTransform();
+        *///?}
     }
 
     private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos, Direction direction) {
@@ -108,13 +135,13 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         var up = world.getBlockState(upPos);
 
         if (up.getBlock().equals(Blocks.DIRT_PATH)) {
-            if (!BetterGrassifyConfig.instance().dirtPaths) {
+            if (!BetterGrassifyConfig.load().dirtPaths) {
                 return false;
             }
         }
 
         if (up.getBlock().equals(Blocks.FARMLAND)) {
-            if (!BetterGrassifyConfig.instance().farmLands) {
+            if (!BetterGrassifyConfig.load().farmLands) {
                 return false;
             }
         }
@@ -139,7 +166,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     public static Block snowNeighbour(BlockRenderView world, BlockPos selfPos) {
-        for (String id : BetterGrassifyConfig.instance().snowLayers) {
+        for (String id : BetterGrassifyConfig.load().snowLayers) {
             Identifier identifier = Identifier.tryParse(id);
 
             //? if >1.21.1 {
@@ -160,7 +187,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             }
 
             var layerCheck = false;
-            switch (BetterGrassifyConfig.instance().betterSnowMode) {
+            switch (BetterGrassifyConfig.load().betterSnowMode) {
                 case OPTIFINE -> layerCheck = isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
                 case LAMBDA ->
                         layerCheck = ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) || (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]);
@@ -181,7 +208,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     public static boolean canHaveSnowLayer(BlockRenderView world, BlockPos selfPos) {
-        if (BetterGrassifyConfig.instance().betterSnowMode == BetterGrassifyConfig.BetterSnowMode.OFF) {
+        if (BetterGrassifyConfig.load().betterSnowMode == BetterGrassifyConfig.BetterSnowMode.OFF) {
             return false;
         }
 
@@ -191,8 +218,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 snowNeighbour(world, selfPos) != null;
 
         var isExcludedBlock = false;
-        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
-            for (String block : BetterGrassifyConfig.instance().excludedBlocks) {
+        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+            for (String block : BetterGrassifyConfig.load().excludedBlocks) {
                 var hasAttribute = block.contains("[");
                 var withoutAttribute = block;
                 var attribute = "";
@@ -231,7 +258,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         } else {
             isExcludedBlock = true;
 
-            for (String block : BetterGrassifyConfig.instance().whitelistedBlocks) {
+            for (String block : BetterGrassifyConfig.load().whitelistedBlocks) {
                 var hasAttribute = block.contains("[");
                 var withoutAttribute = block;
                 var attribute = "";
@@ -270,8 +297,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
 
         var isExcludedTag = false;
-        if (BetterGrassifyConfig.instance().whitelistedTags.isEmpty() && BetterGrassifyConfig.instance().whitelistedBlocks.isEmpty()) {
-            for (String tag : BetterGrassifyConfig.instance().excludedTags) {
+        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+            for (String tag : BetterGrassifyConfig.load().excludedTags) {
                 var identifier = Identifier.tryParse(tag);
                 var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
 
@@ -282,7 +309,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         } else {
             isExcludedTag = true;
 
-            for (String tag : BetterGrassifyConfig.instance().whitelistedTags) {
+            for (String tag : BetterGrassifyConfig.load().whitelistedTags) {
                 var identifier = Identifier.tryParse(tag);
                 var tagKey = TagKey.of(RegistryKeys.BLOCK, identifier);
 
@@ -313,7 +340,6 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         var up = world.getBlockState(upPos);
 
         var sprite = SpriteCalculator.calculateSprite(up, Direction.UP, randomSupplier);
-
         if (sprite != null) {
             quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
         }

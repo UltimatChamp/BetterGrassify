@@ -32,6 +32,8 @@ public class SodiumGameOptionsPagesMixin {
     @Inject(method = "quality", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/gui/options/OptionGroup;createBuilder()Lme/jellysquid/mods/sodium/client/gui/options/OptionGroup$Builder;", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
 *///?}
     private static void bettergrass$quality(CallbackInfoReturnable<OptionPage> cir, List<OptionGroup> groups) {
+        var config = BetterGrassifyConfig.load();
+
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterGrassMode.class, SodiumOptionsStorage.INSTANCE)
                         .setName(Text.translatable("bettergrass.betterGrassMode"))
@@ -41,8 +43,8 @@ public class SodiumGameOptionsPagesMixin {
                                 Text.translatable("options.graphics.fast"),
                                 Text.translatable("options.graphics.fancy")
                         }))
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().betterGrassMode = value,
-                                (options) -> BetterGrassifyConfig.instance().betterGrassMode)
+                        .setBinding((options, value) -> config.betterGrassMode = value,
+                                (options) -> config.betterGrassMode)
                         .setImpact(OptionImpact.VARIES)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()
@@ -50,8 +52,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.grass_block"))
                         .setTooltip(Text.translatable("bettergrass.grassBlocks.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().grassBlocks = value,
-                                (options) -> BetterGrassifyConfig.instance().grassBlocks)
+                        .setBinding((options, value) -> config.grassBlocks = value,
+                                (options) -> config.grassBlocks)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -59,8 +61,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.snow"))
                         .setTooltip(Text.translatable("bettergrass.snowy.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().snowy = value,
-                                (options) -> BetterGrassifyConfig.instance().snowy)
+                        .setBinding((options, value) -> config.snowy = value,
+                                (options) -> config.snowy)
                         //? if >1.20.6 {
                         .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
                         //?} else {
@@ -73,8 +75,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.dirt_path"))
                         .setTooltip(Text.translatable("bettergrass.dirtPaths.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().dirtPaths = value,
-                                (options) -> BetterGrassifyConfig.instance().dirtPaths)
+                        .setBinding((options, value) -> config.dirtPaths = value,
+                                (options) -> config.dirtPaths)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -82,8 +84,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.farmland"))
                         .setTooltip(Text.translatable("bettergrass.farmLands.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().farmLands = value,
-                                (options) -> BetterGrassifyConfig.instance().farmLands)
+                        .setBinding((options, value) -> config.farmLands = value,
+                                (options) -> config.farmLands)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -91,8 +93,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.podzol"))
                         .setTooltip(Text.translatable("bettergrass.podzol.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().podzol = value,
-                                (options) -> BetterGrassifyConfig.instance().podzol)
+                        .setBinding((options, value) -> config.podzol = value,
+                                (options) -> config.podzol)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -100,8 +102,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.mycelium"))
                         .setTooltip(Text.translatable("bettergrass.mycelium.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().mycelium = value,
-                                (options) -> BetterGrassifyConfig.instance().mycelium)
+                        .setBinding((options, value) -> config.mycelium = value,
+                                (options) -> config.mycelium)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -109,8 +111,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.crimson_nylium"))
                         .setTooltip(Text.translatable("bettergrass.crimsonNylium.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().crimsonNylium = value,
-                                (options) -> BetterGrassifyConfig.instance().crimsonNylium)
+                        .setBinding((options, value) -> config.crimsonNylium = value,
+                                (options) -> config.crimsonNylium)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -118,8 +120,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setName(Text.translatable("block.minecraft.warped_nylium"))
                         .setTooltip(Text.translatable("bettergrass.warpedNylium.desc"))
                         .setControl(TickBoxControl::new)
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().warpedNylium = value,
-                                (options) -> BetterGrassifyConfig.instance().warpedNylium)
+                        .setBinding((options, value) -> config.warpedNylium = value,
+                                (options) -> config.warpedNylium)
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -131,8 +133,8 @@ public class SodiumGameOptionsPagesMixin {
                                 Text.translatable("bettergrass.betterSnowMode.optifine"),
                                 Text.translatable("bettergrass.betterSnowMode.lambda")
                         }))
-                        .setBinding((options, value) -> BetterGrassifyConfig.instance().betterSnowMode = value,
-                                (options) -> BetterGrassifyConfig.instance().betterSnowMode)
+                        .setBinding((options, value) -> config.betterSnowMode = value,
+                                (options) -> config.betterSnowMode)
                         //? if >1.20.6 {
                         .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
                         //?} else {

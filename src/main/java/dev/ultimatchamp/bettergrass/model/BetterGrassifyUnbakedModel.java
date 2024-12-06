@@ -1,4 +1,5 @@
-package dev.ultimatchamp.bettergrass.model;
+//? if <1.21.4 {
+/*package dev.ultimatchamp.bettergrass.model;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.Baker;
@@ -11,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Function;
 
 //? if <1.21.2 {
-/*import net.minecraft.util.Identifier;
+/^import net.minecraft.util.Identifier;
 import java.util.Collection;
-*///?}
+^///?}
 
 public class BetterGrassifyUnbakedModel implements UnbakedModel {
     private final UnbakedModel baseModel;
@@ -28,7 +29,7 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
         this.baseModel.resolve(resolver);
     }
     //?} else {
-    /*@Override
+    /^@Override
     public Collection<Identifier> getModelDependencies() {
         return this.baseModel.getModelDependencies();
     }
@@ -37,7 +38,7 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
     public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.baseModel.setParents(modelLoader);
     }
-    *///?}
+    ^///?}
 
     @Nullable
     @Override
@@ -46,8 +47,9 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
         return new BetterGrassifyBakedModel(this.baseModel.bake(loader, textureGetter, rotationContainer));
     }
     //?} else {
-    /*public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    /^public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
         return new BetterGrassifyBakedModel(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
     }
-    *///?}
+    ^///?}
 }
+*///?}

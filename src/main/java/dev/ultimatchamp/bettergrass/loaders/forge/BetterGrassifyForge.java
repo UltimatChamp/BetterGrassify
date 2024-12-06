@@ -23,20 +23,22 @@ public final class BetterGrassifyForge {
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
-        if (BetterGrassifyConfig.instance().betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
+        var config = BetterGrassifyConfig.load();
+
+        if (config.betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
             BetterGrassify.LOGGER.info("[BetterGrassify] Better Grass is disabled.");
         } else {
-            BetterGrassify.LOGGER.info("[BetterGrassify] [{}] Gamers can finally touch grass!?", BetterGrassifyConfig.instance().betterGrassMode.toString());
+            BetterGrassify.LOGGER.info("[BetterGrassify] [{}] Gamers can finally touch grass!?", config.betterGrassMode.toString());
         }
 
         if (!FabricLoader.getInstance().isModLoaded("embeddium")) {
-            BetterGrassifyConfig.instance().betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
+            config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
             BetterGrassify.LOGGER.warn("[BetterGrassify] Embeddium is not installed. 'Better Snow' feature has been disabled.");
         }
 
         if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
-            BetterGrassifyConfig.instance().snowy = false;
-            BetterGrassifyConfig.instance().betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
+            config.snowy = false;
+            config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
             BetterGrassify.LOGGER.warn("[BetterGrassify] WilderWild detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.");
         }
     }

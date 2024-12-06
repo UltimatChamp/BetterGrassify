@@ -47,9 +47,13 @@ public class ModelLoaderMixin {
                 var blocks = BetterGrassify.getBlocks();
 
                 for (String block : blocks) {
-                    if (modelId.toString().startsWith(block)) {
-                        if (modelId.toString().contains("snowy=true")) {
-                            if (BetterGrassifyConfig.instance().snowy) {
+                    //? if >1.20.6 {
+                    if (modelId.id().toString().equals(block)) {
+                    //?} else {
+                    /^if (id.toString().equals(block)) {
+                    ^///?}
+                        if (modelId.getVariant().contains("snowy=true")) {
+                            if (BetterGrassifyConfig.load().snowy) {
                                 var newModel = new BetterGrassifyUnbakedModel(unbakedModel);
                                 //? if >1.20.6 {
                                 this.modelsToBake.put(id, newModel);

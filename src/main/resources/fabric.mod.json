@@ -28,7 +28,9 @@
   "depends": {
     "minecraft": "${minecraft_range}",
     "fabricloader": "*",
-    "fabric": "*",
+    "fabric": "*"
+  },
+  "recommends": {
     "yet_another_config_lib_v3": "*"
   },
   "breaks": {

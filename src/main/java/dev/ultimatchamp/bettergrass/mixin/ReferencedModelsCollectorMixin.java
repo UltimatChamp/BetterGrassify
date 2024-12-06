@@ -1,5 +1,5 @@
-//? if >1.21.1 {
-package dev.ultimatchamp.bettergrass.mixin;
+//? if =1.21.3 {
+/*package dev.ultimatchamp.bettergrass.mixin;
 
 import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
@@ -19,9 +19,9 @@ public class ReferencedModelsCollectorMixin {
             var blocks = BetterGrassify.getBlocks();
 
             for (String block : blocks) {
-                if (modelId.toString().startsWith(block)) {
-                    if (modelId.toString().contains("snowy=true")) {
-                        if (BetterGrassifyConfig.instance().snowy) {
+                if (modelId.id().toString().equals(block)) {
+                    if (modelId.getVariant().contains("snowy=true")) {
+                        if (BetterGrassifyConfig.load().snowy) {
                             return new BetterGrassifyUnbakedModel(model);
                         }
                     } else {
@@ -40,4 +40,4 @@ public class ReferencedModelsCollectorMixin {
         return model;
     }
 }
-//?}
+*///?}

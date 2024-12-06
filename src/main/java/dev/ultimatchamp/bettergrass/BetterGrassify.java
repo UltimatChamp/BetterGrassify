@@ -13,16 +13,17 @@ public class BetterGrassify {
     public static final Logger LOGGER = LoggerFactory.getLogger("bettergrass");
 
     public static List<String> getBlocks() {
+        var config = BetterGrassifyConfig.load();
         List<String> blocks = Lists.newArrayList();
 
         Map<BooleanSupplier, String> defaultBlocks = Map.of(
-                () -> BetterGrassifyConfig.instance().grassBlocks, "minecraft:grass_block",
-                () -> BetterGrassifyConfig.instance().dirtPaths, "minecraft:dirt_path",
-                () -> BetterGrassifyConfig.instance().farmLands, "minecraft:farmland",
-                () -> BetterGrassifyConfig.instance().podzol, "minecraft:podzol",
-                () -> BetterGrassifyConfig.instance().mycelium, "minecraft:mycelium",
-                () -> BetterGrassifyConfig.instance().crimsonNylium, "minecraft:crimson_nylium",
-                () -> BetterGrassifyConfig.instance().warpedNylium, "minecraft:warped_nylium"
+                () -> config.grassBlocks, "minecraft:grass_block",
+                () -> config.dirtPaths, "minecraft:dirt_path",
+                () -> config.farmLands, "minecraft:farmland",
+                () -> config.podzol, "minecraft:podzol",
+                () -> config.mycelium, "minecraft:mycelium",
+                () -> config.crimsonNylium, "minecraft:crimson_nylium",
+                () -> config.warpedNylium, "minecraft:warped_nylium"
         );
 
         defaultBlocks.forEach((isEnabled, block) -> {
@@ -31,7 +32,7 @@ public class BetterGrassify {
             }
         });
 
-        blocks.addAll(BetterGrassifyConfig.instance().moreBlocks);
+        blocks.addAll(config.moreBlocks);
 
         return blocks;
     }

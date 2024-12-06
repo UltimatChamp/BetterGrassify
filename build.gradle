@@ -40,6 +40,7 @@ repositories {
     }
     maven { url "https://maven.su5ed.dev/releases" }
     maven { url "https://maven.neoforged.net/releases" }
+    mavenCentral()
 }
 
 loom {
@@ -84,6 +85,7 @@ dependencies {
         modImplementation "maven.modrinth:embeddium:${property("deps.embeddium_version")}"
     }
 
+    include(modImplementation("blue.endless:jankson:${property("deps.jankson_version")}"))
     modImplementation "maven.modrinth:yacl:${property("deps.yacl_version")}"
 }
 
@@ -141,16 +143,19 @@ processResources {
     def packFormat
     switch (project.property("deps.minecraft_version")) {
         case "1.20.1":
-            packFormat = 15;
-            break;
+            packFormat = 15
+            break
         case "1.20.6":
-            packFormat = 32;
-            break;
+            packFormat = 32
+            break
         case "1.21.1":
-            packFormat = 34;
+            packFormat = 34
             break;
+        case "1.21.3":
+            packFormat = 42
+            break
         default:
-            packFormat = 42;
+            packFormat = 46
     }
 
     filesMatching("pack.mcmeta") {
@@ -316,6 +321,29 @@ publishMods {
                 start = "1.21.2"
                 end = "1.21.3"
             }
+
+            // Discord
+            announcementTitle = "Download from CurseForge"
+            projectSlug = "bettergrassify"
+        }
+    }
+
+    if (project.property("deps.minecraft_version") == "1.21.4") {
+        modrinth("m1.21.4") {
+            projectId = "m5T5xmUy"
+            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+            requires(deps[0], deps[1])
+            minecraftVersions.add("1.21.4")
+
+            // Discord
+            announcementTitle = "Download from Modrinth"
+        }
+
+        curseforge("c1.21.4") {
+            projectId = "1026394"
+            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+            requires(deps[0], deps[1])
+            minecraftVersions.add("1.21.4")
 
             // Discord
             announcementTitle = "Download from CurseForge"
