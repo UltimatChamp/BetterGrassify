@@ -20,5 +20,5 @@
   "bettergrass.excludedTags": "排除標籤",
   "bettergrass.excludedBlocks": "排除方塊",
   "bettergrass.noconfig.warn": "§c由於 Forge 的限制，(Neo)Forge 1.20.1 的 BetterGrassify 無法顯示設定畫面。請改用設定檔。很抱歉造成不便！§r\n\n如果你正在使用 Embeddium，你可以在「顯示設定」中變更大部分的設定。",
-  "bettergrass.noyacl.warn": "§cBetterGrassify 無法顯示設定畫面，因為缺少 YetAnotherConfigLib 模組。請改用設定檔。很抱歉造成不便！§r\n\n如果您正在使用 Sodium，您可以在「顯示設定選單」中更改大部分的設定。"
+  "bettergrass.noyacl.warn": "§cBetterGrassify 無法顯示設定畫面，因為缺少 YetAnotherConfigLib 模組。請改用設定檔。很抱歉造成不便！§r\n\n如果您正在使用 Sodium，您可以在「顯示設定」中更改大部分的設定。"
 }
