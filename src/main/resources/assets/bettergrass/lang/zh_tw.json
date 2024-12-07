@@ -1,6 +1,6 @@
 {
   "bettergrass.title": "BetterGrassify 設定",
-  "bettergrass.betterGrassMode": "更好的草地",
+  "bettergrass.betterGrassMode": "更好的草地模式",
   "bettergrass.betterGrassMode.desc": "§4關閉 §r- 預設的草地紋理\n§3流暢 §r- 草地側面全部使用草地紋理（較慢）\n§d精緻 §r- 草地側面紋理動態化（最慢）",
   "bettergrass.grassBlocks.desc": "也會連接草地！",
   "bettergrass.snowy.desc": "也會連接雪地草地！",
@@ -16,9 +16,9 @@
   "bettergrass.betterSnowMode.desc": "§4關閉 §r- 預設的雪地，不會在特定方塊下方顯示雪。\n§3類似 OptiFine §r- 在附近至少有一個雪或雪塊的特定方塊下方顯示雪。\n§d類似 LambdaBetterGrass §r- 在附近至少有「兩個」雪或雪塊的特定方塊下方顯示雪。",
   "bettergrass.betterSnowMode.optifine": "類似 OptiFine",
   "bettergrass.betterSnowMode.lambda": "類似 LambdaBetterGrass",
-  "bettergrass.snowLayers": "More Snow-like Layers",
+  "bettergrass.snowLayers": "更多類雪層",
   "bettergrass.excludedTags": "排除標籤",
   "bettergrass.excludedBlocks": "排除方塊",
   "bettergrass.noconfig.warn": "§c由於 Forge 的限制，(Neo)Forge 1.20.1 的 BetterGrassify 無法顯示設定畫面。請改用設定檔。很抱歉造成不便！§r\n\n如果你正在使用 Embeddium，你可以在「顯示設定」中變更大部分的設定。",
-  "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\n如果你正在使用 Sodium，你可以在「顯示設定」中變更大部分的設定。"
+  "bettergrass.noyacl.warn": "§cBetterGrassify 無法顯示設定畫面，因為缺少 YetAnotherConfigLib 模組。請改用設定檔。很抱歉造成不便！§r\n\n如果你正在使用 Sodium，你可以在「顯示設定」中變更大部分的設定。"
 }
