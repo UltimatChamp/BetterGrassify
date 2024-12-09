@@ -1,13 +1,8 @@
-🗃️**Detailed Changelog: [1.3.5 --> 1.4.0](https://github.com/UltimatChamp/BetterGrassify/compare/1.3.5+fabric.1.21.3...1.4.0+fabric.1.21.4)**
-
-<hr>
-
-_**200K downloads!!!**_ 🥳
+🗃️**Detailed Changelog: [1.4.0 --> 1.4.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.4.0+fabric.1.21.4...1.4.1+fabric.1.21.4)**
 
 <hr>
 
 ### 🛠️Changes
 
-- Port to 1.21.4.
-- **YetAnotherConfigLib** is no longer a _required_ dependency.
-  - The mod now handles the config file generation itself, and includes the **Jankson** library.
+- Fix crash with **Java 17** on `1.20.1`-`1.20.4`. 😅
+- Updated **Traditional Chinese** localization. [**[#41]**](https://github.com/UltimatChamp/BetterGrassify/pull/41)
