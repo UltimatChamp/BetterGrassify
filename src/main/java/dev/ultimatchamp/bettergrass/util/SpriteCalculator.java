@@ -23,7 +23,7 @@ public final class SpriteCalculator {
 
         var quads = model.getQuads(state, face, randomSupplier.get());
         if (!quads.isEmpty()) {
-            return quads.getFirst().getSprite();
+            return quads.get(0).getSprite();
         }
 
         quads = model.getQuads(state, null, randomSupplier.get());

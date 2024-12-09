@@ -103,10 +103,11 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                     }
                     break;
             }
+
             return true;
         });
         //? if >1.21.3 {
-        wrapped.emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
+        super.emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
         emitter.popTransform();
         //?} else {
         /*super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
