@@ -1,4 +1,4 @@
-//? if neo {
+//? if neoforge {
 /*package dev.ultimatchamp.bettergrass.loaders.neo;
 
 import dev.ultimatchamp.bettergrass.BetterGrassify;

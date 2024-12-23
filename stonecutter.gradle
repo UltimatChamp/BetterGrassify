@@ -1,5 +1,7 @@
 plugins.apply "dev.kikugie.stonecutter"
+
 stonecutter.active "1.21.4-fabric" /* [SC] DO NOT EDIT */
+stonecutter.automaticPlatformConstants = true
 
 stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
     setGroup "project"

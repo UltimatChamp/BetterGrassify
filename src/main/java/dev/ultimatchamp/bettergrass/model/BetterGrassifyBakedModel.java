@@ -48,7 +48,6 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     //? if >1.21.3 {
     public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         emitter.pushTransform(quad -> {
@@ -156,14 +155,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     private static boolean isSnowy(BlockRenderView world, BlockPos selfPos) {
         var self = world.getBlockState(selfPos);
-
-        var snowyCheck = false;
-        if (self.getOrEmpty(Properties.SNOWY).isPresent()) {
-            snowyCheck =
-                    self == self.with(Properties.SNOWY, true);
-        }
-
-        return snowyCheck && !world.getBlockState(selfPos.up()).isAir();
+        return self.getOrEmpty(Properties.SNOWY).orElse(false) && !world.getBlockState(selfPos.up()).isAir();
     }
 
     public static Block snowNeighbour(BlockRenderView world, BlockPos selfPos) {
@@ -187,20 +179,19 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 isSnow[directions.indexOf(direction)] = world.getBlockState(direction).isOf(layer.get()) || (id.equals("snow") && (world.getBlockState(direction).isOf(Blocks.SNOW_BLOCK) || world.getBlockState(direction).isOf(Blocks.POWDER_SNOW)));
             }
 
-            var layerCheck = false;
-            switch (BetterGrassifyConfig.load().betterSnowMode) {
-                case OPTIFINE -> layerCheck = isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
-                case LAMBDA ->
-                        layerCheck = ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) || (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]);
-                default -> {
-                    continue;
-                }
-            }
+            var layerCheck =
+                    switch (BetterGrassifyConfig.load().betterSnowMode) {
+                        case OPTIFINE -> isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
+                        case LAMBDA ->
+                                ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) || (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]);
+                        default -> false;
+                    };
 
             if (layerCheck) {
                 return layer.get();
             }
         }
+
         return null;
     }
 

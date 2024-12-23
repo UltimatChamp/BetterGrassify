@@ -24,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-//? if neo {
+//? if neoforge {
 /*import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import java.util.List;
 *///?}
@@ -37,14 +37,14 @@ public class SectionBuilderMixin {
 
     //? if fabric {
     @Inject(method = "build", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V"))
-    //?} else if neo {
+    //?} else if neoforge {
     /*@Inject(method = "compile", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBatched(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/render/RenderLayer;)V"))
     *///?}
     private void bettergrass$render(ChunkSectionPos sectionPos,
                         ChunkRendererRegion renderRegion,
                         VertexSorter vertexSorter,
                         BlockBufferAllocatorStorage allocatorStorage,
-                        //? if neo {
+                        //? if neoforge {
                         /*List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
                         *///?}
                         CallbackInfoReturnable<SectionBuilder.RenderData> cir,
@@ -67,7 +67,7 @@ public class SectionBuilderMixin {
 
     //? if fabric {
     @ModifyVariable(method = "build", at = @At("STORE"), ordinal = 0)
-    //?} else if neo {
+    //?} else if neoforge {
     /*@ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
     *///?}
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos, @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
