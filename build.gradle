@@ -337,7 +337,6 @@ publishMods {
 
         style {
             look = "MODERN"
-            link = "BUTTON"
             thumbnailUrl = "https://cdn.modrinth.com/data/m5T5xmUy/images/3eaeda7d3cc1cec804e5176d9a21d8eb0f7ab8b6.png"
         }
     }
