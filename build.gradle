@@ -37,6 +37,7 @@ repositories {
     }
     maven { url "https://maven.su5ed.dev/releases" }
     maven { url "https://maven.neoforged.net/releases" }
+    //maven { url "https://maven.quiltmc.org/repository/release" }
     mavenCentral()
 }
 
@@ -84,6 +85,7 @@ dependencies {
 
     include(modImplementation("blue.endless:jankson:${property("deps.jankson_version")}"))
     modImplementation "maven.modrinth:yacl:${property("deps.yacl_version")}"
+    //modImplementation "org.quiltmc.parsers:gson:0.3.1"
 }
 
 if (stonecutter.current.isActive) {

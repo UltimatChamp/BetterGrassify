@@ -1,5 +1,6 @@
 package dev.ultimatchamp.bettergrass.model;
 
+import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -59,9 +60,9 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 case OFF:
                     break;
                 case FAST:
-                    if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+                    if (quad.nominalFace().getAxis() != Direction.Axis.Y && isFullQuad(quad)) {
                         if (state.getBlock().equals(Blocks.DIRT)) {
-                            if (isBelowNonFullBlock(blockView, state, pos, quad.nominalFace())) {
+                            if (isBelowNonFullBlock(blockView, pos, quad.nominalFace())) {
                                 dirtSpriteBake(quad, blockView, pos, randomSupplier);
                                 break;
                             }
@@ -77,11 +78,11 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                     }
                     break;
                 case FANCY:
-                    if (quad.nominalFace().getAxis() != Direction.Axis.Y) {
+                    if (quad.nominalFace().getAxis() != Direction.Axis.Y && isFullQuad(quad)) {
                         Direction face = quad.nominalFace();
 
                         if (state.getBlock().equals(Blocks.DIRT)) {
-                            if (isBelowNonFullBlock(blockView, state, pos, quad.nominalFace())) {
+                            if (isBelowNonFullBlock(blockView, pos, quad.nominalFace())) {
                                 dirtSpriteBake(quad, blockView, pos, randomSupplier);
                                 break;
                             }
@@ -114,6 +115,18 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         *///?}
     }
 
+    private static boolean isFullQuad(MutableQuadView quad) {
+        if (!BetterGrassifyConfig.load().resourcePackCompatibilityMode) return true;
+
+        var tolerance = 1 / 16.0;
+        for (var i = 0; i < 4; i++) {
+            var y = quad.y(i);
+            if (Math.abs(y - Math.round(y)) > tolerance) return false;
+        }
+
+        return true;
+    }
+
     private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos, Direction direction) {
         return canConnect(world, self, selfPos, selfPos.offset(direction).down());
     }
@@ -130,7 +143,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return self == adjacent;
     }
 
-    private static boolean isBelowNonFullBlock(BlockRenderView world, BlockState self, BlockPos selfPos, Direction direction) {
+    private static boolean isBelowNonFullBlock(BlockRenderView world, BlockPos selfPos, Direction direction) {
         var upPos = selfPos.up();
         var up = world.getBlockState(upPos);
 

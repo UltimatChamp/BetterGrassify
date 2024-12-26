@@ -32,6 +32,18 @@ public class BetterGrassifyGui {
                                 )
                                 .customController(opt -> new EnumController<>(opt, BetterGrassifyConfig.BetterGrassMode.class))
                                 .build())
+                        .option(Option.<Boolean>createBuilder()
+                                .name(Text.translatable("bettergrass.resourcePackCompatibilityMode"))
+                                .description(OptionDescription.createBuilder()
+                                        .text(Text.translatable("bettergrass.resourcePackCompatibilityMode.desc"))
+                                        .build())
+                                .binding(
+                                        true,
+                                        () -> config.resourcePackCompatibilityMode,
+                                        (value) -> config.resourcePackCompatibilityMode = value
+                                )
+                                .controller(TickBoxControllerBuilder::create)
+                                .build())
                         .group(OptionGroup.createBuilder()
                                 .name(Text.translatable("soundCategory.block"))
                                 .option(Option.<Boolean>createBuilder()

@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify Einstellungen",
   "bettergrass.betterGrassMode": "Besserer Gras-Modus",
   "bettergrass.betterGrassMode.desc": "§4Aus §r- Gras Blöcke sehen normal aus\n§3Schnell §r- Die obere Gras-Textur wird auf alle Seiten der Gras-Blöcke angewendet (schnell)\n§dSchick §r- Die obere Grastextur wird dynamisch auf die entsprechenden Seiten der Grasblöcke angewendet (langsam)",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "Verbindet auch Grasblöcke!",
   "bettergrass.snowy.desc": "Verbindet auch schneebedecktes Gras!",
   "bettergrass.dirtPaths.desc": "Verbindet auch Trampelpfade!",

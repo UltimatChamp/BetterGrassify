@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify 设置",
   "bettergrass.betterGrassMode": "更好的草模式",
   "bettergrass.betterGrassMode.desc": "§4关 §r- 原版默认\n§3流畅 §r- 方块的顶部纹理将应用于其所有侧面（较慢）\n§d高品质 §r- 方块的顶部纹理将动态应用于它的所需侧面（最慢）",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "连接草方块",
   "bettergrass.snowy.desc": "连接被雪覆盖的草方块",
   "bettergrass.dirtPaths.desc": "连接土径",

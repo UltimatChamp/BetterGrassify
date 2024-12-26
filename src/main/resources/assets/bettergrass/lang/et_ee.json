@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify Config",
   "bettergrass.betterGrassMode": "Parema muru režiim",
   "bettergrass.betterGrassMode.desc": "§4Väljas §r- tavapärase välimusega muruplokid\n§3Kiire §r- pealmine murutekstuur rakendatakse muruplokkide kõigile külgedele (kiire)\n§dUhke §r- pealmine murutekstuur rakendatakse dünaamiliselt muruplokkide vajalikele külgedele (aeglane)",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "Connects grass blocks too!",
   "bettergrass.snowy.desc": "Connects snowy grass too!",
   "bettergrass.dirtPaths.desc": "Ühendab ka mullaradasid!",

@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify Konfigürasyonu",
   "bettergrass.betterGrassMode": "Daha İyi Çimen Modu",
   "bettergrass.betterGrassMode.desc": "§4Kapalı §r- Çimen Blokları normal görünür\n§3Hızlı §r- Üst Çimen dokusu Çimen Bloklarının her tarafına uygulanır (hızlı)\n§dHoş §r- Üst Çimen dokusu, Çimen Bloklarının gerekli taraflarına dinamik olarak uygulanır (yavaş)",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "Çimenli toprak bloklarını bağlar!",
   "bettergrass.snowy.desc": "Karlı çimenide bağlar",
   "bettergrass.dirtPaths.desc": "Toprak yolları da birbirine bağlar!",

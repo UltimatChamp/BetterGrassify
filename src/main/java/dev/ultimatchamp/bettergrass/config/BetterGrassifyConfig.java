@@ -43,6 +43,9 @@ public class BetterGrassifyConfig {
         }
     }
 
+    @Comment("(default: true)")
+    public boolean resourcePackCompatibilityMode = true;
+
     @Comment("Blocks\n(default: true)")
     public boolean grassBlocks = true;
 
@@ -200,6 +203,7 @@ public class BetterGrassifyConfig {
         Map<String, JsonElement> defaults = new HashMap<>();
 
         defaults.put("betterGrassMode", new JsonPrimitive(BetterGrassMode.FANCY.name()));
+        defaults.put("resourcePackCompatibilityMode", new JsonPrimitive(true));
 
         defaults.put("grassBlocks", new JsonPrimitive(true));
         defaults.put("snowy", new JsonPrimitive(true));

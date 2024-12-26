@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify 設定",
   "bettergrass.betterGrassMode": "更好的草地模式",
   "bettergrass.betterGrassMode.desc": "§4關閉 §r- 預設的草地紋理\n§3流暢 §r- 草地側面全部使用草地紋理（較慢）\n§d精緻 §r- 草地側面紋理動態化（最慢）",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "也會連接草地！",
   "bettergrass.snowy.desc": "也會連接雪地草地！",
   "bettergrass.dirtPaths.desc": "也會連接土徑！",

@@ -2,6 +2,8 @@
   "bettergrass.title": "BetterGrassify Config",
   "bettergrass.betterGrassMode": "Better Grass Mode",
   "bettergrass.betterGrassMode.desc": "§4Off §r- Grass Blocks look normal\n§3Fast §r- Top Grass texture will be applied to all sides of the Grass Blocks (fast)\n§dFancy §r- Top Grass texture will be applied dynamically to required sides of the Grass Blocks (slow)",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "Connects grass blocks too!",
   "bettergrass.snowy.desc": "Connects snowy grass too!",
   "bettergrass.dirtPaths.desc": "Connects dirt paths too!",
