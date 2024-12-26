@@ -181,7 +181,6 @@ publishMods {
 
     changelog = "# ${project.version}\n" + file("../../CHANGELOG.md").text
     file = remapJar.archiveFile
-    additionalFiles.from(remapJar.archiveFile)
     displayName = "BetterGrassify ${project.version}"
 
     def fapi
