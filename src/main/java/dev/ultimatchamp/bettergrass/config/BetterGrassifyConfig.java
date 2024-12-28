@@ -9,12 +9,10 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.TranslatableOption;
 
 import java.io.IOException;
+import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BetterGrassifyConfig {
@@ -142,14 +140,15 @@ public class BetterGrassifyConfig {
         BetterGrassifyConfig config;
 
         try {
-            if (!Files.exists(CONFIG_PATH)) {
-                BetterGrassify.LOGGER.info("[BetterGrassify] No config file found. Creating one...");
+            var trimmedFileContent = Files.readString(CONFIG_PATH).trim();
+
+            if (!Files.exists(CONFIG_PATH) || !trimmedFileContent.startsWith("{") || !trimmedFileContent.endsWith("}")) {
+                BetterGrassify.LOGGER.info("[BetterGrassify] Config file is empty or invalid. Creating a new one...");
                 config = new BetterGrassifyConfig();
                 save(config);
             } else {
                 var configContent = Files.readString(CONFIG_PATH);
-                var configJson = JANKSON.load(configContent);
-                configJson = ensureDefaults(configJson);
+                var configJson = ensureDefaults(JANKSON.load(configContent));
                 config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
             }
         } catch (IOException | SyntaxError e) {
@@ -174,87 +173,34 @@ public class BetterGrassifyConfig {
     }
 
     private static JsonObject ensureDefaults(JsonObject configJson) {
-        var defaults = getDefaultConfig();
-        return applyDefaults(configJson, defaults);
-    }
-
-    private static JsonObject applyDefaults(JsonObject targetJson, JsonObject defaults) {
-        var newJson = new JsonObject();
-        newJson.putAll(targetJson);
-
         var modified = new AtomicBoolean(false);
-        defaults.forEach((key, value) -> {
-            if (!newJson.containsKey(key)) {
-                BetterGrassify.LOGGER.info("[BetterGrassify] Missing config field '{}'. Re-saving as default.", key);
-                newJson.put(key, value);
-                modified.set(true);
+        var defaultConfig = new BetterGrassifyConfig();
+
+        for (var field : BetterGrassifyConfig.class.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
             }
-        });
+
+            try {
+                var fieldName = field.getName();
+                var defaultValue = field.get(defaultConfig);
+
+                if (!configJson.containsKey(fieldName)) {
+                    BetterGrassify.LOGGER.info("[BetterGrassify] Missing config field '{}'. Re-saving as default.", fieldName);
+                    configJson.put(fieldName, JANKSON.toJson(defaultValue));
+                    modified.set(true);
+                }
+            } catch (IllegalAccessException e) {
+                BetterGrassify.LOGGER.error("[BetterGrassify] Failed to access field '{}'", field.getName(), e);
+            }
+        }
 
         if (modified.get()) {
-            var config = JANKSON.fromJson(newJson, BetterGrassifyConfig.class);
+            var config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
             save(config);
         }
 
-        return newJson;
-    }
-
-    private static JsonObject getDefaultConfig() {
-        Map<String, JsonElement> defaults = new HashMap<>();
-
-        defaults.put("betterGrassMode", new JsonPrimitive(BetterGrassMode.FANCY.name()));
-        defaults.put("resourcePackCompatibilityMode", new JsonPrimitive(true));
-
-        defaults.put("grassBlocks", new JsonPrimitive(true));
-        defaults.put("snowy", new JsonPrimitive(true));
-        defaults.put("dirtPaths", new JsonPrimitive(true));
-        defaults.put("farmLands", new JsonPrimitive(true));
-        defaults.put("podzol", new JsonPrimitive(true));
-        defaults.put("mycelium", new JsonPrimitive(true));
-        defaults.put("crimsonNylium", new JsonPrimitive(true));
-        defaults.put("warpedNylium", new JsonPrimitive(true));
-
-        defaults.put("moreBlocks", createJsonArray("minecraft:sculk_catalyst"));
-
-        defaults.put("betterSnowMode", new JsonPrimitive(BetterSnowMode.OPTIFINE.name()));
-
-        defaults.put("snowLayers", createJsonArray(
-                "snow",
-                "moss_carpet"
-                //? if >1.21.1 {
-                , "pale_moss_carpet"
-                //?}
-        ));
-
-        defaults.put("excludedTags", createJsonArray("buttons",
-                "doors",
-                "fire",
-                "leaves",
-                "pressure_plates",
-                "rails"
-        ));
-
-        defaults.put("excludedBlocks", createJsonArray(
-                "lantern[hanging]",
-                "redstone_wall_torch",
-                "soul_lantern[hanging]",
-                "soul_wall_torch",
-                "wall_torch"
-        ));
-
-        defaults.put("whitelistedTags", new JsonArray());
-        defaults.put("whitelistedBlocks", new JsonArray());
-
-        var jsonObject = new JsonObject();
-        jsonObject.putAll(defaults);
-
-        return jsonObject;
-    }
-
-    private static JsonArray createJsonArray(String... elements) {
-        JsonArray jsonArray = new JsonArray();
-        Arrays.stream(elements).map(JsonPrimitive::new).forEach(jsonArray::add);
-        return jsonArray;
+        return configJson;
     }
 
     public static Screen createConfigScreen(Screen parent) {
