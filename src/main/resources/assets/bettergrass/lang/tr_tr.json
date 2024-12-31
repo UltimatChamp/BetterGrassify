@@ -22,5 +22,5 @@
   "bettergrass.excludedTags": "Dışlanan Etiketler",
   "bettergrass.excludedBlocks": "Dışlanan Bloklar",
   "bettergrass.noconfig.warn": "§cBetterGrassify (Neo)Forge 1.20.1 için Forge'daki bir sınırlama nedeniyle bir konfigürasyon ekranı görüntülenemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!§r\n\nEğer Embeddium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz.",
-  "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\nEğer Sodium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz."
+  "bettergrass.noyacl.warn": "§cYetAnotherConfigLib modu yüklü olmadığı için BetterGrassify bir konfigürasyon ekranı görüntüleyemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!§r\n\nEğer Sodium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz."
 }
