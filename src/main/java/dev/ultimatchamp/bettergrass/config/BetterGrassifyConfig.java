@@ -140,16 +140,21 @@ public class BetterGrassifyConfig {
         BetterGrassifyConfig config;
 
         try {
-            var trimmedFileContent = Files.readString(CONFIG_PATH).trim();
-
-            if (!Files.exists(CONFIG_PATH) || !trimmedFileContent.startsWith("{") || !trimmedFileContent.endsWith("}")) {
-                BetterGrassify.LOGGER.info("[BetterGrassify] Config file is empty or invalid. Creating a new one...");
+            if (!Files.exists(CONFIG_PATH)) {
+                BetterGrassify.LOGGER.info("[BetterGrassify] Config file not found. Creating a new one...");
                 config = new BetterGrassifyConfig();
                 save(config);
             } else {
-                var configContent = Files.readString(CONFIG_PATH);
-                var configJson = ensureDefaults(JANKSON.load(configContent));
-                config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
+                var configContent = Files.readString(CONFIG_PATH).trim();
+
+                if (!configContent.startsWith("{") || !configContent.endsWith("}")) {
+                    BetterGrassify.LOGGER.error("[BetterGrassify] Config file is empty or invalid. Creating a new one...");
+                    config = new BetterGrassifyConfig();
+                    save(config);
+                } else {
+                    var configJson = ensureDefaults(JANKSON.load(configContent));
+                    config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
+                }
             }
         } catch (IOException | SyntaxError e) {
             BetterGrassify.LOGGER.error("[BetterGrassify]", e);
@@ -173,7 +178,7 @@ public class BetterGrassifyConfig {
     }
 
     private static JsonObject ensureDefaults(JsonObject configJson) {
-        var modified = new AtomicBoolean(false);
+        var modified = false;
         var defaultConfig = new BetterGrassifyConfig();
 
         for (var field : BetterGrassifyConfig.class.getDeclaredFields()) {
@@ -188,14 +193,14 @@ public class BetterGrassifyConfig {
                 if (!configJson.containsKey(fieldName)) {
                     BetterGrassify.LOGGER.info("[BetterGrassify] Missing config field '{}'. Re-saving as default.", fieldName);
                     configJson.put(fieldName, JANKSON.toJson(defaultValue));
-                    modified.set(true);
+                    modified = true;
                 }
             } catch (IllegalAccessException e) {
                 BetterGrassify.LOGGER.error("[BetterGrassify] Failed to access field '{}'", field.getName(), e);
             }
         }
 
-        if (modified.get()) {
+        if (modified) {
             var config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
             save(config);
         }

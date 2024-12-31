@@ -1,6 +1,5 @@
 package dev.ultimatchamp.bettergrass.model;
 
-import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
