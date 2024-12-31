@@ -2,10 +2,12 @@
   "bettergrass.title": "BetterGrassify 设置",
   "bettergrass.betterGrassMode": "更好的草模式",
   "bettergrass.betterGrassMode.desc": "§4关 §r- 原版默认\n§3流畅 §r- 方块的顶部纹理将应用于其所有侧面（较慢）\n§d高品质 §r- 方块的顶部纹理将动态应用于它的所需侧面（最慢）",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "连接草方块",
   "bettergrass.snowy.desc": "连接被雪覆盖的草方块",
-  "bettergrass.dirtPaths.desc": "连接土径\n\n§c或许还存在着一些视觉上的小瑕疵！",
-  "bettergrass.farmLands.desc": "连接耕地\n\n§c或许还存在着一些视觉上的小瑕疵！",
+  "bettergrass.dirtPaths.desc": "连接土径",
+  "bettergrass.farmLands.desc": "连接耕地",
   "bettergrass.podzol.desc": "连接灰化土",
   "bettergrass.mycelium.desc": "连接菌丝体",
   "bettergrass.crimsonNylium.desc": "连接绯红菌岩",
@@ -19,5 +21,6 @@
   "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Excluded Tags",
   "bettergrass.excludedBlocks": "Excluded Blocks",
-  "bettergrass.noconfig.warn": "§c由于Forge中的限制，BetterGrassify 的 (Neo)Forge 1.20.1 版本无法显示配置屏幕，请改用配置文件Config，为您带来不便敬请谅解！§r\n\n但如果您使用的是Embeddium，则可以在\"视频设置\"中更改大多数设置"
+  "bettergrass.noconfig.warn": "§c由于Forge中的限制，BetterGrassify 的 (Neo)Forge 1.20.1 版本无法显示配置屏幕，请改用配置文件Config，为您带来不便敬请谅解！§r\n\n但如果您使用的是Embeddium，则可以在\"视频设置\"中更改大多数设置",
+  "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\n但如果您使用的是Sodium，则可以在\"视频设置\"中更改大多数设置"
 }

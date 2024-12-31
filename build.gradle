@@ -1,22 +1,19 @@
 plugins {
-    id "dev.architectury.loom" version "1.7-SNAPSHOT"
-    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
+    id "dev.architectury.loom" version "1.9-SNAPSHOT"
+    id "me.modmuss50.mod-publish-plugin" version "0.8.3"
 }
 
 def loader = property("loom.platform")
-if (property("loom.platform") == "neoforge") {
-    loader = "neo"
-}
 
 def isFabric = loader == "fabric"
-def isNeo = loader == "neo"
+def isNeo = loader == "neoforge"
 def isForge = loader == "forge"
 
 def isSnapshot = false
 def mcVer = property("deps.minecraft_version")
 if (mcVer.contains("-") || mcVer.contains("w")) {
     isSnapshot = true
-    mcVer.replaceAll("-", "")
+    mcVer.replace("-", "")
 }
 
 version = project.mod_version + "+" + loader + "." + mcVer
@@ -38,8 +35,10 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven { url "https://maven.isxander.dev/releases" }
     maven { url "https://maven.su5ed.dev/releases" }
     maven { url "https://maven.neoforged.net/releases" }
+    mavenCentral()
 }
 
 loom {
@@ -84,7 +83,8 @@ dependencies {
         modImplementation "maven.modrinth:embeddium:${property("deps.embeddium_version")}"
     }
 
-    modImplementation "maven.modrinth:yacl:${property("deps.yacl_version")}"
+    include(modImplementation("blue.endless:jankson:${property("deps.jankson_version")}"))
+    modImplementation "dev.isxander:yet-another-config-lib:${property("deps.yacl_version")}"
 }
 
 if (stonecutter.current.isActive) {
@@ -92,14 +92,6 @@ if (stonecutter.current.isActive) {
         group = "project"
         dependsOn(tasks.named("build"))
         dependsOn(tasks.named("publishMods"))
-    }
-}
-
-afterEvaluate {
-    stonecutter {
-        stonecutter.const("fabric", isFabric)
-        stonecutter.const("neo", isNeo)
-        stonecutter.const("forge", isForge)
     }
 }
 
@@ -141,16 +133,19 @@ processResources {
     def packFormat
     switch (project.property("deps.minecraft_version")) {
         case "1.20.1":
-            packFormat = 15;
-            break;
+            packFormat = 15
+            break
         case "1.20.6":
-            packFormat = 32;
-            break;
+            packFormat = 32
+            break
         case "1.21.1":
-            packFormat = 34;
+            packFormat = 34
             break;
+        case "1.21.3":
+            packFormat = 42
+            break
         default:
-            packFormat = 42;
+            packFormat = 46
     }
 
     filesMatching("pack.mcmeta") {
@@ -175,35 +170,57 @@ jar {
 }
 
 publishMods {
-    if (project.property("deps.minecraft_version").contains("alpha")) {
+    if (mod_version.contains("alpha")) {
         type = ALPHA
-    } else if (project.property("deps.minecraft_version").contains("beta") || isSnapshot) {
+    } else if (mod_version.contains("beta") || mod_version.contains("rc") || isSnapshot) {
         type = BETA
     } else {
         type = STABLE
     }
 
-    changelog = "# ${project.version}\n" + file("CHANGELOG.md").text
+    changelog = "# ${project.version}\n" + file("../../CHANGELOG.md").text
     file = remapJar.archiveFile
     displayName = "BetterGrassify ${project.version}"
-    def deps
 
+    def fapi
     if (isFabric) {
-        deps = ["fabric-api", "yacl"]
+        fapi = "fabric-api"
         modLoaders.addAll("fabric", "quilt")
     } else if (isNeo) {
-        deps = ["forgified-fabric-api", "yacl"]
+        fapi = "forgified-fabric-api"
         modLoaders.add("neoforge")
     } else {
-        deps = ["forgified-fabric-api", "yacl"]
+        fapi = "forgified-fabric-api"
         modLoaders.add("forge")
+    }
+
+    def mrOptions = modrinthOptions {
+        projectId = "m5T5xmUy"
+        accessToken = providers.environmentVariable("MODRINTH_TOKEN")
+
+        requires(fapi)
+        optional("yacl")
+
+        // Discord
+        announcementTitle = "Download from Modrinth"
+    }
+
+    def cfOptions = curseforgeOptions {
+        projectId = "1026394"
+        accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
+
+        requires(fapi)
+        optional("yacl")
+
+        // Discord
+        announcementTitle = "Download from CurseForge"
+        projectSlug = "bettergrassify"
     }
 
     if (project.property("deps.minecraft_version") == "1.20.1") {
         modrinth("m1.20.1") {
-            projectId = "m5T5xmUy"
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            from mrOptions
+
             if (isFabric) {
                 minecraftVersionRange {
                     start = "1.20"
@@ -212,15 +229,11 @@ publishMods {
             } else {
                 minecraftVersions.add("1.20.1")
             }
-
-            // Discord
-            announcementTitle = "Download from Modrinth"
         }
 
         curseforge("c1.20.1") {
-            projectId = "1026394"
-            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            from cfOptions
+
             if (isFabric) {
                 minecraftVersionRange {
                     start = "1.20"
@@ -229,91 +242,80 @@ publishMods {
             } else {
                 minecraftVersions.add("1.20.1")
             }
-
-            // Discord
-            announcementTitle = "Download from CurseForge"
-            projectSlug = "bettergrassify"
         }
     }
 
     if (project.property("deps.minecraft_version") == "1.20.6") {
         modrinth("m1.20.6") {
-            projectId = "m5T5xmUy"
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            from mrOptions
+
             minecraftVersionRange {
                 start = "1.20.5"
                 end = "1.20.6"
             }
-
-            // Discord
-            announcementTitle = "Download from Modrinth"
         }
 
         curseforge("c1.20.6") {
-            projectId = "1026394"
-            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            from cfOptions
+
             minecraftVersionRange {
                 start = "1.20.5"
                 end = "1.20.6"
             }
-
-            // Discord
-            announcementTitle = "Download from CurseForge"
-            projectSlug = "bettergrassify"
         }
     }
 
     if (project.property("deps.minecraft_version") == "1.21.1") {
         modrinth("m1.21.1") {
-            projectId = "m5T5xmUy"
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
+            from mrOptions
+
             minecraftVersionRange {
                 start = "1.21"
                 end = "1.21.1"
             }
-
-            // Discord
-            announcementTitle = "Download from Modrinth"
         }
 
         curseforge("c1.21.1") {
-            projectId = "1026394"
-            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
+            from cfOptions
+
             minecraftVersionRange {
                 start = "1.21"
                 end = "1.21.1"
             }
-
-            // Discord
-            announcementTitle = "Download from CurseForge"
-            projectSlug = "bettergrassify"
         }
     }
 
-    if (project.property("deps.minecraft_version") == "1.21.2") {
-        modrinth("m1.21.2") {
-            projectId = "m5T5xmUy"
-            accessToken = providers.environmentVariable("MODRINTH_TOKEN")
-            requires(deps[0], deps[1])
-            minecraftVersions.add("1.21.2")
+    if (project.property("deps.minecraft_version") == "1.21.3") {
+        modrinth("m1.21.3") {
+            from mrOptions
 
-            // Discord
-            announcementTitle = "Download from Modrinth"
+            minecraftVersionRange {
+                start = "1.21.2"
+                end = "1.21.3"
+            }
         }
 
-        curseforge("c1.21.2") {
-            projectId = "1026394"
-            accessToken = providers.environmentVariable("CURSEFORGE_API_KEY")
-            requires(deps[0], deps[1])
-            minecraftVersions.add("1.21.2")
+        curseforge("c1.21.3") {
+            from cfOptions
 
-            // Discord
-            announcementTitle = "Download from CurseForge"
-            projectSlug = "bettergrassify"
+            minecraftVersionRange {
+                start = "1.21.2"
+                end = "1.21.3"
+            }
+        }
+    }
+
+    if (project.property("deps.minecraft_version") == "1.21.4") {
+        modrinth("m1.21.4") {
+            from mrOptions
+
+            minecraftVersions.add("1.21.4")
+        }
+
+        curseforge("c1.21.4") {
+            from cfOptions
+
+            minecraftVersions.add("1.21.4")
         }
     }
 
@@ -330,5 +332,10 @@ publishMods {
         webhookUrl = providers.environmentVariable("DISCORD_WEBHOOK")
         username = "BetterGrassify Releases"
         avatarUrl = "https://cdn.modrinth.com/data/m5T5xmUy/c67c1f900e8344e462bb5c21fb512579f3b0be46.png"
+
+        style {
+            look = "MODERN"
+            thumbnailUrl = "https://cdn.modrinth.com/data/m5T5xmUy/images/3eaeda7d3cc1cec804e5176d9a21d8eb0f7ab8b6.png"
+        }
     }
 }

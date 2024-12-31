@@ -35,7 +35,7 @@ side="BOTH"
 
 [[dependencies.bettergrass]]
 modId="yet_another_config_lib_v3"
-mandatory=true
+mandatory=false
 versionRange="*"
 ordering="NONE"
 side="CLIENT"

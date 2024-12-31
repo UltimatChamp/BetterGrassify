@@ -2,10 +2,12 @@
   "bettergrass.title": "Impostazioni di BetterGrassify",
   "bettergrass.betterGrassMode": "Modalità Erba Migliorata",
   "bettergrass.betterGrassMode.desc": "§4No §r- Blocchi di erba classici\n§3Semplice §r- La texture superiore verrà applicata a tutti il lati del blocco d'erba (veloce)\n§dSofisticata §r- La texture superiore verrà applicata dinamicamente ai lati del blocco d'erba richiesti (lento)",
+  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
   "bettergrass.grassBlocks.desc": "Connetti anche i blocchi d'erba!",
   "bettergrass.snowy.desc": "Connetti anche l'erba nevosa!",
-  "bettergrass.dirtPaths.desc": "Connetti anche i sentieri sterrati!\n\n§cPotrebbe causare dei bug visuali!",
-  "bettergrass.farmLands.desc": "Connetti anche la terra zappata!\n\n§cPotrebbe causare dei bug visuali!",
+  "bettergrass.dirtPaths.desc": "Connetti anche i sentieri sterrati!",
+  "bettergrass.farmLands.desc": "Connetti anche la terra zappata!",
   "bettergrass.podzol.desc": "Connetti anche la terra grigia!",
   "bettergrass.mycelium.desc": "Connetti anche il micelio!",
   "bettergrass.crimsonNylium.desc": "Connetti anche il necelio cremisi!",
@@ -19,5 +21,6 @@
   "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Tag Esclusi",
   "bettergrass.excludedBlocks": "Blocchi Esclusi",
-  "bettergrass.noconfig.warn": "§cBetterGrassify per (Neo)Forge 1.20.1 non è in grado di visualizzare una schermata di configurazione a causa di una limitazione in Forge. Utilizzare invece il file di configurazione. Ci scusiamo per l'inconveniente!§r\n\nSe utilizzi Embeddium, puoi modificare la maggior parte delle configurazioni nel \"Menu Impostazioni video\"."
+  "bettergrass.noconfig.warn": "§cBetterGrassify per (Neo)Forge 1.20.1 non è in grado di visualizzare una schermata di configurazione a causa di una limitazione in Forge. Utilizzare invece il file di configurazione. Ci scusiamo per l'inconveniente!§r\n\nSe utilizzi Embeddium, puoi modificare la maggior parte delle configurazioni nel \"Menu Impostazioni video\".",
+  "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\nSe utilizzi Sodium, puoi modificare la maggior parte delle configurazioni nel \"Menu Impostazioni video\"."
 }

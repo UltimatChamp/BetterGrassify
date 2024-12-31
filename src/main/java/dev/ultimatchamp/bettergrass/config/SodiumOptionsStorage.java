@@ -16,6 +16,7 @@ public class SodiumOptionsStorage implements OptionStorage<Object> {
 
     @Override
     public void save() {
-        BetterGrassifyConfig.save();
+        var config = BetterGrassifyConfig.load();
+        BetterGrassifyConfig.save(config);
     }
 }
