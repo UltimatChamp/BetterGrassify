@@ -1,8 +1,8 @@
-🗃️**Detailed Changelog: [1.4.2 --> 1.4.3](https://github.com/UltimatChamp/BetterGrassify/compare/1.4.2+fabric.1.21.4...1.4.3+fabric.1.21.4)**
+🗃️**Detailed Changelog: [1.4.3 --> 1.4.4](https://github.com/UltimatChamp/BetterGrassify/compare/1.4.3+fabric.1.21.4...1.4.4+fabric.1.21.4)**
 
 <hr>
 
 ### 🛠️Changes
 
-- Improved config file handling.
-- Updated **Traditional Chinese** translation. [**[#45]**](https://github.com/UltimatChamp/BetterGrassify/pull/45)
+- Updated **Turkish** translation. [**[#46]**](https://github.com/UltimatChamp/BetterGrassify/pull/46)
+- Updated **Brazilian Portuguese** translation. [**[#47]**](https://github.com/UltimatChamp/BetterGrassify/pull/47)
