@@ -2,8 +2,8 @@
   "bettergrass.title": "BetterGrassify Konfigürasyonu",
   "bettergrass.betterGrassMode": "Daha İyi Çimen Modu",
   "bettergrass.betterGrassMode.desc": "§4Kapalı §r- Çimen Blokları normal görünür\n§3Hızlı §r- Üst Çimen dokusu Çimen Bloklarının her tarafına uygulanır (hızlı)\n§dHoş §r- Üst Çimen dokusu, Çimen Bloklarının gerekli taraflarına dinamik olarak uygulanır (yavaş)",
-  "bettergrass.resourcePackCompatibilityMode": "Resource-pack Compatibility Mode",
-  "bettergrass.resourcePackCompatibilityMode.desc": "Fix issues with various resource-packs like Alacrity.",
+  "bettergrass.resourcePackCompatibilityMode": "Kaynak Paketi Uyumluluk Modu",
+  "bettergrass.resourcePackCompatibilityMode.desc": "Alacrity gibi çeşitli kaynak paketleriyle ilgili sorunları düzeltir.",
   "bettergrass.grassBlocks.desc": "Çimenli toprak bloklarını bağlar!",
   "bettergrass.snowy.desc": "Karlı çimenide bağlar",
   "bettergrass.dirtPaths.desc": "Toprak yolları da birbirine bağlar!",
@@ -22,5 +22,5 @@
   "bettergrass.excludedTags": "Dışlanan Etiketler",
   "bettergrass.excludedBlocks": "Dışlanan Bloklar",
   "bettergrass.noconfig.warn": "§cBetterGrassify (Neo)Forge 1.20.1 için Forge'daki bir sınırlama nedeniyle bir konfigürasyon ekranı görüntülenemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!§r\n\nEğer Embeddium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz.",
-  "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\nEğer Sodium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz."
+  "bettergrass.noyacl.warn": "§cBetterGrassify, YetAnotherConfigLib modu yüklü olmadığı için bir konfigürasyon ekranı görüntüleyemiyor. Lütfen bunun yerine konfigürasyon dosyasını kullanın. Rahatsızlık için özür dileriz!§r\n\nEğer Sodium kullanıyorsanız, konfigürasyonların çoğunu \"Video Ayarları Menüsü\" üzerinden değiştirebilirsiniz."
 }
