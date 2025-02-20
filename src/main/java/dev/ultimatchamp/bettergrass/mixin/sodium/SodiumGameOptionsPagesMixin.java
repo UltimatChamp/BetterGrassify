@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-//? if >1.20.6 {
 import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptionPages;
 import net.caffeinemc.mods.sodium.client.gui.options.*;
 import net.caffeinemc.mods.sodium.client.gui.options.control.CyclingControl;
@@ -21,18 +20,8 @@ import net.caffeinemc.mods.sodium.client.gui.options.control.TickBoxControl;
 @Mixin(value = SodiumGameOptionPages.class, remap = false)
 public class SodiumGameOptionsPagesMixin {
     @Inject(method = "quality", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup;createBuilder()Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup$Builder;", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
-//?} else {
-/*import me.jellysquid.mods.sodium.client.gui.SodiumGameOptionPages;
-import me.jellysquid.mods.sodium.client.gui.options.*;
-import me.jellysquid.mods.sodium.client.gui.options.control.CyclingControl;
-import me.jellysquid.mods.sodium.client.gui.options.control.TickBoxControl;
-
-@Mixin(value = SodiumGameOptionPages.class, remap = false)
-public class SodiumGameOptionsPagesMixin {
-    @Inject(method = "quality", at = @At(value = "INVOKE", target = "Lme/jellysquid/mods/sodium/client/gui/options/OptionGroup;createBuilder()Lme/jellysquid/mods/sodium/client/gui/options/OptionGroup$Builder;", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
-*///?}
     private static void bettergrass$quality(CallbackInfoReturnable<OptionPage> cir, List<OptionGroup> groups) {
-        var config = BetterGrassifyConfig.load();
+        BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterGrassMode.class, SodiumOptionsStorage.INSTANCE)
@@ -72,11 +61,7 @@ public class SodiumGameOptionsPagesMixin {
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.snowy = value,
                                 (options) -> config.snowy)
-                        //? if >1.20.6 {
                         .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
-                        //?} else {
-                        /*.setEnabled(!FabricLoader.getInstance().isModLoaded("wilderwild"))
-                        *///?}
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -144,11 +129,7 @@ public class SodiumGameOptionsPagesMixin {
                         }))
                         .setBinding((options, value) -> config.betterSnowMode = value,
                                 (options) -> config.betterSnowMode)
-                        //? if >1.20.6 {
                         .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
-                        //?} else {
-                        /*.setEnabled(!(!FabricLoader.getInstance().isModLoaded("sodium") || FabricLoader.getInstance().isModLoaded("wilderwild")))
-                        *///?}
                         .setImpact(OptionImpact.VARIES)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()

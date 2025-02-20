@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-//? if <1.21.2 {
+//? if <1.21.3 {
 /^import net.minecraft.util.Identifier;
 import java.util.Collection;
 ^///?}
@@ -42,14 +42,8 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
 
     @Nullable
     @Override
-    //? if >1.20.6 {
     public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         return new BetterGrassifyBakedModel(this.baseModel.bake(loader, textureGetter, rotationContainer));
     }
-    //?} else {
-    /^public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        return new BetterGrassifyBakedModel(this.baseModel.bake(loader, textureGetter, rotationContainer, modelId));
-    }
-    ^///?}
 }
 *///?}

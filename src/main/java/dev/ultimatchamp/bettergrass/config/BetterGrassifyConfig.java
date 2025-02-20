@@ -2,18 +2,18 @@ package dev.ultimatchamp.bettergrass.config;
 
 import blue.endless.jankson.*;
 import blue.endless.jankson.api.SyntaxError;
-import com.google.common.collect.Lists;
 import dev.ultimatchamp.bettergrass.BetterGrassify;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.TranslatableOption;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BetterGrassifyConfig {
     @Comment("-> General\nOFF/FAST/FANCY (default: FANCY)")
@@ -68,7 +68,7 @@ public class BetterGrassifyConfig {
     @Comment("(default: true)")
     public boolean warpedNylium = true;
 
-    public List<String> moreBlocks = Lists.newArrayList(
+    public List<String> moreBlocks = List.of(
             "minecraft:sculk_catalyst" // Example
     );
 
@@ -99,7 +99,7 @@ public class BetterGrassifyConfig {
         }
     }
 
-    public List<String> snowLayers = Lists.newArrayList(
+    public List<String> snowLayers = List.of(
             "snow",
             "moss_carpet"
             //? if >1.21.1 {
@@ -107,7 +107,7 @@ public class BetterGrassifyConfig {
             //?}
     );
 
-    public List<String> excludedTags = Lists.newArrayList(
+    public List<String> excludedTags = List.of(
             "buttons",
             "doors",
             "fire",
@@ -116,7 +116,7 @@ public class BetterGrassifyConfig {
             "rails"
     );
 
-    public List<String> excludedBlocks = Lists.newArrayList(
+    public List<String> excludedBlocks = List.of(
             "lantern[hanging]",
             "redstone_wall_torch",
             "soul_lantern[hanging]",
@@ -124,8 +124,8 @@ public class BetterGrassifyConfig {
             "wall_torch"
     );
 
-    public List<String> whitelistedTags = Lists.newArrayList();
-    public List<String> whitelistedBlocks = Lists.newArrayList();
+    public List<String> whitelistedTags = new ArrayList<>();
+    public List<String> whitelistedBlocks = new ArrayList<>();
 
     private static final Jankson JANKSON = Jankson.builder().build();
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("bettergrass.json5");
@@ -141,67 +141,61 @@ public class BetterGrassifyConfig {
 
         try {
             if (!Files.exists(CONFIG_PATH)) {
-                BetterGrassify.LOGGER.info("[BetterGrassify] Config file not found. Creating a new one...");
-                config = new BetterGrassifyConfig();
-                save(config);
+                BetterGrassify.LOGGER.info("[{}] Config file not found. Creating a new one...", BetterGrassify.MOD_ID);
+                save(config = new BetterGrassifyConfig());
             } else {
-                var configContent = Files.readString(CONFIG_PATH).trim();
+                String configContent = Files.readString(CONFIG_PATH).trim();
 
                 if (!configContent.startsWith("{") || !configContent.endsWith("}")) {
-                    BetterGrassify.LOGGER.error("[BetterGrassify] Config file is empty or invalid. Creating a new one...");
-                    config = new BetterGrassifyConfig();
-                    save(config);
+                    BetterGrassify.LOGGER.warn("[{}] Config file is empty or invalid. Creating a new one...", BetterGrassify.MOD_ID);
+                    save(config = new BetterGrassifyConfig());
                 } else {
-                    var configJson = ensureDefaults(JANKSON.load(configContent));
+                    JsonObject configJson = ensureDefaults(JANKSON.load(configContent));
                     config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
                 }
             }
         } catch (IOException | SyntaxError e) {
-            BetterGrassify.LOGGER.error("[BetterGrassify]", e);
-            config = new BetterGrassifyConfig();
-            save(config);
+            BetterGrassify.LOGGER.error("[{}]", BetterGrassify.MOD_ID, e);
+            save(config = new BetterGrassifyConfig());
         }
 
-        cachedConfig = config;
-        return cachedConfig;
+        return cachedConfig = config;
     }
 
     public static void save(BetterGrassifyConfig config) {
         try {
-            var jsonString = JANKSON.toJson(config).toJson(true, true);
+            String jsonString = JANKSON.toJson(config).toJson(true, true);
             Files.createDirectories(CONFIG_PATH.getParent());
             Files.writeString(CONFIG_PATH, jsonString);
             cachedConfig = config;
         } catch (IOException e) {
-            BetterGrassify.LOGGER.error("[BetterGrassify]", e);
+            BetterGrassify.LOGGER.error("[{}]", BetterGrassify.MOD_ID, e);
         }
     }
 
     private static JsonObject ensureDefaults(JsonObject configJson) {
-        var modified = false;
-        var defaultConfig = new BetterGrassifyConfig();
+        boolean modified = false;
+        BetterGrassifyConfig defaultConfig = new BetterGrassifyConfig();
 
-        for (var field : BetterGrassifyConfig.class.getDeclaredFields()) {
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
+        for (Field field : BetterGrassifyConfig.class.getDeclaredFields()) {
+            if (Modifier.isStatic(field.getModifiers())) continue;
 
             try {
-                var fieldName = field.getName();
-                var defaultValue = field.get(defaultConfig);
+                String fieldName = field.getName();
+                Object defaultValue = field.get(defaultConfig);
 
                 if (!configJson.containsKey(fieldName)) {
-                    BetterGrassify.LOGGER.info("[BetterGrassify] Missing config field '{}'. Re-saving as default.", fieldName);
+                    BetterGrassify.LOGGER.info("[{}] Missing config field '{}'. Re-saving as default.", BetterGrassify.MOD_ID, fieldName);
                     configJson.put(fieldName, JANKSON.toJson(defaultValue));
                     modified = true;
                 }
             } catch (IllegalAccessException e) {
-                BetterGrassify.LOGGER.error("[BetterGrassify] Failed to access field '{}'", field.getName(), e);
+                BetterGrassify.LOGGER.error("[{}] Failed to access field '{}'", BetterGrassify.MOD_ID, field.getName(), e);
             }
         }
 
         if (modified) {
-            var config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
+            BetterGrassifyConfig config = JANKSON.fromJson(configJson, BetterGrassifyConfig.class);
             save(config);
         }
 
@@ -209,14 +203,10 @@ public class BetterGrassifyConfig {
     }
 
     public static Screen createConfigScreen(Screen parent) {
-        //? if !forge {
         if (FabricLoader.getInstance().isModLoaded("yet_another_config_lib_v3")) {
             return BetterGrassifyGui.createConfigScreen(parent);
         } else {
             return new NoYACLWarning(parent);
         }
-        //?} else {
-        /*return new NoConfigScreenWarning(parent);
-        *///?}
     }
 }

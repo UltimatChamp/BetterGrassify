@@ -1,11 +1,10 @@
-//? if >1.20.6 {
 package dev.ultimatchamp.bettergrass.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.VertexSorter;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.chunk.BlockBufferAllocatorStorage;
@@ -53,7 +52,7 @@ public class SectionBuilderMixin {
                         @Local MatrixStack matrixStack,
                         @Local BufferBuilder bufferBuilder,
                         @Local Random random) {
-        var snowNeighbour = BetterGrassifyBakedModel.snowNeighbour(renderRegion, blockPos.up());
+        Block snowNeighbour = BetterGrassifyBakedModel.snowNeighbour(renderRegion, blockPos.up());
 
         if (snowNeighbour != null) {
             if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) {
@@ -71,16 +70,11 @@ public class SectionBuilderMixin {
     /*@ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
     *///?}
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos, @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
-        var snowNeighbour = BetterGrassifyBakedModel.snowNeighbour(renderRegion, blockPos.up());
+        if (state.getOrEmpty(Properties.SNOWY).isEmpty()) return state;
+        if (BetterGrassifyBakedModel.isNeighbourSnow(renderRegion, blockPos.up())) return state;
 
-        if (snowNeighbour == Blocks.SNOW) {
-            if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) {
-                if (state.getOrEmpty(Properties.SNOWY).isPresent()) {
-                    return state.with(Properties.SNOWY, true);
-                }
-            }
-        }
+        if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) return state.with(Properties.SNOWY, true);
+
         return state;
     }
 }
-//?}

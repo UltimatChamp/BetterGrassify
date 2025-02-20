@@ -1,7 +1,11 @@
 plugins.apply "dev.kikugie.stonecutter"
 
 stonecutter.active "1.21.4-fabric" /* [SC] DO NOT EDIT */
-stonecutter.automaticPlatformConstants = true
+
+stonecutter.parameters {
+    def loader = property("loom.platform")
+    consts(loader, "fabric", "neoforge")
+}
 
 stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {
     setGroup "project"

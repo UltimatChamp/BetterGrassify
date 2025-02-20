@@ -20,7 +20,7 @@ public final class BetterGrassifyNeo {
     }
 
     private void onClientSetup(FMLClientSetupEvent event) {
-        var config = BetterGrassifyConfig.load();
+        BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
         if (config.betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
             BetterGrassify.LOGGER.info("[BetterGrassify] Better Grass is disabled.");

@@ -1,4 +1,3 @@
-//? if !forge {
 package dev.ultimatchamp.bettergrass.config;
 
 import com.google.common.collect.Lists;
@@ -13,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 public class BetterGrassifyGui {
     public static Screen createConfigScreen(Screen parent) {
-        var config = BetterGrassifyConfig.load();
+        BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
         return YetAnotherConfigLib.createBuilder()
                 .title(Text.translatable("bettergrass.title"))
@@ -170,11 +169,7 @@ public class BetterGrassifyGui {
                                         () -> config.betterSnowMode,
                                         (value) -> config.betterSnowMode = value
                                 )
-                                //? if >1.20.6 {
                                 .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
-                                //?} else {
-                                /*.available(!(!FabricLoader.getInstance().isModLoaded("sodium") || FabricLoader.getInstance().isModLoaded("wilderwild")))
-                                 *///?}
                                 .customController(opt -> new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
                                 .build())
                         .group(ListOption.<String>createBuilder()
@@ -235,7 +230,7 @@ public class BetterGrassifyGui {
                 .save(() -> {
                             BetterGrassifyConfig.save(config);
 
-                            var world = MinecraftClient.getInstance();
+                            MinecraftClient world = MinecraftClient.getInstance();
                             if (world != null) {
                                 world.reloadResources();
                             }
@@ -245,4 +240,3 @@ public class BetterGrassifyGui {
                 .generateScreen(parent);
     }
 }
-//?}

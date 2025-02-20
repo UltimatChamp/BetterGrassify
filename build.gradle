@@ -1,13 +1,12 @@
 plugins {
     id "dev.architectury.loom" version "1.9-SNAPSHOT"
-    id "me.modmuss50.mod-publish-plugin" version "0.8.3"
+    id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
 
 def loader = property("loom.platform")
 
 def isFabric = loader == "fabric"
 def isNeo = loader == "neoforge"
-def isForge = loader == "forge"
 
 def isSnapshot = false
 def mcVer = property("deps.minecraft_version")
@@ -42,11 +41,6 @@ repositories {
 }
 
 loom {
-    runConfigs.all {
-        ideConfigGenerated true
-        runDir "../../run"
-    }
-
     if (loader == "forge") {
         forge {
             mixinConfig "bettergrass.mixins.json"
@@ -74,13 +68,6 @@ dependencies {
 
         modImplementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:${property("deps.fapi_version")}"
         modImplementation "maven.modrinth:sodium:${property("deps.sodium_version")}"
-    } else if (isForge) {
-        forge "net.minecraftforge:forge:${property("deps.fml")}"
-
-        modImplementation "dev.su5ed.sinytra.fabric-api:fabric-api:${property("deps.fapi_version")}"
-        compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-        modImplementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
-        modImplementation "maven.modrinth:embeddium:${property("deps.embeddium_version")}"
     }
 
     include(modImplementation("blue.endless:jankson:${property("deps.jankson_version")}"))
@@ -123,21 +110,10 @@ processResources {
             expand replaceProperties
         }
         exclude(["fabric.mod.json", "META-INF/mods.toml"])
-    } else if (isForge) {
-        filesMatching("META-INF/mods.toml") {
-            expand replaceProperties
-        }
-        exclude(["fabric.mod.json", "META-INF/neoforge.mods.toml"])
     }
 
     def packFormat
     switch (project.property("deps.minecraft_version")) {
-        case "1.20.1":
-            packFormat = 15
-            break
-        case "1.20.6":
-            packFormat = 32
-            break
         case "1.21.1":
             packFormat = 34
             break;
@@ -156,11 +132,8 @@ processResources {
 java {
     withSourcesJar()
 
-    def java = stonecutter.eval(project.property("deps.minecraft_version"), ">=1.20.5")
-            ? JavaVersion.VERSION_21 : JavaVersion.VERSION_17
-
-    sourceCompatibility = java
-    targetCompatibility = java
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
@@ -189,9 +162,6 @@ publishMods {
     } else if (isNeo) {
         fapi = "forgified-fabric-api"
         modLoaders.add("neoforge")
-    } else {
-        fapi = "forgified-fabric-api"
-        modLoaders.add("forge")
     }
 
     def mrOptions = modrinthOptions {
@@ -215,54 +185,6 @@ publishMods {
         // Discord
         announcementTitle = "Download from CurseForge"
         projectSlug = "bettergrassify"
-    }
-
-    if (project.property("deps.minecraft_version") == "1.20.1") {
-        modrinth("m1.20.1") {
-            from mrOptions
-
-            if (isFabric) {
-                minecraftVersionRange {
-                    start = "1.20"
-                    end = "1.20.4"
-                }
-            } else {
-                minecraftVersions.add("1.20.1")
-            }
-        }
-
-        curseforge("c1.20.1") {
-            from cfOptions
-
-            if (isFabric) {
-                minecraftVersionRange {
-                    start = "1.20"
-                    end = "1.20.4"
-                }
-            } else {
-                minecraftVersions.add("1.20.1")
-            }
-        }
-    }
-
-    if (project.property("deps.minecraft_version") == "1.20.6") {
-        modrinth("m1.20.6") {
-            from mrOptions
-
-            minecraftVersionRange {
-                start = "1.20.5"
-                end = "1.20.6"
-            }
-        }
-
-        curseforge("c1.20.6") {
-            from cfOptions
-
-            minecraftVersionRange {
-                start = "1.20.5"
-                end = "1.20.6"
-            }
-        }
     }
 
     if (project.property("deps.minecraft_version") == "1.21.1") {
