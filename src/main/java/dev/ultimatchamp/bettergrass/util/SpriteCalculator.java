@@ -35,6 +35,6 @@ public final class SpriteCalculator {
             }
         }
 
-        return model.getParticleSprite();
+        return null;
     }
 }

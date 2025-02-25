@@ -16,7 +16,10 @@ public class NoYACLWarning extends Screen {
     protected void init() {
         super.init();
 
-        ButtonWidget btn = ButtonWidget.builder(Text.translatable("dataPack.validation.back"), button -> this.client.setScreen(parent)).dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20).build();
+        ButtonWidget btn = ButtonWidget.builder(Text.translatable("dataPack.validation.back"),
+                button -> this.client.setScreen(parent))
+                .dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
+                .build();
         this.addDrawableChild(btn);
     }
 
@@ -27,7 +30,8 @@ public class NoYACLWarning extends Screen {
 
         Text warning = Text.translatable("bettergrass.noyacl.warn");
         //? if >1.21.3 {
-        context.drawWrappedText(this.textRenderer, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF, true);
+        context.drawWrappedText(this.textRenderer, warning, this.width / 2 - 100, this.height / 2 - 50, 200,
+                                0xFFFFFFFF, true);
         //?} else {
         /*context.drawTextWrapped(this.textRenderer, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF);
         *///?}

@@ -19,7 +19,8 @@ import net.caffeinemc.mods.sodium.client.gui.options.control.TickBoxControl;
 
 @Mixin(value = SodiumGameOptionPages.class, remap = false)
 public class SodiumGameOptionsPagesMixin {
-    @Inject(method = "quality", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup;createBuilder()Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup$Builder;", ordinal = 1, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
+    @Inject(method = "quality", at = @At(value = "INVOKE", target = "Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup;createBuilder()Lnet/caffeinemc/mods/sodium/client/gui/options/OptionGroup$Builder;", ordinal = 1,
+            shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILSOFT, remap = false)
     private static void bettergrass$quality(CallbackInfoReturnable<OptionPage> cir, List<OptionGroup> groups) {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
@@ -27,7 +28,8 @@ public class SodiumGameOptionsPagesMixin {
                 .add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterGrassMode.class, SodiumOptionsStorage.INSTANCE)
                         .setName(Text.translatable("bettergrass.betterGrassMode"))
                         .setTooltip(Text.translatable("bettergrass.betterGrassMode.desc"))
-                        .setControl((opt) -> new CyclingControl<>(opt, BetterGrassifyConfig.BetterGrassMode.class, new Text[]{
+                        .setControl((opt) ->
+                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterGrassMode.class, new Text[]{
                                 Text.translatable("options.off"),
                                 Text.translatable("options.graphics.fast"),
                                 Text.translatable("options.graphics.fancy")
@@ -122,7 +124,8 @@ public class SodiumGameOptionsPagesMixin {
                 ).add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterSnowMode.class, SodiumOptionsStorage.INSTANCE)
                         .setName(Text.translatable("bettergrass.betterSnowMode"))
                         .setTooltip(Text.translatable("bettergrass.betterSnowMode.desc"))
-                        .setControl((opt) -> new CyclingControl<>(opt, BetterGrassifyConfig.BetterSnowMode.class, new Text[]{
+                        .setControl((opt) ->
+                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterSnowMode.class, new Text[]{
                                 Text.translatable("options.off"),
                                 Text.translatable("bettergrass.betterSnowMode.optifine"),
                                 Text.translatable("bettergrass.betterSnowMode.lambda")

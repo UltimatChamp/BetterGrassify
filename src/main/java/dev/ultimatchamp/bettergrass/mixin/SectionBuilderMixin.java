@@ -35,9 +35,11 @@ public class SectionBuilderMixin {
     private BlockRenderManager blockRenderManager;
 
     //? if fabric {
-    @Inject(method = "build", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V"))
+    @Inject(method = "build", at = @At(value = "INVOKE",
+            target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V"))
     //?} else if neoforge {
-    /*@Inject(method = "compile", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBatched(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/render/RenderLayer;)V"))
+    /*@Inject(method = "compile", at = @At(value = "INVOKE",
+              target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBatched(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/render/RenderLayer;)V"))
     *///?}
     private void bettergrass$render(ChunkSectionPos sectionPos,
                         ChunkRendererRegion renderRegion,
@@ -58,7 +60,8 @@ public class SectionBuilderMixin {
             if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) {
                 matrixStack.push();
                 matrixStack.translate(0, 1, 0);
-                blockRenderManager.renderBlock(snowNeighbour.getDefaultState(), blockPos.up(), renderRegion, matrixStack, bufferBuilder, true, random);
+                blockRenderManager.renderBlock(snowNeighbour.getDefaultState(), blockPos.up(), renderRegion,
+                                               matrixStack, bufferBuilder, true, random);
                 matrixStack.pop();
             }
         }
@@ -69,11 +72,13 @@ public class SectionBuilderMixin {
     //?} else if neoforge {
     /*@ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
     *///?}
-    private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos, @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
+    private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos,
+                                                 @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
         if (state.getOrEmpty(Properties.SNOWY).isEmpty()) return state;
         if (BetterGrassifyBakedModel.isNeighbourSnow(renderRegion, blockPos.up())) return state;
 
-        if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) return state.with(Properties.SNOWY, true);
+        if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up()))
+            return state.with(Properties.SNOWY, true);
 
         return state;
     }

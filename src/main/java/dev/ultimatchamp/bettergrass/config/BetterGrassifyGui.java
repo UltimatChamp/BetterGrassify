@@ -22,14 +22,16 @@ public class BetterGrassifyGui {
                                 .name(Text.translatable("bettergrass.betterGrassMode"))
                                 .description(OptionDescription.createBuilder()
                                         .text(Text.translatable("bettergrass.betterGrassMode.desc"))
-                                        .webpImage(Identifier.of("bettergrass", "textures/images/bettergrassmode.webp"))
+                                        .webpImage(Identifier.of("bettergrass",
+                                                   "textures/images/bettergrassmode.webp"))
                                         .build())
                                 .binding(
                                         BetterGrassifyConfig.BetterGrassMode.FANCY,
                                         () -> config.betterGrassMode,
                                         (value) -> config.betterGrassMode = value
                                 )
-                                .customController(opt -> new EnumController<>(opt, BetterGrassifyConfig.BetterGrassMode.class))
+                                .customController(opt ->
+                                        new EnumController<>(opt, BetterGrassifyConfig.BetterGrassMode.class))
                                 .build())
                         .option(Option.<Boolean>createBuilder()
                                 .name(Text.translatable("bettergrass.resourcePackCompatibilityMode"))
@@ -170,7 +172,8 @@ public class BetterGrassifyGui {
                                         (value) -> config.betterSnowMode = value
                                 )
                                 .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
-                                .customController(opt -> new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
+                                .customController(opt ->
+                                        new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
                                 .build())
                         .group(ListOption.<String>createBuilder()
                                 .name(Text.translatable("bettergrass.snowLayers"))

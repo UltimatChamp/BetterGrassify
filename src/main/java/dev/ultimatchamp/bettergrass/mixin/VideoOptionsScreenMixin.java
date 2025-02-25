@@ -27,6 +27,9 @@ public abstract class VideoOptionsScreenMixin extends GameOptionsScreen {
             )
     )
     private void bettergrass$addConfigButton(CallbackInfo ci) {
-        this.body.addSingleOptionEntry(new SimpleOption<>("bettergrass.title", SimpleOption.constantTooltip(Text.empty()), (arg, object) -> Text.empty(), SimpleOption.BOOLEAN, true, (parent) -> this.client.setScreen(BetterGrassifyConfig.createConfigScreen(this))));
+        this.body.addSingleOptionEntry(new SimpleOption<>("bettergrass.title",
+                                       SimpleOption.constantTooltip(Text.empty()), (arg, object) ->
+                                       Text.empty(), SimpleOption.BOOLEAN, true, (parent) ->
+                                       this.client.setScreen(BetterGrassifyConfig.createConfigScreen(this))));
     }
 }

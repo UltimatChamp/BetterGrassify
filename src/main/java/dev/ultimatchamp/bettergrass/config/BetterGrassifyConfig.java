@@ -141,13 +141,13 @@ public class BetterGrassifyConfig {
 
         try {
             if (!Files.exists(CONFIG_PATH)) {
-                BetterGrassify.LOGGER.info("[{}] Config file not found. Creating a new one...", BetterGrassify.MOD_ID);
+                BetterGrassify.LOGGER.info("[BetterGrassify] Config file not found. Creating a new one...");
                 save(config = new BetterGrassifyConfig());
             } else {
                 String configContent = Files.readString(CONFIG_PATH).trim();
 
                 if (!configContent.startsWith("{") || !configContent.endsWith("}")) {
-                    BetterGrassify.LOGGER.warn("[{}] Config file is empty or invalid. Creating a new one...", BetterGrassify.MOD_ID);
+                    BetterGrassify.LOGGER.warn("[BetterGrassify] Config file is empty or invalid. Creating a new one...");
                     save(config = new BetterGrassifyConfig());
                 } else {
                     JsonObject configJson = ensureDefaults(JANKSON.load(configContent));
@@ -155,7 +155,7 @@ public class BetterGrassifyConfig {
                 }
             }
         } catch (IOException | SyntaxError e) {
-            BetterGrassify.LOGGER.error("[{}]", BetterGrassify.MOD_ID, e);
+            BetterGrassify.LOGGER.error("[BetterGrassify]", e);
             save(config = new BetterGrassifyConfig());
         }
 
@@ -169,7 +169,7 @@ public class BetterGrassifyConfig {
             Files.writeString(CONFIG_PATH, jsonString);
             cachedConfig = config;
         } catch (IOException e) {
-            BetterGrassify.LOGGER.error("[{}]", BetterGrassify.MOD_ID, e);
+            BetterGrassify.LOGGER.error("[BetterGrassify]", e);
         }
     }
 
@@ -185,12 +185,12 @@ public class BetterGrassifyConfig {
                 Object defaultValue = field.get(defaultConfig);
 
                 if (!configJson.containsKey(fieldName)) {
-                    BetterGrassify.LOGGER.info("[{}] Missing config field '{}'. Re-saving as default.", BetterGrassify.MOD_ID, fieldName);
+                    BetterGrassify.LOGGER.info("[BetterGrassify] Missing config field '{}'. Re-saving as default.", fieldName);
                     configJson.put(fieldName, JANKSON.toJson(defaultValue));
                     modified = true;
                 }
             } catch (IllegalAccessException e) {
-                BetterGrassify.LOGGER.error("[{}] Failed to access field '{}'", BetterGrassify.MOD_ID, field.getName(), e);
+                BetterGrassify.LOGGER.error("[BetterGrassify] Failed to access field '{}'", field.getName(), e);
             }
         }
 

@@ -4,10 +4,8 @@ import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class BetterGrassify {
     public static final String MOD_ID = "bettergrass";
@@ -16,17 +14,15 @@ public class BetterGrassify {
     public static List<String> getBlocks() {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
-        List<String> blocks = Stream.of(
-                Map.entry(config.grassBlocks, "minecraft:grass_block"),
-                Map.entry(config.dirtPaths, "minecraft:dirt_path"),
-                Map.entry(config.farmLands, "minecraft:farmland"),
-                Map.entry(config.podzol, "minecraft:podzol"),
-                Map.entry(config.mycelium, "minecraft:mycelium"),
-                Map.entry(config.crimsonNylium, "minecraft:crimson_nylium"),
-                Map.entry(config.warpedNylium, "minecraft:warped_nylium")
-        ).filter(Map.Entry::getKey)
-        .map(Map.Entry::getValue)
-        .collect(Collectors.toList());
+        List<String> blocks = new ArrayList<>();
+
+        if (config.grassBlocks) blocks.add("minecraft:grass_block");
+        if (config.dirtPaths) blocks.add("minecraft:dirt_path");
+        if (config.farmLands) blocks.add("minecraft:farmland");
+        if (config.podzol) blocks.add("minecraft:podzol");
+        if (config.mycelium) blocks.add("minecraft:mycelium");
+        if (config.crimsonNylium) blocks.add("minecraft:crimson_nylium");
+        if (config.warpedNylium) blocks.add("minecraft:warped_nylium");
 
         blocks.addAll(config.moreBlocks);
 

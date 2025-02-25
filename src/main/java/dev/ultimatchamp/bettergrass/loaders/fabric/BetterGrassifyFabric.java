@@ -28,13 +28,15 @@ public class BetterGrassifyFabric implements ClientModInitializer {
         if (config.betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
             BetterGrassify.LOGGER.info("[BetterGrassify] Better Grass is disabled.");
         } else {
-            BetterGrassify.LOGGER.info("[BetterGrassify] [{}] Gamers can finally touch grass!?", config.betterGrassMode.toString());
+            BetterGrassify.LOGGER.info("[BetterGrassify] [{}] Gamers can finally touch grass!?",
+                                       config.betterGrassMode.toString());
         }
 
         if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
             config.snowy = false;
             config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
-            BetterGrassify.LOGGER.warn("[BetterGrassify] WilderWild detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.");
+            BetterGrassify.LOGGER.warn("[BetterGrassify] WilderWild detected. " +
+                                       "'Better Snowy Grass' and 'Better Snow' features have been disabled.");
         }
 
         ModelLoadingPlugin.register(pluginContext -> pluginContext

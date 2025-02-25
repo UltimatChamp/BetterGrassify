@@ -50,18 +50,22 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     @Override
     //? if >1.21.3 {
-    public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos,
+                               Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         emitter.pushTransform(quad -> {
     //?} else {
-    /*public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    /*public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos,
+                                 Supplier<Random> randomSupplier, RenderContext context) {
         context.pushTransform(quad -> {
     *///?}
-            if (quad.nominalFace().getAxis() == Direction.Axis.Y || !isFullQuad(quad)) {
-                return true;
-            }
+            if (!BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF)) {
+                if (quad.nominalFace().getAxis().isVertical() ||
+                    state.hasBlockEntity() ||
+                    !isFullQuad(quad)
+                ) return true;
 
-            if (!BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF))
-                betterGrassify(quad, blockView, state, pos, randomSupplier, BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FANCY));
+                betterGrassify(quad, blockView, state, pos, randomSupplier);
+            }
 
             return true;
         });
@@ -75,14 +79,15 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         *///?}
     }
 
-    public void betterGrassify(MutableQuadView quad, BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, boolean isFancy) {
+    public void betterGrassify(MutableQuadView quad, BlockRenderView world, BlockState state, BlockPos pos,
+                               Supplier<Random> randomSupplier) {
         // Fix dirt paths connection, only if on a dirt block
         if (state.isOf(Blocks.DIRT) && isBelowNonFullBlock(world, pos, quad.nominalFace())) {
             dirtSpriteBake(quad, world, pos, randomSupplier);
             return;
         }
 
-        if (isFancy) {
+        if (BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FANCY)) {
             Direction face = quad.nominalFace();
 
             if (canFullyConnect(world, state, pos, face)) {
@@ -109,15 +114,21 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
     }
 
-    public void betterSnowyGrass(MutableQuadView quad, BlockRenderView world, BlockPos pos, Supplier<Random> randomSupplier) {
+    public void betterSnowyGrass(MutableQuadView quad, BlockRenderView world, BlockPos pos,
+                                 Supplier<Random> randomSupplier) {
         Direction face = quad.nominalFace();
         BlockPos adjacentPos = pos.offset(face);
 
-        if (isSnowy(world, pos) && canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) { // Self: Snowy Grass | Below: Ghost Snow
+        if (isSnowy(world, pos) && canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) {
+            // Self: Snowy Grass | Below: Ghost Snow
             spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
-        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) && isSnowy(world, adjacentPos.down())) { // Self: Ghost Snow | Below: Snowy Grass
+        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) &&
+                   isSnowy(world, adjacentPos.down())) {
+            // Self: Ghost Snow | Below: Snowy Grass
             spriteBake(quad, world.getBlockState(adjacentPos), randomSupplier);
-        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) && canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) { // Self: Ghost Snow | Below: Ghost Snow
+        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) &&
+                   canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) {
+            // Self: Ghost Snow | Below: Ghost Snow
             if (!BetterGrassifyConfig.load().snowy) return; // Better Snow Mode check, as both self and below have ghost snow
             spriteBake(quad, snowNeighbour(world, pos.up()).getDefaultState(), randomSupplier);
         }
@@ -135,7 +146,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return true;
     }
 
-    private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos, Direction direction) {
+    private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos,
+                                           Direction direction) {
         return canConnect(world, self, selfPos, selfPos.offset(direction).down());
     }
 
@@ -144,7 +156,9 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         BlockPos upPos = adjacentPos.up();
         BlockState up = world.getBlockState(upPos);
 
-        return canConnect(self, adjacent) && (up.isAir() || isSnowy(world, selfPos) || !up.isSideSolidFullSquare(world, upPos, Direction.DOWN));
+        return canConnect(self, adjacent) &&
+               (up.isAir() || isSnowy(world, selfPos) ||
+               !up.isSideSolidFullSquare(world, upPos, Direction.DOWN));
     }
 
     private static boolean canConnect(BlockState self, BlockState adjacent) {
@@ -185,13 +199,15 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
             for (int i = 0; i < 4; i++) {
                 BlockState state = world.getBlockState(directions[i]);
-                isSnow[i] = state.isOf(layer.get()) || (id.equals("snow") && (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)));
+                isSnow[i] = state.isOf(layer.get()) || (id.equals("snow") &&
+                            (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)));
             }
 
             boolean layerCheck =
                     switch (BetterGrassifyConfig.load().betterSnowMode) {
-                        case OPTIFINE -> isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3];
-                        case LAMBDA -> ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) || (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]);
+                        case OPTIFINE -> isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3]; // Any 1 neighbouring layer
+                        case LAMBDA -> ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) ||
+                                       (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]); // Any 2 neighbouring layers
                         default -> false;
                     };
 
@@ -212,6 +228,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
         if (self.isAir() ||
             self.isOf(Blocks.WATER) ||
+            self.hasBlockEntity() ||
             self.isSideSolidFullSquare(world, selfPos, Direction.DOWN) ||
             !world.getBlockState(selfPos.down()).isOpaqueFullCube(/*? if <1.21.3 {*//*world, selfPos.down()*//*?}*/)
         ) return false;
@@ -228,7 +245,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     private static boolean isBlockExcluded(BlockState self) {
         boolean isExcluded = false;
 
-        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
+            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().excludedBlocks) {
                 if (matchesBlock(self, block)) {
                     isExcluded = true;
@@ -251,7 +269,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     private static boolean isTagExcluded(BlockState self, boolean isExcludedBlock) {
         boolean isExcluded = false;
 
-        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
+            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
             for (String tag : BetterGrassifyConfig.load().excludedTags) {
                 if (self.isIn(TagKey.of(RegistryKeys.BLOCK, Identifier.tryParse(tag)))) {
                     isExcluded = true;
@@ -308,7 +327,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         if (sprite != null) quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
     }
 
-    private static void dirtSpriteBake(MutableQuadView quad, BlockRenderView world, BlockPos selfPos, Supplier<Random> randomSupplier) {
+    private static void dirtSpriteBake(MutableQuadView quad, BlockRenderView world, BlockPos selfPos,
+                                       Supplier<Random> randomSupplier) {
         BlockPos upPos = selfPos.up();
         BlockState up = world.getBlockState(upPos);
 
