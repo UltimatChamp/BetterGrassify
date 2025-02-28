@@ -222,7 +222,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     public static boolean isLayerNeighbourSnow(BlockRenderView world, BlockPos selfPos) {
-        return getLayerNeighbour(world, selfPos).isOf(Blocks.SNOW);
+        BlockState layerNeighbour = getLayerNeighbour(world, selfPos);
+        return layerNeighbour != null && layerNeighbour.isOf(Blocks.SNOW);
     }
 
     public static boolean canHaveGhostSnowLayer(BlockRenderView world, BlockPos selfPos) {
