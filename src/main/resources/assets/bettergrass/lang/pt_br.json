@@ -21,6 +21,5 @@
   "bettergrass.snowLayers": "Mais camadas semelhantes à neve",
   "bettergrass.excludedTags": "Tags excluídas",
   "bettergrass.excludedBlocks": "Blocos excluídos",
-  "bettergrass.noconfig.warn": "§cBetterGrassify para (Neo)Forge 1.20.1 está indisponivel para mostrar a tela de configuração devido à uma limitação no Forge. Por favor, utilize os arquivos de configuração no lugar. Desculpe pela inconveniência!§r\n\n Se estiver usando o Embeddium, você poderá alterar a maioria das configurações na seção \"Menu de Configurações de Vídeo\".",
   "bettergrass.noyacl.warn": "§cO BetterGrassify não pode exibir uma tela de configuração porque o mod YetAnotherConfigLib não está instalado. Em vez disso, use o arquivo de configuração. Desculpe pelo incômodo!§r\n\nSe estiver usando o Sodium, você poderá alterar a maioria das configurações no arquivo \"Menu de Configurações de Vídeo\"."
 }

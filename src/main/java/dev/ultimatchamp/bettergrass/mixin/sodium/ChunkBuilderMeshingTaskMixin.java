@@ -2,7 +2,6 @@ package dev.ultimatchamp.bettergrass.mixin.sodium;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
-import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.state.property.Properties;
@@ -37,19 +36,18 @@ public class ChunkBuilderMeshingTaskMixin {
                          @Local(ordinal = 0) BlockPos.Mutable pos,
                          @Local(ordinal = 1) BlockPos.Mutable modelOffset,
                          @Local LocalRef<BlockState> blockState) {
-        Block snowNeighbour = BetterGrassifyBakedModel.snowNeighbour(slice, pos.up());
+        BlockState layerNeighbour = BetterGrassifyBakedModel.getLayerNeighbour(slice, pos.up());
 
-        if (snowNeighbour != null) {
-            if (BetterGrassifyBakedModel.canHaveSnowLayer(slice, pos.up())) {
-                if (snowNeighbour == Blocks.SNOW) {
+        if (layerNeighbour != null) {
+            if (BetterGrassifyBakedModel.canHaveGhostLayer(slice, pos.up())) {
+                if (layerNeighbour.isOf(Blocks.SNOW)) {
                     if (blockState.get().getOrEmpty(Properties.SNOWY).isPresent()) {
                         blockState.set(blockState.get().with(Properties.SNOWY, true));
                     }
                 }
 
-                BlockState state = snowNeighbour.getDefaultState();
-                BakedModel model = cache.getBlockModels().getModel(state);
-                cache.getBlockRenderer().renderModel(model, state, pos.up(), modelOffset.up());
+                BakedModel model = cache.getBlockModels().getModel(layerNeighbour);
+                cache.getBlockRenderer().renderModel(model, layerNeighbour, pos.up(), modelOffset.up());
             }
         }
     }

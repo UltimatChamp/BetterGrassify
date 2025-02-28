@@ -21,6 +21,5 @@
   "bettergrass.snowLayers": "More Snow-like Layers",
   "bettergrass.excludedTags": "Excluded Tags",
   "bettergrass.excludedBlocks": "Excluded Blocks",
-  "bettergrass.noconfig.warn": "§c由于Forge中的限制，BetterGrassify 的 (Neo)Forge 1.20.1 版本无法显示配置屏幕，请改用配置文件Config，为您带来不便敬请谅解！§r\n\n但如果您使用的是Embeddium，则可以在\"视频设置\"中更改大多数设置",
   "bettergrass.noyacl.warn": "§cBetterGrassify is unable to display a configuration screen because YetAnotherConfigLib mod is not installed. Please use the configuration file instead. Sorry for the inconvenience!§r\n\n但如果您使用的是Sodium，则可以在\"视频设置\"中更改大多数设置"
 }

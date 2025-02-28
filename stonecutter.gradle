@@ -3,8 +3,10 @@ plugins.apply "dev.kikugie.stonecutter"
 stonecutter.active "1.21.4-fabric" /* [SC] DO NOT EDIT */
 
 stonecutter.parameters {
-    def loader = property("loom.platform")
-    consts(loader, "fabric", "neoforge")
+    def current = property("loom.platform")
+    def loaders = ["fabric", "neoforge"]
+
+    consts(current, loaders)
 }
 
 stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) {

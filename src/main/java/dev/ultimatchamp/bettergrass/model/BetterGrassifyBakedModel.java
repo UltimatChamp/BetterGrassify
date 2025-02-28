@@ -104,9 +104,9 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             if (isSnowy(world, pos)) {
                 spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
                 return;
-            } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up())) {
+            } else if (canHaveGhostSnowLayer(world, pos.up())) {
                 if (!BetterGrassifyConfig.load().snowy) return; // Better Snow Mode check, as block has ghost snow
-                spriteBake(quad, snowNeighbour(world, pos.up()).getDefaultState(), randomSupplier);
+                spriteBake(quad, getLayerNeighbour(world, pos.up()), randomSupplier);
                 return;
             }
 
@@ -119,18 +119,16 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         Direction face = quad.nominalFace();
         BlockPos adjacentPos = pos.offset(face);
 
-        if (isSnowy(world, pos) && canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) {
+        if (isSnowy(world, pos) && canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Snowy Grass | Below: Ghost Snow
             spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
-        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) &&
-                   isSnowy(world, adjacentPos.down())) {
+        } else if (canHaveGhostSnowLayer(world, pos.up()) && isSnowy(world, adjacentPos.down())) {
             // Self: Ghost Snow | Below: Snowy Grass
             spriteBake(quad, world.getBlockState(adjacentPos), randomSupplier);
-        } else if (canHaveSnowLayer(world, pos.up()) && isNeighbourSnow(world, pos.up()) &&
-                   canHaveSnowLayer(world, adjacentPos) && isNeighbourSnow(world, adjacentPos)) {
+        } else if (canHaveGhostSnowLayer(world, pos.up()) && canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Ghost Snow | Below: Ghost Snow
             if (!BetterGrassifyConfig.load().snowy) return; // Better Snow Mode check, as both self and below have ghost snow
-            spriteBake(quad, snowNeighbour(world, pos.up()).getDefaultState(), randomSupplier);
+            spriteBake(quad, getLayerNeighbour(world, pos.up()), randomSupplier);
         }
     }
 
@@ -182,7 +180,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return self.getOrEmpty(Properties.SNOWY).orElse(false) && !world.getBlockState(selfPos.up()).isAir();
     }
 
-    public static Block snowNeighbour(BlockRenderView world, BlockPos selfPos) {
+    public static BlockState getLayerNeighbour(BlockRenderView world, BlockPos selfPos) {
         for (String id : BetterGrassifyConfig.load().snowLayers) {
             Identifier identifier = Identifier.tryParse(id);
 
@@ -211,17 +209,27 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                         default -> false;
                     };
 
-            if (layerCheck) return layer.get();
+            if (!layerCheck) continue;
+
+            for (BlockPos direction : directions) {
+                BlockState state = world.getBlockState(direction);
+                if (state.isOf(layer.get()) || (id.equals("snow") &&
+                        (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))) return state;
+            }
         }
 
         return null;
     }
 
-    public static boolean isNeighbourSnow(BlockRenderView world, BlockPos selfPos) {
-        return snowNeighbour(world, selfPos) == Blocks.SNOW;
+    public static boolean isLayerNeighbourSnow(BlockRenderView world, BlockPos selfPos) {
+        return getLayerNeighbour(world, selfPos).isOf(Blocks.SNOW);
     }
 
-    public static boolean canHaveSnowLayer(BlockRenderView world, BlockPos selfPos) {
+    public static boolean canHaveGhostSnowLayer(BlockRenderView world, BlockPos selfPos) {
+        return canHaveGhostLayer(world, selfPos) && isLayerNeighbourSnow(world, selfPos);
+    }
+
+    public static boolean canHaveGhostLayer(BlockRenderView world, BlockPos selfPos) {
         if (BetterGrassifyConfig.load().betterSnowMode == BetterGrassifyConfig.BetterSnowMode.OFF) return false;
 
         BlockState self = world.getBlockState(selfPos);
@@ -233,7 +241,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             !world.getBlockState(selfPos.down()).isOpaqueFullCube(/*? if <1.21.3 {*//*world, selfPos.down()*//*?}*/)
         ) return false;
 
-        boolean isLayer = snowNeighbour(world, selfPos) != null;
+        boolean isLayer = getLayerNeighbour(world, selfPos) != null;
         if (!isLayer) return false;
 
         boolean isExcludedBlock = isBlockExcluded(self);

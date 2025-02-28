@@ -3,7 +3,6 @@ package dev.ultimatchamp.bettergrass.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.VertexSorter;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.block.BlockRenderManager;
@@ -49,18 +48,17 @@ public class SectionBuilderMixin {
                         /*List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
                         *///?}
                         CallbackInfoReturnable<SectionBuilder.RenderData> cir,
-                        @Local BlockState blockState,
                         @Local(ordinal = 2) BlockPos blockPos,
                         @Local MatrixStack matrixStack,
                         @Local BufferBuilder bufferBuilder,
                         @Local Random random) {
-        Block snowNeighbour = BetterGrassifyBakedModel.snowNeighbour(renderRegion, blockPos.up());
+        BlockState layerNeighbour = BetterGrassifyBakedModel.getLayerNeighbour(renderRegion, blockPos.up());
 
-        if (snowNeighbour != null) {
-            if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up())) {
+        if (layerNeighbour != null) {
+            if (BetterGrassifyBakedModel.canHaveGhostLayer(renderRegion, blockPos.up())) {
                 matrixStack.push();
                 matrixStack.translate(0, 1, 0);
-                blockRenderManager.renderBlock(snowNeighbour.getDefaultState(), blockPos.up(), renderRegion,
+                blockRenderManager.renderBlock(layerNeighbour, blockPos.up(), renderRegion,
                                                matrixStack, bufferBuilder, true, random);
                 matrixStack.pop();
             }
@@ -75,9 +73,9 @@ public class SectionBuilderMixin {
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos,
                                                  @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
         if (state.getOrEmpty(Properties.SNOWY).isEmpty()) return state;
-        if (BetterGrassifyBakedModel.isNeighbourSnow(renderRegion, blockPos.up())) return state;
+        if (!BetterGrassifyBakedModel.isLayerNeighbourSnow(renderRegion, blockPos.up())) return state;
 
-        if (BetterGrassifyBakedModel.canHaveSnowLayer(renderRegion, blockPos.up()))
+        if (BetterGrassifyBakedModel.canHaveGhostLayer(renderRegion, blockPos.up()))
             return state.with(Properties.SNOWY, true);
 
         return state;
