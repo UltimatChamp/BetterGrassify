@@ -39,17 +39,18 @@ public class BetterGrassifyFabric implements ClientModInitializer {
                                        "'Better Snowy Grass' and 'Better Snow' features have been disabled.");
         }
 
+        //? if >1.21.1 {
         ModelLoadingPlugin.register(pluginContext -> pluginContext
         //? if >1.21.3 {
         .modifyBlockModelOnLoad()
-        //?} else if >1.21.1 {
+        //?} else {
         /*.modifyModelOnLoad()
         *///?}
         .register(ModelModifier.WRAP_LAST_PHASE, (model, context) -> {
             //? if >1.21.3 {
             ModelIdentifier modelId = context.id();
-            //?} else if >1.21.1 {
-            /*ModelIdentifier modelId = context.topLevelId()
+            //?} else {
+            /*ModelIdentifier modelId = context.topLevelId();
             *///?}
 
             if (!modelId.getVariant().equals("inventory")) {
@@ -61,14 +62,14 @@ public class BetterGrassifyFabric implements ClientModInitializer {
                             if (BetterGrassifyConfig.load().snowy) {
                                 //? if >1.21.3 {
                                 return new BetterGrassifyGroupableModel(model);
-                                //?} else if >1.21.1 {
+                                //?} else {
                                 /*return new BetterGrassifyUnbakedModel(model);
                                 *///?}
                             }
                         } else {
                             //? if >1.21.3 {
                             return new BetterGrassifyGroupableModel(model);
-                            //?} else if >1.21.1 {
+                            //?} else {
                             /*return new BetterGrassifyUnbakedModel(model);
                             *///?}
                         }
@@ -79,7 +80,7 @@ public class BetterGrassifyFabric implements ClientModInitializer {
                     if (modelId.id().toString().equals("minecraft:dirt")) {
                         //? if >1.21.3 {
                         return new BetterGrassifyGroupableModel(model);
-                        //?} else if >1.21.1 {
+                        //?} else {
                         /*return new BetterGrassifyUnbakedModel(model);
                         *///?}
                     }
@@ -88,6 +89,7 @@ public class BetterGrassifyFabric implements ClientModInitializer {
 
             return model;
         }));
+        //?}
     }
 }
 //?}

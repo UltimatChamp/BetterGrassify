@@ -82,6 +82,13 @@ if (stonecutter.current.isActive) {
     }
 }
 
+afterEvaluate {
+    stonecutter {
+        stonecutter.const("fabric", isFabric)
+        stonecutter.const("neoforge", isNeo)
+    }
+}
+
 processResources {
     var replaceProperties = [
             minecraft_range      : project.property("deps.mc_range"),
