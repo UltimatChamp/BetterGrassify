@@ -1,4 +1,5 @@
 {
+  "modmenu.descriptionTranslation.bettergrass": "Gamers can finally touch grass!?\\nOptiFine\\u0027s Fancy and Fast better grass implemented on Fabric and NeoForge!",
   "bettergrass.title": "BetterGrassify Config",
   "bettergrass.betterGrassMode": "Better Grass Mode",
   "bettergrass.betterGrassMode.desc": "§4Off §r- Grass Blocks look normal\n§3Fast §r- Top Grass texture will be applied to all sides of the Grass Blocks (fast)\n§dFancy §r- Top Grass texture will be applied dynamically to required sides of the Grass Blocks (slow)",
