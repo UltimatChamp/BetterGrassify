@@ -136,12 +136,16 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         if (!BetterGrassifyConfig.load().resourcePackCompatibilityMode) return true;
 
         float tolerance = 1 / 16f; // 1 pixel
+        float minY = Float.MAX_VALUE;
+        float maxY = Float.MIN_VALUE;
+
         for (int i = 0; i < 4; i++) {
             float y = quad.y(i);
-            if (Math.abs(y - Math.round(y)) > tolerance) return false;
+            minY = Math.min(minY, y);
+            maxY = Math.max(maxY, y);
         }
 
-        return true;
+        return minY <= tolerance && maxY >= (1 - tolerance);
     }
 
     private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos,
