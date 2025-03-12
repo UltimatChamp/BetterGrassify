@@ -1,16 +1,8 @@
-🗃️**Detailed Changelog: [1.4.4 --> 1.5.0](https://github.com/UltimatChamp/BetterGrassify/compare/1.4.4+fabric.1.21.4...1.5.0+fabric.1.21.4)**
+🗃️**Detailed Changelog: [1.5.0 --> 1.5.1](https://github.com/UltimatChamp/BetterGrassify/compare/1.5.0+fabric.1.21.4...1.5.1+fabric.1.21.4)**
 
-<hr>
-
-### 📢Announcement
-
-- Support for all `1.20.x` versions has been dropped. _(Almost been a year since `1.20.6` was released)_
-
-<hr>
+---
 
 ### 🛠️Changes
 
-- Fixed various issues with pistons.
-- Fixed some very rare cases where **Better Snowy Grass** would be applied, even when disabled.
-- Some internal code optimizations and refactoring.
-- Updated **Italian** translation. [**[#49]**](https://github.com/UltimatChamp/BetterGrassify/pull/49)
+- Refined **Resource-pack Compatibility Mode** to fix issues with **Wynncraft** and other packs. 
+- Updated **Simplified Chinese** translation. [**[#51]**](https://github.com/UltimatChamp/BetterGrassify/pull/51)
