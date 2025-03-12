@@ -1,5 +1,4 @@
 {
-  "modmenu.descriptionTranslation.bettergrass": "玩家终于可以“摸草”了？！\\nOptiFine\\ 的精美和快速草现在在 Fabric 和 NeoForge 上实现了！",
   "bettergrass.title": "BetterGrassify 设置",
   "bettergrass.betterGrassMode": "更好的草模式",
   "bettergrass.betterGrassMode.desc": "§4关 §r- 原版默认\n§3流畅 §r- 方块的顶部纹理将应用于其所有侧面（较慢）\n§d高品质 §r- 方块的顶部纹理将动态应用于它的所需侧面（最慢）",
