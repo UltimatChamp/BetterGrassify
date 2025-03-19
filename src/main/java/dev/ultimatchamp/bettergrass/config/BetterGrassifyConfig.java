@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BetterGrassifyConfig {
     @Comment("-> General\nOFF/FAST/FANCY (default: FANCY)")
@@ -168,13 +169,13 @@ public class BetterGrassifyConfig {
 
     public static void save(BetterGrassifyConfig config) {
         try {
-            BetterGrassifyBakedModel.BETTER_SNOW_CACHE = new ArrayList<>();
+            BetterGrassifyBakedModel.BETTER_SNOW_CACHE = new CopyOnWriteArrayList<>();
 
-            BetterGrassifyBakedModel.EXCLUDED_BLOCKS_CACHE = new ArrayList<>();
-            BetterGrassifyBakedModel.EXCLUDED_TAGS_CACHE = new ArrayList<>();
+            BetterGrassifyBakedModel.EXCLUDED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+            BetterGrassifyBakedModel.EXCLUDED_TAGS_CACHE = new CopyOnWriteArrayList<>();
 
-            BetterGrassifyBakedModel.WHITELISTED_BLOCKS_CACHE = new ArrayList<>();
-            BetterGrassifyBakedModel.WHITELISTED_TAGS_CACHE = new ArrayList<>();
+            BetterGrassifyBakedModel.WHITELISTED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+            BetterGrassifyBakedModel.WHITELISTED_TAGS_CACHE = new CopyOnWriteArrayList<>();
 
             String jsonString = JANKSON.toJson(config).toJson(true, true);
             Files.createDirectories(CONFIG_PATH.getParent());

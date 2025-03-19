@@ -201,7 +201,9 @@ public class BetterGrassifyGui {
                                                 "fire",
                                                 "leaves",
                                                 "pressure_plates",
-                                                "rails"
+                                                "rails",
+                                                "stairs",
+                                                "trapdoors"
                                         ),
                                         () -> config.excludedTags,
                                         val -> config.excludedTags = val

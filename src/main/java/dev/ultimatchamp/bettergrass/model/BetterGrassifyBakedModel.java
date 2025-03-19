@@ -18,10 +18,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 //? if >1.21.3 {
@@ -46,13 +46,13 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 *///?}
 
-    public static List<Block> BETTER_SNOW_CACHE = new ArrayList<>();
+    public static List<Block> BETTER_SNOW_CACHE = new CopyOnWriteArrayList<>();
 
-    public static List<Map.Entry<Block, String>> EXCLUDED_BLOCKS_CACHE = new ArrayList<>();
-    public static List<TagKey<Block>> EXCLUDED_TAGS_CACHE = new ArrayList<>();
+    public static List<Map.Entry<Block, String>> EXCLUDED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+    public static List<TagKey<Block>> EXCLUDED_TAGS_CACHE = new CopyOnWriteArrayList<>();
 
-    public static List<Map.Entry<Block, String>> WHITELISTED_BLOCKS_CACHE = new ArrayList<>();
-    public static List<TagKey<Block>> WHITELISTED_TAGS_CACHE = new ArrayList<>();
+    public static List<Map.Entry<Block, String>> WHITELISTED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+    public static List<TagKey<Block>> WHITELISTED_TAGS_CACHE = new CopyOnWriteArrayList<>();
 
     @Override
     public boolean isVanillaAdapter() {
