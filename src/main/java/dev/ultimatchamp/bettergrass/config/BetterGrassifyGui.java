@@ -167,7 +167,7 @@ public class BetterGrassifyGui {
                                         .text(Text.translatable("bettergrass.betterSnowMode.desc"))
                                         .build())
                                 .binding(
-                                        BetterGrassifyConfig.BetterSnowMode.OPTIFINE,
+                                        BetterGrassifyConfig.BetterSnowMode.LAMBDA,
                                         () -> config.betterSnowMode,
                                         (value) -> config.betterSnowMode = value
                                 )

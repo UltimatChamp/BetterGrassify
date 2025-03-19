@@ -2,7 +2,9 @@ package dev.ultimatchamp.bettergrass.config;
 
 import blue.endless.jankson.*;
 import blue.endless.jankson.api.SyntaxError;
+import com.google.common.collect.Lists;
 import dev.ultimatchamp.bettergrass.BetterGrassify;
+import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.TranslatableOption;
@@ -68,12 +70,12 @@ public class BetterGrassifyConfig {
     @Comment("(default: true)")
     public boolean warpedNylium = true;
 
-    public List<String> moreBlocks = List.of(
+    public List<String> moreBlocks = Lists.newArrayList(
             "minecraft:sculk_catalyst" // Example
     );
 
-    @Comment("-> Better Snow\nOFF/OPTIFINE/LAMBDA (default: OPTIFINE)")
-    public BetterSnowMode betterSnowMode = BetterSnowMode.OPTIFINE;
+    @Comment("-> Better Snow\nOFF/OPTIFINE/LAMBDA (default: LAMBDA)")
+    public BetterSnowMode betterSnowMode = BetterSnowMode.LAMBDA;
 
     public enum BetterSnowMode implements TranslatableOption {
         OFF(0, "options.off"),
@@ -99,7 +101,7 @@ public class BetterGrassifyConfig {
         }
     }
 
-    public List<String> snowLayers = List.of(
+    public List<String> snowLayers = Lists.newArrayList(
             "snow",
             "moss_carpet"
             //? if >1.21.1 {
@@ -107,16 +109,18 @@ public class BetterGrassifyConfig {
             //?}
     );
 
-    public List<String> excludedTags = List.of(
+    public List<String> excludedTags = Lists.newArrayList(
             "buttons",
             "doors",
             "fire",
             "leaves",
             "pressure_plates",
-            "rails"
+            "rails",
+            "stairs",
+            "trapdoors"
     );
 
-    public List<String> excludedBlocks = List.of(
+    public List<String> excludedBlocks = Lists.newArrayList(
             "lantern[hanging]",
             "redstone_wall_torch",
             "soul_lantern[hanging]",
@@ -164,6 +168,14 @@ public class BetterGrassifyConfig {
 
     public static void save(BetterGrassifyConfig config) {
         try {
+            BetterGrassifyBakedModel.BETTER_SNOW_CACHE = new ArrayList<>();
+
+            BetterGrassifyBakedModel.EXCLUDED_BLOCKS_CACHE = new ArrayList<>();
+            BetterGrassifyBakedModel.EXCLUDED_TAGS_CACHE = new ArrayList<>();
+
+            BetterGrassifyBakedModel.WHITELISTED_BLOCKS_CACHE = new ArrayList<>();
+            BetterGrassifyBakedModel.WHITELISTED_TAGS_CACHE = new ArrayList<>();
+
             String jsonString = JANKSON.toJson(config).toJson(true, true);
             Files.createDirectories(CONFIG_PATH.getParent());
             Files.writeString(CONFIG_PATH, jsonString);

@@ -18,6 +18,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -42,6 +45,14 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         this.wrapped = baseModel;
     }
 *///?}
+
+    public static List<Block> BETTER_SNOW_CACHE = new ArrayList<>();
+
+    public static List<Map.Entry<Block, String>> EXCLUDED_BLOCKS_CACHE = new ArrayList<>();
+    public static List<TagKey<Block>> EXCLUDED_TAGS_CACHE = new ArrayList<>();
+
+    public static List<Map.Entry<Block, String>> WHITELISTED_BLOCKS_CACHE = new ArrayList<>();
+    public static List<TagKey<Block>> WHITELISTED_TAGS_CACHE = new ArrayList<>();
 
     @Override
     public boolean isVanillaAdapter() {
@@ -185,31 +196,37 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     public static BlockState getLayerNeighbour(BlockRenderView world, BlockPos selfPos) {
-        for (String id : BetterGrassifyConfig.load().snowLayers) {
-            Identifier identifier = Identifier.tryParse(id);
+        if (BETTER_SNOW_CACHE.isEmpty()) {
+            for (String id : BetterGrassifyConfig.load().snowLayers) {
+                Identifier identifier = Identifier.tryParse(id);
 
-            //? if >1.21.1 {
-            Optional<Block> layer = Registries.BLOCK.getOptionalValue(identifier);
-            //?} else {
-            /*Optional<Block> layer = Registries.BLOCK.getOrEmpty(identifier);
-            *///?}
+                //? if >1.21.1 {
+                Optional<Block> layer = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*Optional<Block> layer = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
 
-            if (layer.isEmpty()) continue;
+                if (layer.isEmpty()) continue;
 
+                BETTER_SNOW_CACHE.add(layer.get());
+            }
+        }
+
+        for (Block layer : BETTER_SNOW_CACHE) {
             BlockPos[] directions = { selfPos.north(), selfPos.south(), selfPos.east(), selfPos.west() };
-            boolean[] isSnow = new boolean[4];
+            boolean[] isLayer = new boolean[4];
 
             for (int i = 0; i < 4; i++) {
                 BlockState state = world.getBlockState(directions[i]);
-                isSnow[i] = state.isOf(layer.get()) || (id.equals("snow") &&
+                isLayer[i] = state.isOf(layer) || (layer.getDefaultState().isOf(Blocks.SNOW) &&
                             (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)));
             }
 
             boolean layerCheck =
                     switch (BetterGrassifyConfig.load().betterSnowMode) {
-                        case OPTIFINE -> isSnow[0] || isSnow[1] || isSnow[2] || isSnow[3]; // Any 1 neighbouring layer
-                        case LAMBDA -> ((isSnow[0] || isSnow[1]) && (isSnow[2] || isSnow[3])) ||
-                                       (isSnow[0] && isSnow[1]) || (isSnow[2] && isSnow[3]); // Any 2 neighbouring layers
+                        case OPTIFINE -> isLayer[0] || isLayer[1] || isLayer[2] || isLayer[3]; // Any 1 neighbouring layer
+                        case LAMBDA -> ((isLayer[0] || isLayer[1]) && (isLayer[2] || isLayer[3])) ||
+                                       (isLayer[0] && isLayer[1]) || (isLayer[2] && isLayer[3]); // Any 2 neighbouring layers
                         default -> false;
                     };
 
@@ -217,8 +234,11 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
             for (BlockPos direction : directions) {
                 BlockState state = world.getBlockState(direction);
-                if (state.isOf(layer.get()) || (id.equals("snow") &&
-                        (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))) return state;
+
+                if (layer.getDefaultState().isOf(Blocks.SNOW) &&
+                   (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))
+                  return layer.getDefaultState();
+                if (state.isOf(layer)) return state;
             }
         }
 
@@ -227,7 +247,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     public static boolean isLayerNeighbourSnow(BlockRenderView world, BlockPos selfPos) {
         BlockState layerNeighbour = getLayerNeighbour(world, selfPos);
-        return layerNeighbour != null && layerNeighbour.isOf(Blocks.SNOW);
+        return layerNeighbour != null && (layerNeighbour.isOf(Blocks.SNOW) || layerNeighbour.isOf(Blocks.SNOW_BLOCK) ||
+               layerNeighbour.isOf(Blocks.POWDER_SNOW));
     }
 
     public static boolean canHaveGhostSnowLayer(BlockRenderView world, BlockPos selfPos) {
@@ -256,53 +277,94 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     private static boolean isBlockExcluded(BlockState self) {
-        boolean isExcluded = false;
-
-        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
-            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+        if (EXCLUDED_BLOCKS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
+            BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().excludedBlocks) {
-                if (matchesBlock(self, block)) {
-                    isExcluded = true;
-                    break;
-                }
-            }
-        } else {
-            isExcluded = true;
+                Identifier identifier = Identifier.tryParse(withoutAttribute(block));
 
+                //? if >1.21.1 {
+                Optional<Block> excludedBlock = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*Optional<Block> excludedBlock = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
+
+                if (excludedBlock.isEmpty()) continue;
+
+                EXCLUDED_BLOCKS_CACHE.add(Map.entry(excludedBlock.get(), block));
+            }
+        } else if (WHITELISTED_BLOCKS_CACHE.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().whitelistedBlocks) {
-                if (matchesBlock(self, block)) {
-                    return false;
-                }
+                Identifier identifier = Identifier.tryParse(withoutAttribute(block));
+
+                //? if >1.21.1 {
+                Optional<Block> whitelistedBlock = Registries.BLOCK.getOptionalValue(identifier);
+                //?} else {
+                /*Optional<Block> whitelistedBlock = Registries.BLOCK.getOrEmpty(identifier);
+                *///?}
+
+                if (whitelistedBlock.isEmpty()) continue;
+
+                WHITELISTED_BLOCKS_CACHE.add(Map.entry(whitelistedBlock.get(), block));
             }
         }
 
-        return isExcluded;
+        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
+            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
+            for (Map.Entry<Block, String> entry : EXCLUDED_BLOCKS_CACHE) {
+                if (matchesBlock(self, entry.getValue())) {
+                    return true;
+                }
+            }
+        } else {
+            for (Map.Entry<Block, String> entry : WHITELISTED_BLOCKS_CACHE) {
+                if (matchesBlock(self, entry.getValue())) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private static String withoutAttribute(String block) {
+        boolean hasAttribute = block.contains("[");
+        return hasAttribute ? block.substring(0, block.indexOf("[")) : block;
     }
 
     private static boolean isTagExcluded(BlockState self, boolean isExcludedBlock) {
-        boolean isExcluded = false;
+        if (EXCLUDED_TAGS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
+            BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
+            for (String tag : BetterGrassifyConfig.load().excludedTags) {
+                Identifier identifier = Identifier.tryParse(tag);
+                EXCLUDED_TAGS_CACHE.add(TagKey.of(RegistryKeys.BLOCK, identifier));
+            }
+        } else if (WHITELISTED_TAGS_CACHE.isEmpty()) {
+            for (String tag : BetterGrassifyConfig.load().whitelistedTags) {
+                Identifier identifier = Identifier.tryParse(tag);
+                WHITELISTED_TAGS_CACHE.add(TagKey.of(RegistryKeys.BLOCK, identifier));
+            }
+        }
 
         if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
             BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
-            for (String tag : BetterGrassifyConfig.load().excludedTags) {
-                if (self.isIn(TagKey.of(RegistryKeys.BLOCK, Identifier.tryParse(tag)))) {
-                    isExcluded = true;
-                    break;
+            for (TagKey<Block> tag : EXCLUDED_TAGS_CACHE) {
+                if (self.isIn(tag)) {
+                    return true;
                 }
             }
         } else {
-            isExcluded = true;
-
-            for (String tag : BetterGrassifyConfig.load().whitelistedTags) {
-                if (self.isIn(TagKey.of(RegistryKeys.BLOCK, Identifier.tryParse(tag)))) {
+            for (TagKey<Block> tag : WHITELISTED_TAGS_CACHE) {
+                if (self.isIn(tag)) {
                     return false;
                 }
             }
 
-            if (!isExcludedBlock) isExcluded = false;
+            if (!isExcludedBlock) return false;
         }
 
-        return isExcluded;
+        return false;
     }
 
     private static boolean matchesBlock(BlockState self, String block) {
