@@ -105,21 +105,11 @@ public class BetterGrassifyConfig {
     public List<String> snowLayers = Lists.newArrayList(
             "snow",
             "moss_carpet"
-            //? if >1.21.1 {
-            , "pale_moss_carpet"
-            //?}
+            /*? if >1.21.1 {*/, "pale_moss_carpet"/*?} */
+            /*? if >1.21.4 {*/, "leaf_litter"/*?} */
     );
 
-    public List<String> excludedTags = Lists.newArrayList(
-            "buttons",
-            "doors",
-            "fire",
-            "leaves",
-            "pressure_plates",
-            "rails",
-            "stairs",
-            "trapdoors"
-    );
+    public List<String> excludedTags = Lists.newArrayList();
 
     public List<String> excludedBlocks = Lists.newArrayList(
             "lantern[hanging]",

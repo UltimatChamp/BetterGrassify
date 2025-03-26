@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
@@ -16,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
@@ -24,19 +24,36 @@ import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
+//? if >1.21.4 {
+import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
+import net.minecraft.client.render.model.BlockStateModel;
+//?} else {
+/*import net.minecraft.client.render.model.BakedModel;
+*///?}
+
 //? if >1.21.3 {
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.minecraft.client.render.model.WrapperBakedModel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
+//?}
 
-public class BetterGrassifyBakedModel extends WrapperBakedModel implements FabricBakedModel {
-    public BetterGrassifyBakedModel(BakedModel baseModel) {
-        super(baseModel);
+//? if =1.21.4 {
+/*import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.minecraft.client.render.model.WrapperBakedModel;
+*///?}
+
+//? if >1.21.4 {
+public class BetterGrassifyBakedModel extends WrapperBlockStateModel implements BlockStateModel {
+    public BetterGrassifyBakedModel(BlockStateModel wrapped) {
+        super(wrapped);
     }
-//?} else {
+//?} else if >1.21.3 {
+/*public class BetterGrassifyBakedModel extends WrapperBakedModel implements FabricBakedModel {
+    public BetterGrassifyBakedModel(BakedModel wrapped) {
+        super(wrapped);
+    }
+*///?} else {
 /*import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 
@@ -54,17 +71,25 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     public static List<Map.Entry<Block, String>> WHITELISTED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
     public static List<TagKey<Block>> WHITELISTED_TAGS_CACHE = new CopyOnWriteArrayList<>();
 
-    @Override
+    //? if <1.21.5 {
+    /*@Override
     public boolean isVanillaAdapter() {
         return false;
     }
+    *///?}
 
     @Override
-    //? if >1.21.3 {
-    public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos,
-                               Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    //? if >1.21.4 {
+    public void emitQuads(QuadEmitter emitter, BlockRenderView blockView, BlockPos pos, BlockState state, Random random,
+                          Predicate<@Nullable Direction> cullTest) {
+        Supplier<Random> randomSupplier = () -> random;
+
         emitter.pushTransform(quad -> {
-    //?} else {
+    //?} else if >1.21.3 {
+    /*public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos,
+                                 Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+        emitter.pushTransform(quad -> {
+    *///?} else {
     /*public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos,
                                  Supplier<Random> randomSupplier, RenderContext context) {
         context.pushTransform(quad -> {
@@ -81,10 +106,13 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             return true;
         });
 
-        //? if >1.21.3 {
-        super.emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
+        //? if >1.21.4 {
+        super.emitQuads(emitter, blockView, pos, state, random, cullTest);
         emitter.popTransform();
-        //?} else {
+        //?} else if >1.21.3 {
+        /*super.emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
+        emitter.popTransform();
+        *///?} else {
         /*super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
         context.popTransform();
         *///?}
@@ -238,6 +266,10 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 if (layer.getDefaultState().isOf(Blocks.SNOW) &&
                    (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))
                   return layer.getDefaultState();
+                //? if >1.21.4 {
+                if (layer.getDefaultState().isOf(Blocks.LEAF_LITTER))
+                  return layer.getDefaultState().with(Properties.SEGMENT_AMOUNT, 4);
+                //?}
                 if (state.isOf(layer)) return state;
             }
         }
@@ -260,11 +292,18 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
         BlockState self = world.getBlockState(selfPos);
 
+        VoxelShape outlineShape = self.getOutlineShape(world, selfPos);
+        VoxelShape bottomFace = outlineShape.getFace(Direction.DOWN);
+        double height = outlineShape.getMax(Direction.Axis.Y) - outlineShape.getMin(Direction.Axis.Y);
         if (self.isAir() ||
             self.isOf(Blocks.WATER) ||
             self.hasBlockEntity() ||
-            self.isSideSolidFullSquare(world, selfPos, Direction.DOWN) ||
-            !world.getBlockState(selfPos.down()).isOpaqueFullCube(/*? if <1.21.3 {*//*world, selfPos.down()*//*?}*/)
+            !(bottomFace.getMin(Direction.Axis.X) > 0F &&
+              bottomFace.getMax(Direction.Axis.X) < 1F &&
+              bottomFace.getMin(Direction.Axis.Z) > 0F &&
+              bottomFace.getMax(Direction.Axis.Z) < 1F
+            ) ||
+            height <= 0.125F
         ) return false;
 
         boolean isLayer = getLayerNeighbour(world, selfPos) != null;

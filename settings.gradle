@@ -15,6 +15,8 @@ plugins {
 
 stonecutter {
     create(rootProject) {
+        vers("1.21.5-fabric", "1.21.5")
+
         vers("1.21.4-fabric", "1.21.4")
 
         vers("1.21.3-fabric", "1.21.3")
@@ -22,7 +24,7 @@ stonecutter {
         vers("1.21.1-fabric", "1.21.1")
         vers("1.21.1-neo", "1.21.1")
 
-        vcsVersion = "1.21.4-fabric"
+        vcsVersion = "1.21.5-fabric"
     }
 }
 

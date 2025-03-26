@@ -8,7 +8,6 @@ package dev.ultimatchamp.bettergrass.util;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.Direction;
@@ -21,11 +20,24 @@ public final class SpriteCalculator {
     private static final BlockModels MODELS = MinecraftClient.getInstance().getBakedModelManager().getBlockModels();
 
     public static Sprite calculateSprite(BlockState state, Direction face, Supplier<Random> randomSupplier) {
-        BakedModel model = MODELS.getModel(state);
+        var model = MODELS.getModel(state);
 
-        List<BakedQuad> quads = model.getQuads(state, face, randomSupplier.get());
+        //? if >1.21.4 {
+        List<BakedQuad> quads = model.getParts(randomSupplier.get()).getFirst().getQuads(face);
         if (!quads.isEmpty()) {
-            return quads.get(0).getSprite();
+            return quads.getFirst().sprite();
+        }
+
+        quads = model.getParts(randomSupplier.get()).getFirst().getQuads(null);
+        if (!quads.isEmpty()) {
+            for (BakedQuad quad : quads) {
+                if (quad.face() == face) return quad.sprite();
+            }
+        }
+        //?} else {
+        /*List<BakedQuad> quads = model.getQuads(state, face, randomSupplier.get());
+        if (!quads.isEmpty()) {
+            return quads.getFirst().getSprite();
         }
 
         quads = model.getQuads(state, null, randomSupplier.get());
@@ -34,6 +46,7 @@ public final class SpriteCalculator {
                 if (quad.getFace() == face) return quad.getSprite();
             }
         }
+        *///?}
 
         return null;
     }

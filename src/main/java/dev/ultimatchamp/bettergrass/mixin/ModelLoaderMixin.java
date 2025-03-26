@@ -45,8 +45,8 @@ public class ModelLoaderMixin {
                     }
                 }
 
-                if (blocks.contains("minecraft:dirt_path") || blocks.contains("minecraft:farmland")) {
-                    if (modelId.id().toString().equals("minecraft:dirt")) {
+                if (modelId.id().toString().equals("minecraft:dirt")) {
+                    if (blocks.contains("minecraft:dirt_path") || blocks.contains("minecraft:farmland")) {
                         BetterGrassifyUnbakedModel newModel = new BetterGrassifyUnbakedModel(unbakedModel);
                         this.modelsToBake.put(id, newModel);
                         ci.cancel();

@@ -1,4 +1,5 @@
-package dev.ultimatchamp.bettergrass.mixin;
+//? if <1.21.5 {
+/*package dev.ultimatchamp.bettergrass.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.systems.VertexSorter;
@@ -23,9 +24,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 //? if neoforge {
-/*import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
+/^import net.neoforged.neoforge.client.event.AddSectionGeometryEvent;
 import java.util.List;
-*///?}
+^///?}
 
 @Mixin(value = SectionBuilder.class)
 public class SectionBuilderMixin {
@@ -37,16 +38,16 @@ public class SectionBuilderMixin {
     @Inject(method = "build", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBlock(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;)V"))
     //?} else if neoforge {
-    /*@Inject(method = "compile", at = @At(value = "INVOKE",
+    /^@Inject(method = "compile", at = @At(value = "INVOKE",
               target = "Lnet/minecraft/client/render/block/BlockRenderManager;renderBatched(Lnet/minecraft/block/BlockState;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/BlockRenderView;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;ZLnet/minecraft/util/math/random/Random;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/render/RenderLayer;)V"))
-    *///?}
+    ^///?}
     private void bettergrass$render(ChunkSectionPos sectionPos,
                         ChunkRendererRegion renderRegion,
                         VertexSorter vertexSorter,
                         BlockBufferAllocatorStorage allocatorStorage,
                         //? if neoforge {
-                        /*List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
-                        *///?}
+                        /^List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
+                        ^///?}
                         CallbackInfoReturnable<SectionBuilder.RenderData> cir,
                         @Local(ordinal = 2) BlockPos blockPos,
                         @Local MatrixStack matrixStack,
@@ -68,8 +69,8 @@ public class SectionBuilderMixin {
     //? if fabric {
     @ModifyVariable(method = "build", at = @At("STORE"), ordinal = 0)
     //?} else if neoforge {
-    /*@ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
-    *///?}
+    /^@ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
+    ^///?}
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos,
                                                  @Local(argsOnly = true) ChunkRendererRegion renderRegion) {
         if (state.getOrEmpty(Properties.SNOWY).isEmpty()) return state;
@@ -81,3 +82,4 @@ public class SectionBuilderMixin {
         return state;
     }
 }
+*///?}

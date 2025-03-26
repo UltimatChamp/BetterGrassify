@@ -3,7 +3,6 @@ package dev.ultimatchamp.bettergrass.mixin.sodium;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
@@ -46,7 +45,7 @@ public class ChunkBuilderMeshingTaskMixin {
                     }
                 }
 
-                BakedModel model = cache.getBlockModels().getModel(layerNeighbour);
+                var model = cache.getBlockModels().getModel(layerNeighbour);
                 cache.getBlockRenderer().renderModel(model, layerNeighbour, pos.up(), modelOffset.up());
             }
         }

@@ -171,7 +171,7 @@ public class BetterGrassifyGui {
                                         () -> config.betterSnowMode,
                                         (value) -> config.betterSnowMode = value
                                 )
-                                .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
+                                .available(/*? if >1.21.4 {*/FabricLoader.getInstance().isModLoaded("sodium") || /*?} */!FabricLoader.getInstance().isModLoaded("wilderwild"))
                                 .customController(opt ->
                                         new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
                                 .build())
@@ -181,9 +181,8 @@ public class BetterGrassifyGui {
                                         Lists.newArrayList(
                                                 "snow",
                                                 "moss_carpet"
-                                                //? if >1.21.2 {
-                                                , "pale_moss_carpet"
-                                                //?}
+                                                /*? if >1.21.1 {*/, "pale_moss_carpet"/*?} */
+                                                /*? if >1.21.4 {*/, "leaf_litter"/*?} */
                                         ),
                                         () -> config.snowLayers,
                                         val -> config.snowLayers = val
@@ -195,16 +194,7 @@ public class BetterGrassifyGui {
                         .group(ListOption.<String>createBuilder()
                                 .name(Text.translatable("bettergrass.excludedTags"))
                                 .binding(
-                                        Lists.newArrayList(
-                                                "buttons",
-                                                "doors",
-                                                "fire",
-                                                "leaves",
-                                                "pressure_plates",
-                                                "rails",
-                                                "stairs",
-                                                "trapdoors"
-                                        ),
+                                        Lists.newArrayList(),
                                         () -> config.excludedTags,
                                         val -> config.excludedTags = val
                                 )

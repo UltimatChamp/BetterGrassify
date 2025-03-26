@@ -52,7 +52,7 @@ dependencies {
     minecraft "com.mojang:minecraft:${property("deps.minecraft_version")}"
     mappings(loom.layered {
         mappings("net.fabricmc:yarn:${property("deps.yarn_mappings")}:v2")
-        if (stonecutter.eval(property("deps.minecraft_version"), ">=1.21")) {
+        if (stonecutter.eval(property("deps.minecraft_version"), "=1.21.1")) {
             mappings("dev.architectury:yarn-mappings-patch-neoforge:${property("deps.layered_mappings")}")
         }
     })
@@ -123,12 +123,15 @@ processResources {
     switch (project.property("deps.minecraft_version")) {
         case "1.21.1":
             packFormat = 34
-            break;
+            break
         case "1.21.3":
             packFormat = 42
             break
-        default:
+        case "1.21.4":
             packFormat = 46
+            break
+        default:
+            packFormat = 55
     }
 
     filesMatching("pack.mcmeta") {
@@ -245,6 +248,20 @@ publishMods {
             from cfOptions
 
             minecraftVersions.add("1.21.4")
+        }
+    }
+
+    if (project.property("deps.minecraft_version") == "1.21.5") {
+        modrinth("m1.21.5") {
+            from mrOptions
+
+            minecraftVersions.add("1.21.5")
+        }
+
+        curseforge("c1.21.5") {
+            from cfOptions
+
+            minecraftVersions.add("1.21.5")
         }
     }
 
