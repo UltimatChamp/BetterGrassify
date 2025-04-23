@@ -41,13 +41,6 @@ public class BetterGrassifyFabric implements ClientModInitializer {
                                        config.betterGrassMode.toString());
         }
 
-        //? if >1.21.4 {
-        if (!FabricLoader.getInstance().isModLoaded("sodium")) {
-            config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
-            BetterGrassify.LOGGER.warn("[BetterGrassify] 'Sodium' is not installed. 'Better Snow' has been disabled.");
-        }
-        //?}
-
         if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
             config.snowy = false;
             config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;

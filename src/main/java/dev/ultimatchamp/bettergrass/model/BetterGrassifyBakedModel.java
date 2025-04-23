@@ -95,12 +95,14 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         context.pushTransform(quad -> {
     *///?}
             if (!BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF)) {
-                if (quad.nominalFace().getAxis().isVertical() ||
+                Direction face = quad.nominalFace();
+                if (face == null ||
+                    face.getAxis().isVertical() ||
                     state.hasBlockEntity() ||
                     !isFullQuad(quad)
                 ) return true;
 
-                betterGrassify(quad, blockView, state, pos, randomSupplier);
+                betterGrassify(quad, blockView, state, pos, face, randomSupplier);
             }
 
             return true;
@@ -119,7 +121,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     public void betterGrassify(MutableQuadView quad, BlockRenderView world, BlockState state, BlockPos pos,
-                               Supplier<Random> randomSupplier) {
+                               Direction face, Supplier<Random> randomSupplier) {
         // Fix dirt paths connection, only if on a dirt block
         if (state.isOf(Blocks.DIRT) && isBelowNonFullBlock(world, pos, quad.nominalFace())) {
             dirtSpriteBake(quad, world, pos, randomSupplier);
@@ -127,8 +129,6 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
 
         if (BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FANCY)) {
-            Direction face = quad.nominalFace();
-
             if (canFullyConnect(world, state, pos, face)) {
                 if (isSnowy(world, pos)) {
                     spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
@@ -266,11 +266,15 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 if (layer.getDefaultState().isOf(Blocks.SNOW) &&
                    (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))
                   return layer.getDefaultState();
+                else if (layer.getDefaultState().isOf(Blocks.PINK_PETALS))
+                    return layer.getDefaultState().with(Properties.FLOWER_AMOUNT, 4);
                 //? if >1.21.4 {
-                if (layer.getDefaultState().isOf(Blocks.LEAF_LITTER))
+                else if (layer.getDefaultState().isOf(Blocks.LEAF_LITTER))
                   return layer.getDefaultState().with(Properties.SEGMENT_AMOUNT, 4);
+                else if (layer.getDefaultState().isOf(Blocks.WILDFLOWERS))
+                    return layer.getDefaultState().with(Properties.FLOWER_AMOUNT, 4);
                 //?}
-                if (state.isOf(layer)) return state;
+                else if (state.isOf(layer)) return state;
             }
         }
 

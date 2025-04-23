@@ -1,16 +1,17 @@
 pluginManagement {
     repositories {
         gradlePluginPortal()
-        maven { url "https://maven.architectury.dev" }
-        maven { url "https://maven.fabricmc.net" }
-        maven { url "https://maven.neoforged.net/releases" }
-        maven { url "https://maven.minecraftforge.net" }
-        maven { url "https://maven.kikugie.dev/snapshots" }
+        maven("https://maven.architectury.dev")
+        maven("https://maven.fabricmc.net")
+        maven("https://maven.neoforged.net/releases")
+        maven("https://maven.minecraftforge.net")
+        maven("https://maven.kikugie.dev/releases")
+        maven("https://maven.kikugie.dev/snapshots")
     }
 }
 
 plugins {
-    id "dev.kikugie.stonecutter" version "0.5.2"
+    id("dev.kikugie.stonecutter") version "0.6-beta.2"
 }
 
 stonecutter {

@@ -107,6 +107,8 @@ public class BetterGrassifyConfig {
             "moss_carpet"
             /*? if >1.21.1 {*/, "pale_moss_carpet"/*?} */
             /*? if >1.21.4 {*/, "leaf_litter"/*?} */
+            , "pink_petals"
+            /*? if >1.21.4 {*/, "wildflowers"/*?} */
     );
 
     public List<String> excludedTags = Lists.newArrayList();
