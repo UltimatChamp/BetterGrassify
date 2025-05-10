@@ -20,10 +20,6 @@ modrinth:
 
 ---
 
-[![RocketNode Server Hosting: Use code `CHAMP`](https://cdn.modrinth.com/data/m5T5xmUy/images/ccc929118d7f2420e2ca6edd973233031ddfd692.png)](http://www.rocketnode.com/champ)
-
----
-
 _<small>Gamers can finally touch grass!?</small>_
 
 ---
