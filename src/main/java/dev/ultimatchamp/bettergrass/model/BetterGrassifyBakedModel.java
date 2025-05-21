@@ -3,20 +3,21 @@ package dev.ultimatchamp.bettergrass.model;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.List;
 import java.util.Map;
@@ -26,10 +27,10 @@ import java.util.function.Supplier;
 
 //? if >1.21.4 {
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
-import net.minecraft.client.render.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 //?} else {
-/*import net.minecraft.client.render.model.BakedModel;
-*///?}
+//import net.minecraft.client.resources.model.BakedModel;
+//?}
 
 //? if >1.21.3 {
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -40,7 +41,7 @@ import java.util.function.Predicate;
 
 //? if =1.21.4 {
 /*import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.minecraft.client.render.model.WrapperBakedModel;
+import net.minecraft.client.resources.model.DelegateBakedModel;
 *///?}
 
 //? if >1.21.4 {
@@ -49,7 +50,7 @@ public class BetterGrassifyBakedModel extends WrapperBlockStateModel implements 
         super(wrapped);
     }
 //?} else if >1.21.3 {
-/*public class BetterGrassifyBakedModel extends WrapperBakedModel implements FabricBakedModel {
+/*public class BetterGrassifyBakedModel extends DelegateBakedModel implements FabricBakedModel {
     public BetterGrassifyBakedModel(BakedModel wrapped) {
         super(wrapped);
     }
@@ -80,18 +81,18 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     @Override
     //? if >1.21.4 {
-    public void emitQuads(QuadEmitter emitter, BlockRenderView blockView, BlockPos pos, BlockState state, Random random,
-                          Predicate<@Nullable Direction> cullTest) {
-        Supplier<Random> randomSupplier = () -> random;
+    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state,
+                          RandomSource random, Predicate<@Nullable Direction> cullTest) {
+            Supplier<RandomSource> randomSupplier = () -> random;
 
         emitter.pushTransform(quad -> {
     //?} else if >1.21.3 {
-    /*public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos,
-                                 Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    /*public void emitBlockQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+                                 Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         emitter.pushTransform(quad -> {
     *///?} else {
-    /*public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos,
-                                 Supplier<Random> randomSupplier, RenderContext context) {
+    /*public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
+                                 Supplier<RandomSource> randomSupplier, RenderContext context) {
         context.pushTransform(quad -> {
     *///?}
             if (!BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF)) {
@@ -99,7 +100,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 if (face == null ||
                     face.getAxis().isVertical() ||
                     state.hasBlockEntity() ||
-                    !isFullQuad(quad)
+                    !(isFullQuad(quad) || state.getBlock() instanceof SlabBlock)
                 ) return true;
 
                 betterGrassify(quad, blockView, state, pos, face, randomSupplier);
@@ -120,10 +121,10 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         *///?}
     }
 
-    public void betterGrassify(MutableQuadView quad, BlockRenderView world, BlockState state, BlockPos pos,
-                               Direction face, Supplier<Random> randomSupplier) {
+    public void betterGrassify(MutableQuadView quad, BlockAndTintGetter world, BlockState state, BlockPos pos,
+                               Direction face, Supplier<RandomSource> randomSupplier) {
         // Fix dirt paths connection, only if on a dirt block
-        if (state.isOf(Blocks.DIRT) && isBelowNonFullBlock(world, pos, quad.nominalFace())) {
+        if (state.is(Blocks.DIRT) && isBelowNonFullBlock(world, pos, face)) {
             dirtSpriteBake(quad, world, pos, randomSupplier);
             return;
         }
@@ -131,21 +132,21 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         if (BetterGrassifyConfig.load().betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FANCY)) {
             if (canFullyConnect(world, state, pos, face)) {
                 if (isSnowy(world, pos)) {
-                    spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
+                    spriteBake(quad, world.getBlockState(pos.above()), randomSupplier);
                     return;
                 }
 
                 spriteBake(quad, state, randomSupplier);
             } else {
-                betterSnowyGrass(quad, world, pos, randomSupplier);
+                betterSnowyGrass(quad, world, pos, face, randomSupplier);
             }
         } else { // Fast
             if (isSnowy(world, pos)) {
-                spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
+                spriteBake(quad, world.getBlockState(pos.above()), randomSupplier);
                 return;
-            } else if (canHaveGhostSnowLayer(world, pos.up())) {
+            } else if (canHaveGhostSnowLayer(world, pos.above())) {
                 if (!BetterGrassifyConfig.load().snowy) return; // Better Snow Mode check, as block has ghost snow
-                spriteBake(quad, getLayerNeighbour(world, pos.up()), randomSupplier);
+                spriteBake(quad, getLayerNeighbour(world, pos.above()), randomSupplier);
                 return;
             }
 
@@ -153,21 +154,20 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
     }
 
-    public void betterSnowyGrass(MutableQuadView quad, BlockRenderView world, BlockPos pos,
-                                 Supplier<Random> randomSupplier) {
-        Direction face = quad.nominalFace();
-        BlockPos adjacentPos = pos.offset(face);
+    public void betterSnowyGrass(MutableQuadView quad, BlockAndTintGetter world, BlockPos pos, Direction face,
+                                 Supplier<RandomSource> randomSupplier) {
+        BlockPos adjacentPos = pos.relative(face);
 
         if (isSnowy(world, pos) && canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Snowy Grass | Below: Ghost Snow
-            spriteBake(quad, world.getBlockState(pos.up()), randomSupplier);
-        } else if (canHaveGhostSnowLayer(world, pos.up()) && isSnowy(world, adjacentPos.down())) {
+            spriteBake(quad, world.getBlockState(pos.above()), randomSupplier);
+        } else if (canHaveGhostSnowLayer(world, pos.above()) && isSnowy(world, adjacentPos.below())) {
             // Self: Ghost Snow | Below: Snowy Grass
             spriteBake(quad, world.getBlockState(adjacentPos), randomSupplier);
-        } else if (canHaveGhostSnowLayer(world, pos.up()) && canHaveGhostSnowLayer(world, adjacentPos)) {
+        } else if (canHaveGhostSnowLayer(world, pos.above()) && canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Ghost Snow | Below: Ghost Snow
             if (!BetterGrassifyConfig.load().snowy) return; // Better Snow Mode check, as both self and below have ghost snow
-            spriteBake(quad, getLayerNeighbour(world, pos.up()), randomSupplier);
+            spriteBake(quad, getLayerNeighbour(world, pos.above()), randomSupplier);
         }
     }
 
@@ -187,27 +187,27 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return minY <= tolerance && maxY >= (1 - tolerance);
     }
 
-    private static boolean canFullyConnect(BlockRenderView world, BlockState self, BlockPos selfPos,
+    private static boolean canFullyConnect(BlockAndTintGetter world, BlockState self, BlockPos selfPos,
                                            Direction direction) {
-        return canConnect(world, self, selfPos, selfPos.offset(direction).down());
+        return canConnect(world, self, selfPos, selfPos.relative(direction).below());
     }
 
-    private static boolean canConnect(BlockRenderView world, BlockState self, BlockPos selfPos, BlockPos adjacentPos) {
+    private static boolean canConnect(BlockAndTintGetter world, BlockState self, BlockPos selfPos, BlockPos adjacentPos) {
         BlockState adjacent = world.getBlockState(adjacentPos);
-        BlockPos upPos = adjacentPos.up();
+        BlockPos upPos = adjacentPos.above();
         BlockState up = world.getBlockState(upPos);
 
         return canConnect(self, adjacent) &&
                (up.isAir() || isSnowy(world, selfPos) ||
-               !up.isSideSolidFullSquare(world, upPos, Direction.DOWN));
+               !up.isFaceSturdy(world, upPos, Direction.DOWN));
     }
 
     private static boolean canConnect(BlockState self, BlockState adjacent) {
         return self == adjacent;
     }
 
-    private static boolean isBelowNonFullBlock(BlockRenderView world, BlockPos selfPos, Direction direction) {
-        BlockPos upPos = selfPos.up();
+    private static boolean isBelowNonFullBlock(BlockAndTintGetter world, BlockPos selfPos, Direction direction) {
+        BlockPos upPos = selfPos.above();
         BlockState up = world.getBlockState(upPos);
 
         if (!(up.getBlock().equals(Blocks.DIRT_PATH) || up.getBlock().equals(Blocks.FARMLAND))) return false;
@@ -218,21 +218,16 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return canFullyConnect(world, up, upPos, direction);
     }
 
-    private static boolean isSnowy(BlockRenderView world, BlockPos selfPos) {
+    private static boolean isSnowy(BlockAndTintGetter world, BlockPos selfPos) {
         BlockState self = world.getBlockState(selfPos);
-        return self.getOrEmpty(Properties.SNOWY).orElse(false) && !world.getBlockState(selfPos.up()).isAir();
+        return self.getOptionalValue(BlockStateProperties.SNOWY).orElse(false) && !world.getBlockState(selfPos.above()).isAir();
     }
 
-    public static BlockState getLayerNeighbour(BlockRenderView world, BlockPos selfPos) {
+    public static BlockState getLayerNeighbour(BlockAndTintGetter world, BlockPos selfPos) {
         if (BETTER_SNOW_CACHE.isEmpty()) {
             for (String id : BetterGrassifyConfig.load().snowLayers) {
-                Identifier identifier = Identifier.tryParse(id);
-
-                //? if >1.21.1 {
-                Optional<Block> layer = Registries.BLOCK.getOptionalValue(identifier);
-                //?} else {
-                /*Optional<Block> layer = Registries.BLOCK.getOrEmpty(identifier);
-                *///?}
+                ResourceLocation identifier = ResourceLocation.tryParse(id);
+                Optional<Block> layer = BuiltInRegistries.BLOCK.getOptional(identifier);
 
                 if (layer.isEmpty()) continue;
 
@@ -246,8 +241,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
             for (int i = 0; i < 4; i++) {
                 BlockState state = world.getBlockState(directions[i]);
-                isLayer[i] = state.isOf(layer) || (layer.getDefaultState().isOf(Blocks.SNOW) &&
-                            (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)));
+                isLayer[i] = state.is(layer) || (layer.defaultBlockState().is(Blocks.SNOW) &&
+                            (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)));
             }
 
             boolean layerCheck =
@@ -263,49 +258,49 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             for (BlockPos direction : directions) {
                 BlockState state = world.getBlockState(direction);
 
-                if (layer.getDefaultState().isOf(Blocks.SNOW) &&
-                   (state.isOf(Blocks.SNOW_BLOCK) || state.isOf(Blocks.POWDER_SNOW)))
-                  return layer.getDefaultState();
-                else if (layer.getDefaultState().isOf(Blocks.PINK_PETALS))
-                    return layer.getDefaultState().with(Properties.FLOWER_AMOUNT, 4);
+                if (layer.defaultBlockState().is(Blocks.SNOW) &&
+                   (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)))
+                  return layer.defaultBlockState();
+                else if (layer.defaultBlockState().is(Blocks.PINK_PETALS))
+                    return layer.defaultBlockState().setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
                 //? if >1.21.4 {
-                else if (layer.getDefaultState().isOf(Blocks.LEAF_LITTER))
-                  return layer.getDefaultState().with(Properties.SEGMENT_AMOUNT, 4);
-                else if (layer.getDefaultState().isOf(Blocks.WILDFLOWERS))
-                    return layer.getDefaultState().with(Properties.FLOWER_AMOUNT, 4);
+                else if (layer.defaultBlockState().is(Blocks.LEAF_LITTER))
+                  return layer.defaultBlockState().setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
+                else if (layer.defaultBlockState().is(Blocks.WILDFLOWERS))
+                    return layer.defaultBlockState().setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
                 //?}
-                else if (state.isOf(layer)) return state;
+                else if (state.is(layer)) return state;
             }
         }
 
         return null;
     }
 
-    public static boolean isLayerNeighbourSnow(BlockRenderView world, BlockPos selfPos) {
+    public static boolean isLayerNeighbourSnow(BlockAndTintGetter world, BlockPos selfPos) {
         BlockState layerNeighbour = getLayerNeighbour(world, selfPos);
-        return layerNeighbour != null && (layerNeighbour.isOf(Blocks.SNOW) || layerNeighbour.isOf(Blocks.SNOW_BLOCK) ||
-               layerNeighbour.isOf(Blocks.POWDER_SNOW));
+        return layerNeighbour != null && (layerNeighbour.is(Blocks.SNOW) || layerNeighbour.is(Blocks.SNOW_BLOCK) ||
+               layerNeighbour.is(Blocks.POWDER_SNOW));
     }
 
-    public static boolean canHaveGhostSnowLayer(BlockRenderView world, BlockPos selfPos) {
+    public static boolean canHaveGhostSnowLayer(BlockAndTintGetter world, BlockPos selfPos) {
         return canHaveGhostLayer(world, selfPos) && isLayerNeighbourSnow(world, selfPos);
     }
 
-    public static boolean canHaveGhostLayer(BlockRenderView world, BlockPos selfPos) {
+    public static boolean canHaveGhostLayer(BlockAndTintGetter world, BlockPos selfPos) {
         if (BetterGrassifyConfig.load().betterSnowMode == BetterGrassifyConfig.BetterSnowMode.OFF) return false;
 
         BlockState self = world.getBlockState(selfPos);
 
-        VoxelShape outlineShape = self.getOutlineShape(world, selfPos);
-        VoxelShape bottomFace = outlineShape.getFace(Direction.DOWN);
-        double height = outlineShape.getMax(Direction.Axis.Y) - outlineShape.getMin(Direction.Axis.Y);
+        VoxelShape outlineShape = self.getShape(world, selfPos);
+        VoxelShape bottomFace = outlineShape.getFaceShape(Direction.DOWN);
+        double height = outlineShape.max(Direction.Axis.Y) - outlineShape.min(Direction.Axis.Y);
         if (self.isAir() ||
-            self.isOf(Blocks.WATER) ||
+            self.is(Blocks.WATER) ||
             self.hasBlockEntity() ||
-            !(bottomFace.getMin(Direction.Axis.X) > 0F &&
-              bottomFace.getMax(Direction.Axis.X) < 1F &&
-              bottomFace.getMin(Direction.Axis.Z) > 0F &&
-              bottomFace.getMax(Direction.Axis.Z) < 1F
+            !(bottomFace.min(Direction.Axis.X) > 0F &&
+              bottomFace.max(Direction.Axis.X) < 1F &&
+              bottomFace.min(Direction.Axis.Z) > 0F &&
+              bottomFace.max(Direction.Axis.Z) < 1F
             ) ||
             height <= 0.125F
         ) return false;
@@ -323,13 +318,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         if (EXCLUDED_BLOCKS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
             BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().excludedBlocks) {
-                Identifier identifier = Identifier.tryParse(withoutAttribute(block));
-
-                //? if >1.21.1 {
-                Optional<Block> excludedBlock = Registries.BLOCK.getOptionalValue(identifier);
-                //?} else {
-                /*Optional<Block> excludedBlock = Registries.BLOCK.getOrEmpty(identifier);
-                *///?}
+                ResourceLocation identifier = ResourceLocation.tryParse(withoutAttribute(block));
+                Optional<Block> excludedBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
 
                 if (excludedBlock.isEmpty()) continue;
 
@@ -337,13 +327,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             }
         } else if (WHITELISTED_BLOCKS_CACHE.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().whitelistedBlocks) {
-                Identifier identifier = Identifier.tryParse(withoutAttribute(block));
-
-                //? if >1.21.1 {
-                Optional<Block> whitelistedBlock = Registries.BLOCK.getOptionalValue(identifier);
-                //?} else {
-                /*Optional<Block> whitelistedBlock = Registries.BLOCK.getOrEmpty(identifier);
-                *///?}
+                ResourceLocation identifier = ResourceLocation.tryParse(withoutAttribute(block));
+                Optional<Block> whitelistedBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
 
                 if (whitelistedBlock.isEmpty()) continue;
 
@@ -380,26 +365,26 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         if (EXCLUDED_TAGS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
             BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
             for (String tag : BetterGrassifyConfig.load().excludedTags) {
-                Identifier identifier = Identifier.tryParse(tag);
-                EXCLUDED_TAGS_CACHE.add(TagKey.of(RegistryKeys.BLOCK, identifier));
+                ResourceLocation identifier = ResourceLocation.tryParse(tag);
+                EXCLUDED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, identifier));
             }
         } else if (WHITELISTED_TAGS_CACHE.isEmpty()) {
             for (String tag : BetterGrassifyConfig.load().whitelistedTags) {
-                Identifier identifier = Identifier.tryParse(tag);
-                WHITELISTED_TAGS_CACHE.add(TagKey.of(RegistryKeys.BLOCK, identifier));
+                ResourceLocation identifier = ResourceLocation.tryParse(tag);
+                WHITELISTED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, identifier));
             }
         }
 
         if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
             BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
             for (TagKey<Block> tag : EXCLUDED_TAGS_CACHE) {
-                if (self.isIn(tag)) {
+                if (self.is(tag)) {
                     return true;
                 }
             }
         } else {
             for (TagKey<Block> tag : WHITELISTED_TAGS_CACHE) {
-                if (self.isIn(tag)) {
+                if (self.is(tag)) {
                     return false;
                 }
             }
@@ -425,11 +410,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             attributeEnabled = !block.contains("=false");
         }
 
-        //? if >1.21.1 {
-        var blockCheck = Registries.BLOCK.getOptionalValue(Identifier.tryParse(blockName));
-        //?} else {
-        /*var blockCheck = Registries.BLOCK.getOrEmpty(Identifier.tryParse(blockName));
-        *///?}
+        var blockCheck = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.tryParse(blockName));
 
         if (blockCheck.isEmpty()) return false;
 
@@ -440,17 +421,17 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         return false;
     }
 
-    private static void spriteBake(MutableQuadView quad, BlockState state, Supplier<Random> randomSupplier) {
-        Sprite sprite = SpriteCalculator.calculateSprite(state, Direction.UP, randomSupplier);
+    private static void spriteBake(MutableQuadView quad, BlockState state, Supplier<RandomSource> randomSupplier) {
+        TextureAtlasSprite sprite = SpriteCalculator.calculateSprite(state, Direction.UP, randomSupplier);
         if (sprite != null) quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
     }
 
-    private static void dirtSpriteBake(MutableQuadView quad, BlockRenderView world, BlockPos selfPos,
-                                       Supplier<Random> randomSupplier) {
-        BlockPos upPos = selfPos.up();
+    private static void dirtSpriteBake(MutableQuadView quad, BlockAndTintGetter world, BlockPos selfPos,
+                                       Supplier<RandomSource> randomSupplier) {
+        BlockPos upPos = selfPos.above();
         BlockState up = world.getBlockState(upPos);
 
-        Sprite sprite = SpriteCalculator.calculateSprite(up, Direction.UP, randomSupplier);
+        TextureAtlasSprite sprite = SpriteCalculator.calculateSprite(up, Direction.UP, randomSupplier);
         if (sprite != null) quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
     }
 }

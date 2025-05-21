@@ -5,24 +5,24 @@ import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.gui.controllers.cycling.EnumController;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class BetterGrassifyGui {
     public static Screen createConfigScreen(Screen parent) {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
         return YetAnotherConfigLib.createBuilder()
-                .title(Text.translatable("bettergrass.title"))
+                .title(Component.translatable("bettergrass.title"))
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("stat.generalButton"))
+                        .name(Component.translatable("stat.generalButton"))
                         .option(Option.<BetterGrassifyConfig.BetterGrassMode>createBuilder()
-                                .name(Text.translatable("bettergrass.betterGrassMode"))
+                                .name(Component.translatable("bettergrass.betterGrassMode"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("bettergrass.betterGrassMode.desc"))
-                                        .webpImage(Identifier.of("bettergrass",
+                                        .text(Component.translatable("bettergrass.betterGrassMode.desc"))
+                                        .webpImage(ResourceLocation.fromNamespaceAndPath("bettergrass",
                                                    "textures/images/bettergrassmode.webp"))
                                         .build())
                                 .binding(
@@ -34,9 +34,9 @@ public class BetterGrassifyGui {
                                         new EnumController<>(opt, BetterGrassifyConfig.BetterGrassMode.class))
                                 .build())
                         .option(Option.<Boolean>createBuilder()
-                                .name(Text.translatable("bettergrass.resourcePackCompatibilityMode"))
+                                .name(Component.translatable("bettergrass.resourcePackCompatibilityMode"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("bettergrass.resourcePackCompatibilityMode.desc"))
+                                        .text(Component.translatable("bettergrass.resourcePackCompatibilityMode.desc"))
                                         .build())
                                 .binding(
                                         true,
@@ -46,11 +46,11 @@ public class BetterGrassifyGui {
                                 .controller(TickBoxControllerBuilder::create)
                                 .build())
                         .group(OptionGroup.createBuilder()
-                                .name(Text.translatable("soundCategory.block"))
+                                .name(Component.translatable("soundCategory.block"))
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.grass_block"))
+                                        .name(Component.translatable("block.minecraft.grass_block"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.grassBlocks.desc"))
+                                                .text(Component.translatable("bettergrass.grassBlocks.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -60,9 +60,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.snow"))
+                                        .name(Component.translatable("block.minecraft.snow"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.snowy.desc"))
+                                                .text(Component.translatable("bettergrass.snowy.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -73,9 +73,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.dirt_path"))
+                                        .name(Component.translatable("block.minecraft.dirt_path"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.dirtPaths.desc"))
+                                                .text(Component.translatable("bettergrass.dirtPaths.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -85,9 +85,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.farmland"))
+                                        .name(Component.translatable("block.minecraft.farmland"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.farmLands.desc"))
+                                                .text(Component.translatable("bettergrass.farmLands.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -97,9 +97,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.podzol"))
+                                        .name(Component.translatable("block.minecraft.podzol"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.podzol.desc"))
+                                                .text(Component.translatable("bettergrass.podzol.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -109,9 +109,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.mycelium"))
+                                        .name(Component.translatable("block.minecraft.mycelium"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.mycelium.desc"))
+                                                .text(Component.translatable("bettergrass.mycelium.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -121,9 +121,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.crimson_nylium"))
+                                        .name(Component.translatable("block.minecraft.crimson_nylium"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.crimsonNylium.desc"))
+                                                .text(Component.translatable("bettergrass.crimsonNylium.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -133,9 +133,9 @@ public class BetterGrassifyGui {
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
-                                        .name(Text.translatable("block.minecraft.warped_nylium"))
+                                        .name(Component.translatable("block.minecraft.warped_nylium"))
                                         .description(OptionDescription.createBuilder()
-                                                .text(Text.translatable("bettergrass.warpedNylium.desc"))
+                                                .text(Component.translatable("bettergrass.warpedNylium.desc"))
                                                 .build())
                                         .binding(
                                                 true,
@@ -147,7 +147,7 @@ public class BetterGrassifyGui {
                                 .build())
                         .group(ListOption.<String>createBuilder()
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("bettergrass.moreBlocks.desc"))
+                                        .text(Component.translatable("bettergrass.moreBlocks.desc"))
                                         .build())
                                 .binding(
                                         Lists.newArrayList("minecraft:sculk_catalyst"),
@@ -160,11 +160,11 @@ public class BetterGrassifyGui {
                                 .build())
                         .build())
                 .category(ConfigCategory.createBuilder()
-                        .name(Text.translatable("bettergrass.betterSnow"))
+                        .name(Component.translatable("bettergrass.betterSnow"))
                         .option(Option.<BetterGrassifyConfig.BetterSnowMode>createBuilder()
-                                .name(Text.translatable("bettergrass.betterSnowMode"))
+                                .name(Component.translatable("bettergrass.betterSnowMode"))
                                 .description(OptionDescription.createBuilder()
-                                        .text(Text.translatable("bettergrass.betterSnowMode.desc"))
+                                        .text(Component.translatable("bettergrass.betterSnowMode.desc"))
                                         .build())
                                 .binding(
                                         BetterGrassifyConfig.BetterSnowMode.LAMBDA,
@@ -176,15 +176,15 @@ public class BetterGrassifyGui {
                                         new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
                                 .build())
                         .group(ListOption.<String>createBuilder()
-                                .name(Text.translatable("bettergrass.snowLayers"))
+                                .name(Component.translatable("bettergrass.snowLayers"))
                                 .binding(
                                         Lists.newArrayList(
                                                 "snow",
                                                 "moss_carpet"
-                                                /*? if >1.21.1 {*/, "pale_moss_carpet"/*?} */
-                                                /*? if >1.21.4 {*/, "leaf_litter"/*?} */
+                                                /*? if >1.21.1 {*/, "pale_moss_carpet"/*?}*/
+                                                /*? if >1.21.4 {*/, "leaf_litter"/*?}*/
                                                 , "pink_petals"
-                                                /*? if >1.21.4 {*/, "wildflowers"/*?} */
+                                                /*? if >1.21.4 {*/, "wildflowers"/*?}*/
                                         ),
                                         () -> config.snowLayers,
                                         val -> config.snowLayers = val
@@ -194,7 +194,7 @@ public class BetterGrassifyGui {
                                 .insertEntriesAtEnd(true)
                                 .build())
                         .group(ListOption.<String>createBuilder()
-                                .name(Text.translatable("bettergrass.excludedTags"))
+                                .name(Component.translatable("bettergrass.excludedTags"))
                                 .binding(
                                         Lists.newArrayList(),
                                         () -> config.excludedTags,
@@ -206,7 +206,7 @@ public class BetterGrassifyGui {
                                 .insertEntriesAtEnd(true)
                                 .build())
                         .group(ListOption.<String>createBuilder()
-                                .name(Text.translatable("bettergrass.excludedBlocks"))
+                                .name(Component.translatable("bettergrass.excludedBlocks"))
                                 .binding(
                                         Lists.newArrayList(
                                                 "lantern[hanging]",
@@ -226,11 +226,7 @@ public class BetterGrassifyGui {
                         .build())
                 .save(() -> {
                             BetterGrassifyConfig.save(config);
-
-                            MinecraftClient world = MinecraftClient.getInstance();
-                            if (world != null) {
-                                world.reloadResources();
-                            }
+                            Minecraft.getInstance().reloadResourcePacks();
                         }
                 )
                 .build()

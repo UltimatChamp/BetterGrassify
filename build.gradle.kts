@@ -47,25 +47,29 @@ loom {
 dependencies {
     minecraft("com.mojang:minecraft:${project.property("deps.minecraft_version")}")
     mappings(loom.layered {
-        mappings("net.fabricmc:yarn:${project.property("deps.yarn_mappings")}:v2")
-        if (isNeo && project.property("deps.minecraft_version") == "1.21.1") {
-            mappings("dev.architectury:yarn-mappings-patch-neoforge:${project.property("deps.layered_mappings")}")
-        }
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.property("deps.minecraft_version")}:${project.property("deps.parchment_version")}@zip")
     })
+
+    fun addEmbeddedFabricModule(name: String) {
+        modImplementation(fabricApi.module(name, project.property("deps.fapi_version") as String))
+    }
 
     if (isFabric) {
         modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-
-        modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
         modImplementation("maven.modrinth:modmenu:${project.property("deps.modmenu_version")}")
-        modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
+
+        addEmbeddedFabricModule("fabric-renderer-api-v1")
+        if (stonecutter.eval(property("deps.minecraft_version") as String, ">1.21.1")) {
+            addEmbeddedFabricModule("fabric-model-loading-api-v1")
+        }
     } else if (isNeo) {
         "neoForge"("net.neoforged:neoforge:${project.property("deps.neoforge")}")
 
         modImplementation("org.sinytra.forgified-fabric-api:forgified-fabric-api:${project.property("deps.fapi_version")}")
-        modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
     }
 
+    modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
     modImplementation("dev.isxander:yet-another-config-lib:${project.property("deps.yacl_version")}")
 
     include("blue.endless:jankson:${project.property("deps.jankson_version")}")

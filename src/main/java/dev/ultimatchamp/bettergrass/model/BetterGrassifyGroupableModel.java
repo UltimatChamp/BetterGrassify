@@ -1,32 +1,33 @@
-//? if =1.21.4 {
+//? if 1.21.4 {
 /*package dev.ultimatchamp.bettergrass.model;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.WrapperGroupableModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.GroupableModel;
+import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
-public class BetterGrassifyGroupableModel extends WrapperGroupableModel implements GroupableModel {
-    private final GroupableModel wrapped;
+public class BetterGrassifyGroupableModel extends WrapperGroupableModel implements UnbakedBlockStateModel {
+    private final UnbakedBlockStateModel wrapped;
 
-    public BetterGrassifyGroupableModel(GroupableModel wrapped) {
+    public BetterGrassifyGroupableModel(UnbakedBlockStateModel wrapped) {
         this.wrapped = wrapped;
     }
 
     @Override
-    public BakedModel bake(Baker baker) {
+    public @NotNull BakedModel bake(ModelBaker baker) {
         return new BetterGrassifyBakedModel(this.wrapped.bake(baker));
     }
 
     @Override
-    public Object getEqualityGroup(BlockState state) {
-        return this.wrapped.getEqualityGroup(state);
+    public @NotNull Object visualEqualityGroup(BlockState state) {
+        return this.wrapped.visualEqualityGroup(state);
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        this.wrapped.resolve(resolver);
+    public void resolveDependencies(Resolver resolver) {
+        this.wrapped.resolveDependencies(resolver);
     }
 }
 *///?}

@@ -5,33 +5,33 @@
 
 package dev.ultimatchamp.bettergrass.util;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public final class SpriteCalculator {
-    private static final BlockModels MODELS = MinecraftClient.getInstance().getBakedModelManager().getBlockModels();
+    private static final BlockModelShaper MODELS = Minecraft.getInstance().getModelManager().getBlockModelShaper();
 
-    public static Sprite calculateSprite(BlockState state, Direction face, Supplier<Random> randomSupplier) {
-        var model = MODELS.getModel(state);
+    public static TextureAtlasSprite calculateSprite(BlockState state, Direction face, Supplier<RandomSource> randomSupplier) {
+        var model = MODELS.getBlockModel(state);
 
         //? if >1.21.4 {
-        List<BakedQuad> quads = model.getParts(randomSupplier.get()).getFirst().getQuads(face);
+        List<BakedQuad> quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(face);
         if (!quads.isEmpty()) {
             return quads.getFirst().sprite();
         }
 
-        quads = model.getParts(randomSupplier.get()).getFirst().getQuads(null);
+        quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(null);
         if (!quads.isEmpty()) {
             for (BakedQuad quad : quads) {
-                if (quad.face() == face) return quad.sprite();
+                if (quad.direction() == face) return quad.sprite();
             }
         }
         //?} else {
@@ -43,7 +43,7 @@ public final class SpriteCalculator {
         quads = model.getQuads(state, null, randomSupplier.get());
         if (!quads.isEmpty()) {
             for (BakedQuad quad : quads) {
-                if (quad.getFace() == face) return quad.getSprite();
+                if (quad.getDirection() == face) return quad.getSprite();
             }
         }
         *///?}

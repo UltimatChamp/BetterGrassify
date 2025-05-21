@@ -2,30 +2,31 @@
 package dev.ultimatchamp.bettergrass.model;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedGroupedBlockStateModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
-public class BetterGrassifyUnbakedGroupedBlockStateModel extends WrapperUnbakedGroupedBlockStateModel implements BlockStateModel.UnbakedGrouped {
-    private final BlockStateModel.UnbakedGrouped wrapped;
+public class BetterGrassifyUnbakedGroupedBlockStateModel extends WrapperUnbakedGroupedBlockStateModel implements BlockStateModel.UnbakedRoot {
+    private final BlockStateModel.UnbakedRoot wrapped;
 
-    public BetterGrassifyUnbakedGroupedBlockStateModel(BlockStateModel.UnbakedGrouped wrapped) {
+    public BetterGrassifyUnbakedGroupedBlockStateModel(BlockStateModel.UnbakedRoot wrapped) {
         this.wrapped = wrapped;
     }
 
     @Override
-    public BlockStateModel bake(BlockState state, Baker baker) {
+    public @NotNull BlockStateModel bake(BlockState state, ModelBaker baker) {
         return new BetterGrassifyBakedModel(this.wrapped.bake(state, baker));
     }
 
     @Override
-    public Object getEqualityGroup(BlockState state) {
-        return this.wrapped.getEqualityGroup(state);
+    public @NotNull Object visualEqualityGroup(BlockState state) {
+        return this.wrapped.visualEqualityGroup(state);
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        this.wrapped.resolve(resolver);
+    public void resolveDependencies(Resolver resolver) {
+        this.wrapped.resolveDependencies(resolver);
     }
 }
 //?}

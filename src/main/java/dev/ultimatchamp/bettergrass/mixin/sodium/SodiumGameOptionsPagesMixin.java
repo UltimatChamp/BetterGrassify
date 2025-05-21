@@ -3,7 +3,7 @@ package dev.ultimatchamp.bettergrass.mixin.sodium;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.config.SodiumOptionsStorage;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,13 +26,13 @@ public class SodiumGameOptionsPagesMixin {
 
         groups.add(OptionGroup.createBuilder()
                 .add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterGrassMode.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("bettergrass.betterGrassMode"))
-                        .setTooltip(Text.translatable("bettergrass.betterGrassMode.desc"))
+                        .setName(Component.translatable("bettergrass.betterGrassMode"))
+                        .setTooltip(Component.translatable("bettergrass.betterGrassMode.desc"))
                         .setControl((opt) ->
-                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterGrassMode.class, new Text[]{
-                                Text.translatable("options.off"),
-                                Text.translatable("options.graphics.fast"),
-                                Text.translatable("options.graphics.fancy")
+                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterGrassMode.class, new Component[]{
+                                Component.translatable("options.off"),
+                                Component.translatable("options.graphics.fast"),
+                                Component.translatable("options.graphics.fancy")
                         }))
                         .setBinding((options, value) -> config.betterGrassMode = value,
                                 (options) -> config.betterGrassMode)
@@ -40,8 +40,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("bettergrass.resourcePackCompatibilityMode"))
-                        .setTooltip(Text.translatable("bettergrass.resourcePackCompatibilityMode.desc"))
+                        .setName(Component.translatable("bettergrass.resourcePackCompatibilityMode"))
+                        .setTooltip(Component.translatable("bettergrass.resourcePackCompatibilityMode.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.resourcePackCompatibilityMode = value,
                                 (options) -> config.resourcePackCompatibilityMode)
@@ -49,8 +49,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.grass_block"))
-                        .setTooltip(Text.translatable("bettergrass.grassBlocks.desc"))
+                        .setName(Component.translatable("block.minecraft.grass_block"))
+                        .setTooltip(Component.translatable("bettergrass.grassBlocks.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.grassBlocks = value,
                                 (options) -> config.grassBlocks)
@@ -58,8 +58,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.snow"))
-                        .setTooltip(Text.translatable("bettergrass.snowy.desc"))
+                        .setName(Component.translatable("block.minecraft.snow"))
+                        .setTooltip(Component.translatable("bettergrass.snowy.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.snowy = value,
                                 (options) -> config.snowy)
@@ -68,8 +68,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.dirt_path"))
-                        .setTooltip(Text.translatable("bettergrass.dirtPaths.desc"))
+                        .setName(Component.translatable("block.minecraft.dirt_path"))
+                        .setTooltip(Component.translatable("bettergrass.dirtPaths.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.dirtPaths = value,
                                 (options) -> config.dirtPaths)
@@ -77,8 +77,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.farmland"))
-                        .setTooltip(Text.translatable("bettergrass.farmLands.desc"))
+                        .setName(Component.translatable("block.minecraft.farmland"))
+                        .setTooltip(Component.translatable("bettergrass.farmLands.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.farmLands = value,
                                 (options) -> config.farmLands)
@@ -86,8 +86,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.podzol"))
-                        .setTooltip(Text.translatable("bettergrass.podzol.desc"))
+                        .setName(Component.translatable("block.minecraft.podzol"))
+                        .setTooltip(Component.translatable("bettergrass.podzol.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.podzol = value,
                                 (options) -> config.podzol)
@@ -95,8 +95,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.mycelium"))
-                        .setTooltip(Text.translatable("bettergrass.mycelium.desc"))
+                        .setName(Component.translatable("block.minecraft.mycelium"))
+                        .setTooltip(Component.translatable("bettergrass.mycelium.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.mycelium = value,
                                 (options) -> config.mycelium)
@@ -104,8 +104,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.crimson_nylium"))
-                        .setTooltip(Text.translatable("bettergrass.crimsonNylium.desc"))
+                        .setName(Component.translatable("block.minecraft.crimson_nylium"))
+                        .setTooltip(Component.translatable("bettergrass.crimsonNylium.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.crimsonNylium = value,
                                 (options) -> config.crimsonNylium)
@@ -113,8 +113,8 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(boolean.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("block.minecraft.warped_nylium"))
-                        .setTooltip(Text.translatable("bettergrass.warpedNylium.desc"))
+                        .setName(Component.translatable("block.minecraft.warped_nylium"))
+                        .setTooltip(Component.translatable("bettergrass.warpedNylium.desc"))
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.warpedNylium = value,
                                 (options) -> config.warpedNylium)
@@ -122,13 +122,13 @@ public class SodiumGameOptionsPagesMixin {
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
                 ).add(OptionImpl.createBuilder(BetterGrassifyConfig.BetterSnowMode.class, SodiumOptionsStorage.INSTANCE)
-                        .setName(Text.translatable("bettergrass.betterSnowMode"))
-                        .setTooltip(Text.translatable("bettergrass.betterSnowMode.desc"))
+                        .setName(Component.translatable("bettergrass.betterSnowMode"))
+                        .setTooltip(Component.translatable("bettergrass.betterSnowMode.desc"))
                         .setControl((opt) ->
-                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterSnowMode.class, new Text[]{
-                                Text.translatable("options.off"),
-                                Text.translatable("bettergrass.betterSnowMode.optifine"),
-                                Text.translatable("bettergrass.betterSnowMode.lambda")
+                                    new CyclingControl<>(opt, BetterGrassifyConfig.BetterSnowMode.class, new Component[]{
+                                Component.translatable("options.off"),
+                                Component.translatable("bettergrass.betterSnowMode.optifine"),
+                                Component.translatable("bettergrass.betterSnowMode.lambda")
                         }))
                         .setBinding((options, value) -> config.betterSnowMode = value,
                                 (options) -> config.betterSnowMode)

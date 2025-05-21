@@ -6,8 +6,9 @@ import com.google.common.collect.Lists;
 import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.TranslatableOption;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.util.OptionEnum;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -22,25 +23,25 @@ public class BetterGrassifyConfig {
     @Comment("-> General\nOFF/FAST/FANCY (default: FANCY)")
     public BetterGrassMode betterGrassMode = BetterGrassMode.FANCY;
 
-    public enum BetterGrassMode implements TranslatableOption {
+    public enum BetterGrassMode implements OptionEnum {
         OFF(0, "options.off"),
         FAST(1, "options.graphics.fast"),
         FANCY(2, "options.graphics.fancy");
 
         private final int id;
-        private final String translationKey;
+        private final String key;
 
-        BetterGrassMode(final int id, final String translationKey) {
+        BetterGrassMode(final int id, final String key) {
             this.id = id;
-            this.translationKey = translationKey;
+            this.key = key;
         }
 
         public int getId() {
             return this.id;
         }
 
-        public String getTranslationKey() {
-            return this.translationKey;
+        public @NotNull String getKey() {
+            return this.key;
         }
     }
 
@@ -78,17 +79,17 @@ public class BetterGrassifyConfig {
     @Comment("-> Better Snow\nOFF/OPTIFINE/LAMBDA (default: LAMBDA)")
     public BetterSnowMode betterSnowMode = BetterSnowMode.LAMBDA;
 
-    public enum BetterSnowMode implements TranslatableOption {
+    public enum BetterSnowMode implements OptionEnum {
         OFF(0, "options.off"),
         OPTIFINE(1, "bettergrass.betterSnowMode.optifine"),
         LAMBDA(2, "bettergrass.betterSnowMode.lambda");
 
         private final int id;
-        private final String translationKey;
+        private final String key;
 
-        BetterSnowMode(final int id, final String translationKey) {
+        BetterSnowMode(final int id, final String key) {
             this.id = id;
-            this.translationKey = translationKey;
+            this.key = key;
         }
 
         @Override
@@ -97,18 +98,18 @@ public class BetterGrassifyConfig {
         }
 
         @Override
-        public String getTranslationKey() {
-            return this.translationKey;
+        public @NotNull String getKey() {
+            return this.key;
         }
     }
 
     public List<String> snowLayers = Lists.newArrayList(
             "snow",
             "moss_carpet"
-            /*? if >1.21.1 {*/, "pale_moss_carpet"/*?} */
-            /*? if >1.21.4 {*/, "leaf_litter"/*?} */
+            /*? if >1.21.1 {*/, "pale_moss_carpet"/*?}*/
+            /*? if >1.21.4 {*/, "leaf_litter"/*?}*/
             , "pink_petals"
-            /*? if >1.21.4 {*/, "wildflowers"/*?} */
+            /*? if >1.21.4 {*/, "wildflowers"/*?}*/
     );
 
     public List<String> excludedTags = Lists.newArrayList();
@@ -133,6 +134,8 @@ public class BetterGrassifyConfig {
         if (cachedConfig != null) {
             return cachedConfig;
         }
+
+        initializeCaches();
 
         BetterGrassifyConfig config;
 
@@ -159,16 +162,18 @@ public class BetterGrassifyConfig {
         return cachedConfig = config;
     }
 
+    public static void initializeCaches() {
+        BetterGrassifyBakedModel.BETTER_SNOW_CACHE = new CopyOnWriteArrayList<>();
+
+        BetterGrassifyBakedModel.EXCLUDED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+        BetterGrassifyBakedModel.EXCLUDED_TAGS_CACHE = new CopyOnWriteArrayList<>();
+
+        BetterGrassifyBakedModel.WHITELISTED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
+        BetterGrassifyBakedModel.WHITELISTED_TAGS_CACHE = new CopyOnWriteArrayList<>();
+    }
+
     public static void save(BetterGrassifyConfig config) {
         try {
-            BetterGrassifyBakedModel.BETTER_SNOW_CACHE = new CopyOnWriteArrayList<>();
-
-            BetterGrassifyBakedModel.EXCLUDED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
-            BetterGrassifyBakedModel.EXCLUDED_TAGS_CACHE = new CopyOnWriteArrayList<>();
-
-            BetterGrassifyBakedModel.WHITELISTED_BLOCKS_CACHE = new CopyOnWriteArrayList<>();
-            BetterGrassifyBakedModel.WHITELISTED_TAGS_CACHE = new CopyOnWriteArrayList<>();
-
             String jsonString = JANKSON.toJson(config).toJson(true, true);
             Files.createDirectories(CONFIG_PATH.getParent());
             Files.writeString(CONFIG_PATH, jsonString);

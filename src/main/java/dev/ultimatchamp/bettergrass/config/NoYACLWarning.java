@@ -1,14 +1,14 @@
 package dev.ultimatchamp.bettergrass.config;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 public class NoYACLWarning extends Screen {
     private final Screen parent;
     public NoYACLWarning(Screen parent) {
-        super(Text.empty());
+        super(Component.empty());
         this.parent = parent;
     }
 
@@ -16,24 +16,26 @@ public class NoYACLWarning extends Screen {
     protected void init() {
         super.init();
 
-        ButtonWidget btn = ButtonWidget.builder(Text.translatable("dataPack.validation.back"),
-                button -> this.client.setScreen(parent))
-                .dimensions(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
+        if(this.minecraft == null) return;
+
+        Button btn = Button.builder(Component.translatable("dataPack.validation.back"),
+                        button -> this.minecraft.setScreen(parent))
+                .bounds(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
                 .build();
-        this.addDrawableChild(btn);
+        this.addRenderableWidget(btn);
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        Text warning = Text.translatable("bettergrass.noyacl.warn");
+        Component warning = Component.translatable("bettergrass.noyacl.warn");
         //? if >1.21.3 {
-        context.drawWrappedText(this.textRenderer, warning, this.width / 2 - 100, this.height / 2 - 50, 200,
-                                0xFFFFFFFF, true);
+        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200,
+                             0xFFFFFFFF, true);
         //?} else {
-        /*context.drawTextWrapped(this.textRenderer, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF);
-        *///?}
+        //guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF);
+        //?}
     }
 }
