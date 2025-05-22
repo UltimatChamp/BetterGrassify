@@ -308,24 +308,19 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         boolean isLayer = getLayerNeighbour(world, selfPos) != null;
         if (!isLayer) return false;
 
-        boolean isExcludedBlock = isBlockExcluded(self);
-        boolean isExcludedTag = isTagExcluded(self, isExcludedBlock);
+        boolean isWhitelistedBlock = isBlockWhitelisted(self);
+        boolean isWhitelistedTag = isTagWhitelisted(self);
 
-        return !(isExcludedBlock || isExcludedTag);
+        if (isWhitelistOn()) return isWhitelistedBlock || isWhitelistedTag;
+
+        boolean isExcludedBlock = isBlockExcluded(self);
+        boolean isExcludedTag = isTagExcluded(self);
+
+        return !isExcludedBlock && !isExcludedTag;
     }
 
-    private static boolean isBlockExcluded(BlockState self) {
-        if (EXCLUDED_BLOCKS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
-            BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
-            for (String block : BetterGrassifyConfig.load().excludedBlocks) {
-                ResourceLocation identifier = ResourceLocation.tryParse(withoutAttribute(block));
-                Optional<Block> excludedBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
-
-                if (excludedBlock.isEmpty()) continue;
-
-                EXCLUDED_BLOCKS_CACHE.add(Map.entry(excludedBlock.get(), block));
-            }
-        } else if (WHITELISTED_BLOCKS_CACHE.isEmpty()) {
+    private static boolean isBlockWhitelisted(BlockState self) {
+        if (WHITELISTED_BLOCKS_CACHE.isEmpty()) {
             for (String block : BetterGrassifyConfig.load().whitelistedBlocks) {
                 ResourceLocation identifier = ResourceLocation.tryParse(withoutAttribute(block));
                 Optional<Block> whitelistedBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
@@ -336,60 +331,65 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
             }
         }
 
-        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
-            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
-            for (Map.Entry<Block, String> entry : EXCLUDED_BLOCKS_CACHE) {
-                if (matchesBlock(self, entry.getValue())) {
-                    return true;
-                }
+        for (Map.Entry<Block, String> entry : WHITELISTED_BLOCKS_CACHE) {
+            if (matchesBlock(self, entry.getValue())) {
+                return true;
             }
-        } else {
-            for (Map.Entry<Block, String> entry : WHITELISTED_BLOCKS_CACHE) {
-                if (matchesBlock(self, entry.getValue())) {
-                    return false;
-                }
-            }
-
-            return true;
         }
 
         return false;
     }
 
-    private static String withoutAttribute(String block) {
-        boolean hasAttribute = block.contains("[");
-        return hasAttribute ? block.substring(0, block.indexOf("[")) : block;
-    }
-
-    private static boolean isTagExcluded(BlockState self, boolean isExcludedBlock) {
-        if (EXCLUDED_TAGS_CACHE.isEmpty() && BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() &&
-            BetterGrassifyConfig.load().whitelistedTags.isEmpty()) {
-            for (String tag : BetterGrassifyConfig.load().excludedTags) {
-                ResourceLocation identifier = ResourceLocation.tryParse(tag);
-                EXCLUDED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, identifier));
-            }
-        } else if (WHITELISTED_TAGS_CACHE.isEmpty()) {
+    private static boolean isTagWhitelisted(BlockState self) {
+        if (WHITELISTED_TAGS_CACHE.isEmpty()) {
             for (String tag : BetterGrassifyConfig.load().whitelistedTags) {
                 ResourceLocation identifier = ResourceLocation.tryParse(tag);
                 WHITELISTED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, identifier));
             }
         }
 
-        if (BetterGrassifyConfig.load().whitelistedTags.isEmpty() &&
-            BetterGrassifyConfig.load().whitelistedBlocks.isEmpty()) {
-            for (TagKey<Block> tag : EXCLUDED_TAGS_CACHE) {
-                if (self.is(tag)) {
-                    return true;
-                }
+        for (TagKey<Block> tag : WHITELISTED_TAGS_CACHE) {
+            if (self.is(tag)) {
+                return true;
             }
-        } else {
-            for (TagKey<Block> tag : WHITELISTED_TAGS_CACHE) {
-                if (self.is(tag)) {
-                    return false;
-                }
-            }
+        }
 
-            if (!isExcludedBlock) return false;
+        return false;
+    }
+
+    private static boolean isBlockExcluded(BlockState self) {
+        if (EXCLUDED_BLOCKS_CACHE.isEmpty()) {
+            for (String block : BetterGrassifyConfig.load().excludedBlocks) {
+                ResourceLocation identifier = ResourceLocation.tryParse(withoutAttribute(block));
+                Optional<Block> excludedBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
+
+                if (excludedBlock.isEmpty()) continue;
+
+                EXCLUDED_BLOCKS_CACHE.add(Map.entry(excludedBlock.get(), block));
+            }
+        }
+
+        for (Map.Entry<Block, String> entry : EXCLUDED_BLOCKS_CACHE) {
+            if (matchesBlock(self, entry.getValue())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isTagExcluded(BlockState self) {
+        if (EXCLUDED_TAGS_CACHE.isEmpty()) {
+            for (String tag : BetterGrassifyConfig.load().excludedTags) {
+                ResourceLocation identifier = ResourceLocation.tryParse(tag);
+                EXCLUDED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, identifier));
+            }
+        }
+
+        for (TagKey<Block> tag : EXCLUDED_TAGS_CACHE) {
+            if (self.is(tag)) {
+                return true;
+            }
         }
 
         return false;
@@ -397,7 +397,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     private static boolean matchesBlock(BlockState self, String block) {
         boolean hasAttribute = block.contains("[");
-        String blockName = hasAttribute ? block.substring(0, block.indexOf("[")) : block;
+        String blockName = withoutAttribute(block);
         String attribute = "";
         boolean attributeEnabled = true;
 
@@ -419,6 +419,15 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
 
         return false;
+    }
+
+    private static String withoutAttribute(String block) {
+        boolean hasAttribute = block.contains("[");
+        return hasAttribute ? block.substring(0, block.indexOf("[")) : block;
+    }
+
+    private static boolean isWhitelistOn() {
+        return !BetterGrassifyConfig.load().whitelistedBlocks.isEmpty() || !BetterGrassifyConfig.load().whitelistedTags.isEmpty();
     }
 
     private static void spriteBake(MutableQuadView quad, BlockState state, Supplier<RandomSource> randomSupplier) {
