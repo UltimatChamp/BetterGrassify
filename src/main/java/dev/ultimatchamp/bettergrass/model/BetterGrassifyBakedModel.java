@@ -14,7 +14,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -100,7 +99,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
                 if (face == null ||
                     face.getAxis().isVertical() ||
                     state.hasBlockEntity() ||
-                    !(isFullQuad(quad) || state.getBlock() instanceof SlabBlock)
+                    !isFullQuad(quad)
                 ) return true;
 
                 betterGrassify(quad, blockView, state, pos, face, randomSupplier);
@@ -294,21 +293,22 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         VoxelShape outlineShape = self.getShape(world, selfPos);
         VoxelShape bottomFace = outlineShape.getFaceShape(Direction.DOWN);
         double height = outlineShape.max(Direction.Axis.Y) - outlineShape.min(Direction.Axis.Y);
-        if (self.isAir() ||
-            self.is(Blocks.WATER) ||
-            self.hasBlockEntity() ||
-            !(bottomFace.min(Direction.Axis.X) > 0F &&
-              bottomFace.max(Direction.Axis.X) < 1F &&
-              bottomFace.min(Direction.Axis.Z) > 0F &&
-              bottomFace.max(Direction.Axis.Z) < 1F
-            ) ||
-            height <= 0.125F
-        ) return false;
+
+        boolean isWhitelistedBlock = isBlockWhitelisted(self);
+        if (!isWhitelistedBlock) {
+            if (self.isAir() || self.is(Blocks.WATER) || self.hasBlockEntity() ||
+                !(bottomFace.min(Direction.Axis.X) > 0F &&
+                  bottomFace.max(Direction.Axis.X) < 1F &&
+                  bottomFace.min(Direction.Axis.Z) > 0F &&
+                  bottomFace.max(Direction.Axis.Z) < 1F
+                ) ||
+                height <= 0.125F
+            ) return false;
+        }
 
         boolean isLayer = getLayerNeighbour(world, selfPos) != null;
         if (!isLayer) return false;
 
-        boolean isWhitelistedBlock = isBlockWhitelisted(self);
         boolean isWhitelistedTag = isTagWhitelisted(self);
 
         if (isWhitelistOn()) return isWhitelistedBlock || isWhitelistedTag;
@@ -422,8 +422,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     private static String withoutAttribute(String block) {
-        boolean hasAttribute = block.contains("[");
-        return hasAttribute ? block.substring(0, block.indexOf("[")) : block;
+        int attributeIndex = block.indexOf("[");
+        return attributeIndex > 0 ? block.substring(0, attributeIndex) : block;
     }
 
     private static boolean isWhitelistOn() {
