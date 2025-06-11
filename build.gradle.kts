@@ -3,7 +3,7 @@ plugins {
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-var loader = project.property("loom.platform")
+var loader = project.property("loom.platform") as String
 
 var isFabric = loader == "fabric"
 var isNeo = loader == "neoforge"
@@ -48,21 +48,14 @@ dependencies {
     minecraft("com.mojang:minecraft:${project.property("deps.minecraft_version")}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.property("deps.minecraft_version")}:${project.property("deps.parchment_version")}@zip")
+        //parchment("org.parchmentmc.data:parchment-${project.property("deps.minecraft_version")}:${project.property("deps.parchment_version")}@zip")
     })
-
-    fun addEmbeddedFabricModule(name: String) {
-        modImplementation(fabricApi.module(name, project.property("deps.fapi_version") as String))
-    }
 
     if (isFabric) {
         modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-        modImplementation("maven.modrinth:modmenu:${project.property("deps.modmenu_version")}")
+        modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
 
-        addEmbeddedFabricModule("fabric-renderer-api-v1")
-        if (stonecutter.eval(property("deps.minecraft_version") as String, ">1.21.1")) {
-            addEmbeddedFabricModule("fabric-model-loading-api-v1")
-        }
+        modImplementation("maven.modrinth:modmenu:${project.property("deps.modmenu_version")}")
     } else if (isNeo) {
         "neoForge"("net.neoforged:neoforge:${project.property("deps.neoforge")}")
 
@@ -77,8 +70,9 @@ dependencies {
 }
 
 stonecutter {
-    stonecutter.const("fabric", isFabric)
-    stonecutter.const("neoforge", isNeo)
+    constants {
+        match(loader, "fabric", "neoforge")
+    }
 }
 
 tasks.processResources {
@@ -220,6 +214,16 @@ publishMods {
             curseforge("c1.21.5") {
                 from(cfOptions)
                 minecraftVersions.add("1.21.5")
+            }
+        }
+        "1.21.6" -> {
+            modrinth("m1.21.6") {
+                from(mrOptions)
+                minecraftVersions.add("1.21.6")
+            }
+            curseforge("c1.21.6") {
+                from(cfOptions)
+                minecraftVersions.add("1.21.6")
             }
         }
     }

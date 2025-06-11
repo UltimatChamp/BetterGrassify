@@ -60,7 +60,7 @@ public class BetterGrassifyFabric implements ClientModInitializer {
             //ModelResourceLocation modelId = context.topLevelId();
             //?}
 
-            /*? if <1.21.5 {*//*if (modelId.getVariant().equals("inventory")) return model;*//*?}*/
+            /*? if <1.21.5 {*//*if (modelId == null || modelId.getVariant().equals("inventory")) return model;*//*?}*/
 
             List<String> blocks = BetterGrassify.getBlocks();
 

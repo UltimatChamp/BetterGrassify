@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.VertexSorting;
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
 import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.chunk.RenderChunkRegion;
 import net.minecraft.client.renderer.chunk.SectionCompiler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
@@ -22,9 +21,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+/*?if <1.21.6 {*//*import net.minecraft.client.renderer.chunk.RenderChunkRegion;*//*?}*/
+
+//? if >1.21.5 {
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.chunk.RenderSectionRegion;
+//?} else if >1.21.4 {
+import net.minecraft.client.renderer.RenderType;
+//?}
+
 //? if >1.21.4 {
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 
 import java.util.List;
@@ -42,25 +49,30 @@ public abstract class SectionCompilerMixin {
     @Final
     private BlockRenderDispatcher blockRenderer;
 
-    //? if >1.21.4 {
+    //? if >1.21.5 {
     @Shadow
+    protected abstract BufferBuilder getOrBeginLayer(Map<ChunkSectionLayer, BufferBuilder> map, SectionBufferBuilderPack sectionBufferBuilderPack, ChunkSectionLayer chunkSectionLayer);
+    //?} else if >1.21.4 {
+    /*@Shadow
     protected abstract BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers, SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType);
-    //?}
+    *///?}
 
     //? if fabric {
     @Inject(method = "compile", at = @At(value = "INVOKE",
     //?} else {
     //@Inject(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;", at = @At(value = "INVOKE",
     //?}
-            //? if >1.21.4 {
-            target = "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;")
+            //? if >1.21.5 {
+            target = "Lnet/minecraft/client/renderer/chunk/RenderSectionRegion;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;")
+            //?} else if >1.21.4 {
+            //target = "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;")
             //?} else if 1.21.1 && neoforge {
             //target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)V")
             //?} else {
             //target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;)V")
             //?}
     )
-    private void bettergrass$render(SectionPos sectionPos, RenderChunkRegion region, VertexSorting vertexSorting,
+    private void bettergrass$render(SectionPos sectionPos, /*? if >1.21.5 {*/RenderSectionRegion/*?} else {*//*RenderChunkRegion*//*?}*/ region, VertexSorting vertexSorting,
                                     SectionBufferBuilderPack sectionBufferBuilderPack,
                                     //? if neoforge {
                                     //List<AddSectionGeometryEvent.AdditionalSectionRenderer> additionalRenderers,
@@ -68,7 +80,7 @@ public abstract class SectionCompilerMixin {
                                     CallbackInfoReturnable<SectionCompiler.Results> cir,
                                     @Local(ordinal = 2) BlockPos blockPos, @Local PoseStack matrixStack,
                                     //? if >1.21.4 {
-                                    @Local Map<RenderType, BufferBuilder> map, @Local List<BlockModelPart> list,
+                                    @Local Map</*? if >1.21.5 {*/ChunkSectionLayer/*?} else {*//*RenderType*//*?}*/, BufferBuilder> map, @Local List<BlockModelPart> list,
                                     //?} else {
                                     //@Local BufferBuilder bufferBuilder,
                                     //?}
@@ -79,7 +91,7 @@ public abstract class SectionCompilerMixin {
             if (BetterGrassifyBakedModel.canHaveGhostLayer(region, blockPos)) {
                 matrixStack.pushPose();
                 //? if >1.21.4 {
-                RenderType renderLayer = ItemBlockRenderTypes.getChunkRenderType(layerNeighbour);
+                var renderLayer = ItemBlockRenderTypes.getChunkRenderType(layerNeighbour);
                 BufferBuilder bufferBuilder = this.getOrBeginLayer(map, sectionBufferBuilderPack, renderLayer);
                 random.setSeed(layerNeighbour.getSeed(blockPos));
                 this.blockRenderer.getBlockModel(layerNeighbour).collectParts(random, list);
@@ -106,7 +118,7 @@ public abstract class SectionCompilerMixin {
     //@ModifyVariable(method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;", at = @At("STORE"), ordinal = 0)
     //?}
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos,
-                                                 @Local(argsOnly = true) RenderChunkRegion region) {
+        @Local(argsOnly = true) /*? if >1.21.5 {*/RenderSectionRegion/*?} else {*//*RenderChunkRegion*//*?}*/ region) {
         if (state.getOptionalValue(BlockStateProperties.SNOWY).isEmpty()) return state;
         if (!BetterGrassifyBakedModel.isLayerNeighbourSnow(region, blockPos.above())) return state;
 

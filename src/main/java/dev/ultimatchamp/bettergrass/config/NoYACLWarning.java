@@ -27,7 +27,7 @@ public class NoYACLWarning extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
+        /*? if <1.21.6 {*//*this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);*//*?}*/
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         Component warning = Component.translatable("bettergrass.noyacl.warn");

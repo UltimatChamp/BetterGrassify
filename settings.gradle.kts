@@ -11,11 +11,13 @@ pluginManagement {
 }
 
 plugins {
-    id("dev.kikugie.stonecutter") version "0.6"
+    id("dev.kikugie.stonecutter") version "0.7-alpha.22"
 }
 
 stonecutter {
     create(rootProject) {
+        vers("1.21.6-fabric", "1.21.6")
+
         vers("1.21.5-fabric", "1.21.5")
 
         vers("1.21.4-fabric", "1.21.4")
@@ -25,7 +27,7 @@ stonecutter {
         vers("1.21.1-fabric", "1.21.1")
         vers("1.21.1-neoforge", "1.21.1")
 
-        vcsVersion = "1.21.5-fabric"
+        vcsVersion = "1.21.6-fabric"
     }
 }
 

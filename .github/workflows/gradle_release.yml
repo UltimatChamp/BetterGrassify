@@ -34,7 +34,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build and Publish with Gradle
-        run: ./gradlew chiseledReleaseMod
+        run: ./gradlew publishMods
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

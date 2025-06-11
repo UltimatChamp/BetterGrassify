@@ -307,7 +307,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
         }
 
         boolean isLayer = getLayerNeighbour(world, selfPos) != null;
-        if (!isLayer) return false;
+        if (!isLayer || !world.getBlockState(selfPos.below()).isFaceSturdy(world, selfPos.below(), Direction.UP)) return false;
 
         boolean isWhitelistedTag = isTagWhitelisted(self);
 
