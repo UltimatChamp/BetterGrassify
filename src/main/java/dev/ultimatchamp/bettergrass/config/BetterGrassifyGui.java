@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import dev.isxander.yacl3.api.*;
 import dev.isxander.yacl3.api.controller.*;
 import dev.isxander.yacl3.gui.controllers.cycling.EnumController;
+import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -69,7 +70,7 @@ public class BetterGrassifyGui {
                                                 () -> config.snowy,
                                                 (value) -> config.snowy = value
                                         )
-                                        .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
+                                        .available(!FabricLoader.getInstance().isModLoaded("wilderwild") || !WilderWildCompat.isSnowloggingOn())
                                         .controller(TickBoxControllerBuilder::create)
                                         .build())
                                 .option(Option.<Boolean>createBuilder()
@@ -171,7 +172,7 @@ public class BetterGrassifyGui {
                                         () -> config.betterSnowMode,
                                         (value) -> config.betterSnowMode = value
                                 )
-                                .available(!FabricLoader.getInstance().isModLoaded("wilderwild"))
+                                .available(!FabricLoader.getInstance().isModLoaded("wilderwild") || !WilderWildCompat.isSnowloggingOn())
                                 .customController(opt ->
                                         new EnumController<>(opt, BetterGrassifyConfig.BetterSnowMode.class))
                                 .build())

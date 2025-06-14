@@ -1,5 +1,6 @@
 package dev.ultimatchamp.bettergrass.mixin.sodium;
 
+import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.config.SodiumOptionsStorage;
 import net.fabricmc.loader.api.FabricLoader;
@@ -63,7 +64,7 @@ public class SodiumGameOptionsPagesMixin {
                         .setControl(TickBoxControl::new)
                         .setBinding((options, value) -> config.snowy = value,
                                 (options) -> config.snowy)
-                        .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
+                        .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild") || !WilderWildCompat.isSnowloggingOn())
                         .setImpact(OptionImpact.LOW)
                         .setFlags(OptionFlag.REQUIRES_ASSET_RELOAD)
                         .build()
@@ -132,7 +133,7 @@ public class SodiumGameOptionsPagesMixin {
                         }))
                         .setBinding((options, value) -> config.betterSnowMode = value,
                                 (options) -> config.betterSnowMode)
-                        .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild"))
+                        .setEnabled(() -> !FabricLoader.getInstance().isModLoaded("wilderwild") || !WilderWildCompat.isSnowloggingOn())
                         .setImpact(OptionImpact.VARIES)
                         .setFlags(OptionFlag.REQUIRES_RENDERER_RELOAD)
                         .build()

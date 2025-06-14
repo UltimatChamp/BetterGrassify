@@ -2,6 +2,7 @@
 /*package dev.ultimatchamp.bettergrass.loaders.neo;
 
 import dev.ultimatchamp.bettergrass.BetterGrassify;
+import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.neoforged.bus.api.IEventBus;
@@ -30,7 +31,7 @@ public final class BetterGrassifyNeo {
                                         config.betterGrassMode.toString());
         }
 
-        if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
+        if (FabricLoader.getInstance().isModLoaded("wilderwild") && WilderWildCompat.isSnowloggingOn()) {
             config.snowy = false;
             config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
             BetterGrassify.LOGGER.warn("[BetterGrassify] WilderWild detected. " +

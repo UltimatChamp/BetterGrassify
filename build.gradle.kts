@@ -24,12 +24,8 @@ base {
 
 repositories {
     exclusiveContent {
-        forRepository {
-            maven("https://api.modrinth.com/maven")
-        }
-        filter {
-            includeGroup("maven.modrinth")
-        }
+        forRepository { maven("https://api.modrinth.com/maven") }
+        filter { includeGroup("maven.modrinth") }
     }
     maven("https://maven.isxander.dev/releases")
     maven("https://thedarkcolour.github.io/KotlinForForge/")
@@ -67,6 +63,10 @@ dependencies {
 
     include("blue.endless:jankson:${project.property("deps.jankson_version")}")
     modImplementation("blue.endless:jankson:${project.property("deps.jankson_version")}")
+
+    // Compat
+    modCompileOnly("maven.modrinth:wilder-wild:${project.property("deps.wilderwild_version")}") {
+    }
 }
 
 stonecutter {

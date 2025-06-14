@@ -2,6 +2,7 @@
 package dev.ultimatchamp.bettergrass.loaders.fabric;
 
 import dev.ultimatchamp.bettergrass.BetterGrassify;
+import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
@@ -38,7 +39,7 @@ public class BetterGrassifyFabric implements ClientModInitializer {
                                        config.betterGrassMode.toString());
         }
 
-        if (FabricLoader.getInstance().isModLoaded("wilderwild")) {
+        if (FabricLoader.getInstance().isModLoaded("wilderwild") && WilderWildCompat.isSnowloggingOn()) {
             config.snowy = false;
             config.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
             BetterGrassify.LOGGER.warn("[BetterGrassify] 'WilderWild' detected. " +

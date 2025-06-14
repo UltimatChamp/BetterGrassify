@@ -1,8 +1,10 @@
 package dev.ultimatchamp.bettergrass.model;
 
+import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -218,6 +220,8 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
     }
 
     private static boolean isSnowy(BlockAndTintGetter world, BlockPos selfPos) {
+        if (FabricLoader.getInstance().isModLoaded("wilderwild") && WilderWildCompat.isSnowloggingOn()) return false;
+
         BlockState self = world.getBlockState(selfPos);
         return self.getOptionalValue(BlockStateProperties.SNOWY).orElse(false) && !world.getBlockState(selfPos.above()).isAir();
     }
@@ -287,6 +291,7 @@ public class BetterGrassifyBakedModel extends ForwardingBakedModel {
 
     public static boolean canHaveGhostLayer(BlockAndTintGetter world, BlockPos selfPos) {
         if (BetterGrassifyConfig.load().betterSnowMode == BetterGrassifyConfig.BetterSnowMode.OFF) return false;
+        if (FabricLoader.getInstance().isModLoaded("wilderwild") && WilderWildCompat.isSnowloggingOn()) return false;
 
         BlockState self = world.getBlockState(selfPos);
 
