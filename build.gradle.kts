@@ -65,8 +65,7 @@ dependencies {
     modImplementation("blue.endless:jankson:${project.property("deps.jankson_version")}")
 
     // Compat
-    modCompileOnly("maven.modrinth:wilder-wild:${project.property("deps.wilderwild_version")}") {
-    }
+    modCompileOnly("maven.modrinth:wilder-wild:${project.property("deps.wilderwild_version")}")
 }
 
 stonecutter {

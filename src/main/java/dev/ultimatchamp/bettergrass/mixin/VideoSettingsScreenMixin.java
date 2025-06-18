@@ -27,7 +27,7 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
             )
     )
     private void bettergrass$addConfigButton(CallbackInfo ci) {
-        if (this.minecraft == null) return;
+        if (this.minecraft == null || this.list == null) return;
 
         this.list.addBig(new OptionInstance<>("bettergrass.title",
                 OptionInstance.cachedConstantTooltip(Component.empty()), (arg, object) ->
