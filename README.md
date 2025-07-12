@@ -24,7 +24,7 @@ _<small>Gamers can finally touch grass!?</small>_
 
 ---
 
-_OptiFine's Fancy_ and _Fast **better grass**_ implemented on Fabric and NeoForge!
+_OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge!
 
 <img alt="Banner" width="750px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/7b81f0b5a85d97ab9d791d0139319012b5a5d7ec.png" />
 

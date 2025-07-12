@@ -1,9 +1,14 @@
 {
   "required": true,
   "package": "dev.ultimatchamp.bettergrass.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
-  "mixins": [${mixins}],
+  "mixins": [
+    "SectionCompilerMixin",
+    "VideoSettingsScreenMixin",
+    "sodium.ChunkBuilderMeshingTaskMixin",
+    "sodium.SodiumOptionsGUIMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

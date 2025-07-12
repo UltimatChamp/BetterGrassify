@@ -1,4 +1,3 @@
-//? if >1.21.4 {
 package dev.ultimatchamp.bettergrass.model;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedGroupedBlockStateModel;
@@ -7,16 +6,16 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class BetterGrassifyUnbakedGroupedBlockStateModel extends WrapperUnbakedGroupedBlockStateModel implements BlockStateModel.UnbakedRoot {
+public class BetterGrassifyUnbakedRootBlockStateModel extends WrapperUnbakedGroupedBlockStateModel implements BlockStateModel.UnbakedRoot {
     private final BlockStateModel.UnbakedRoot wrapped;
 
-    public BetterGrassifyUnbakedGroupedBlockStateModel(BlockStateModel.UnbakedRoot wrapped) {
+    public BetterGrassifyUnbakedRootBlockStateModel(BlockStateModel.UnbakedRoot wrapped) {
         this.wrapped = wrapped;
     }
 
     @Override
-    public @NotNull BlockStateModel bake(BlockState state, ModelBaker baker) {
-        return new BetterGrassifyBakedModel(this.wrapped.bake(state, baker));
+    public @NotNull BlockStateModel bake(BlockState blockState, ModelBaker modelBaker) {
+        return new BetterGrassifyBlockStateModel(this.wrapped.bake(blockState, modelBaker));
     }
 
     @Override
@@ -29,4 +28,3 @@ public class BetterGrassifyUnbakedGroupedBlockStateModel extends WrapperUnbakedG
         this.wrapped.resolveDependencies(resolver);
     }
 }
-//?}

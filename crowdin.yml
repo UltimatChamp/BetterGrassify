@@ -1,0 +1,12 @@
+project_id: "${{ secrets.CROWDIN_PROJECT_ID }}"
+api_token: "${{ secrets.CROWDIN_PERSONAL_TOKEN }}"
+base_path: "src/main/resources"
+
+preserve_hierarchy: true
+
+files: [
+  {
+    source: "/assets/bettergrass/lang/en_us.json",
+    translation: "/assets/bettergrass/lang/%locale_with_underscore%.json"
+  }
+]

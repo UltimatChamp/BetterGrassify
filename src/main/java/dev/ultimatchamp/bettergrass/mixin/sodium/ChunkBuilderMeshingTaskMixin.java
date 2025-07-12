@@ -2,13 +2,14 @@ package dev.ultimatchamp.bettergrass.mixin.sodium;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import dev.ultimatchamp.bettergrass.model.BetterGrassifyBakedModel;
+import dev.ultimatchamp.bettergrass.util.BetterSnowUtils;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.ChunkBuildContext;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.ChunkBuildOutput;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderCache;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask;
 import net.caffeinemc.mods.sodium.client.util.task.CancellationToken;
 import net.caffeinemc.mods.sodium.client.world.LevelSlice;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,17 +34,17 @@ public class ChunkBuilderMeshingTaskMixin {
                                      @Local(ordinal = 0) BlockPos.MutableBlockPos pos,
                                      @Local(ordinal = 1) BlockPos.MutableBlockPos modelOffset,
                                      @Local LocalRef<BlockState> blockState) {
-        BlockState layerNeighbour = BetterGrassifyBakedModel.getLayerNeighbour(slice, pos.above());
+        BlockState layerNeighbour = BetterSnowUtils.getLayerNeighbour(slice, pos.above());
 
         if (layerNeighbour != null) {
-            if (BetterGrassifyBakedModel.canHaveGhostLayer(slice, pos.above())) {
+            if (BetterSnowUtils.canHaveGhostLayer(slice, pos.above())) {
                 if (layerNeighbour.is(Blocks.SNOW)) {
                     if (blockState.get().getOptionalValue(BlockStateProperties.SNOWY).isPresent()) {
                         blockState.set(blockState.get().setValue(BlockStateProperties.SNOWY, true));
                     }
                 }
 
-                var model = cache.getBlockModels().getBlockModel(layerNeighbour);
+                BlockStateModel model = cache.getBlockModels().getBlockModel(layerNeighbour);
                 cache.getBlockRenderer().renderModel(model, layerNeighbour, pos.above(), modelOffset.above());
             }
         }

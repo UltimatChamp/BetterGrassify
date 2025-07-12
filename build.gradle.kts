@@ -1,21 +1,16 @@
 plugins {
-    id("dev.architectury.loom") version "1.10-SNAPSHOT"
+    id("fabric-loom") version "1.11-SNAPSHOT"
     id("me.modmuss50.mod-publish-plugin") version "0.8.4"
 }
 
-var loader = project.property("loom.platform") as String
-
-var isFabric = loader == "fabric"
-var isNeo = loader == "neoforge"
-
 var isSnapshot = false
-var mcVer = project.property("deps.minecraft_version") as String
+var mcVer = project.property("minecraft_version") as String
 if (mcVer.contains("-") || mcVer.contains("w")) {
     isSnapshot = true
     mcVer = mcVer.replace("-", "")
 }
 
-version = "${project.property("mod_version")}+$loader.$mcVer"
+version = "${project.property("mod_version")}+fabric.$mcVer"
 group = project.property("maven_group") as String
 
 base {
@@ -27,81 +22,45 @@ repositories {
         forRepository { maven("https://api.modrinth.com/maven") }
         filter { includeGroup("maven.modrinth") }
     }
-    maven("https://maven.isxander.dev/releases")
-    maven("https://thedarkcolour.github.io/KotlinForForge/")
-    maven("https://maven.su5ed.dev/releases")
-    maven("https://maven.neoforged.net/releases")
+    maven("https://maven.parchmentmc.org")
+    maven("https://maven.shedaniel.me/")
+    maven("https://maven.terraformersmc.com/releases/")
     mavenCentral()
 }
 
-loom {
-    runConfigs.all {
-        ideConfigGenerated(true)
-    }
-}
-
 dependencies {
-    minecraft("com.mojang:minecraft:${project.property("deps.minecraft_version")}")
+    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings(loom.layered {
         officialMojangMappings()
-        //parchment("org.parchmentmc.data:parchment-${project.property("deps.minecraft_version")}:${project.property("deps.parchment_version")}@zip")
+        parchment("org.parchmentmc.data:parchment-${project.property("parchment_version")}@zip")
     })
 
-    if (isFabric) {
-        modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-        modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
+    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fapi_version")}")
 
-        modImplementation("maven.modrinth:modmenu:${project.property("deps.modmenu_version")}")
-    } else if (isNeo) {
-        "neoForge"("net.neoforged:neoforge:${project.property("deps.neoforge")}")
-
-        modImplementation("org.sinytra.forgified-fabric-api:forgified-fabric-api:${project.property("deps.fapi_version")}")
-    }
-
-    modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
-    modImplementation("dev.isxander:yet-another-config-lib:${project.property("deps.yacl_version")}")
-
-    include("blue.endless:jankson:${project.property("deps.jankson_version")}")
-    modImplementation("blue.endless:jankson:${project.property("deps.jankson_version")}")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("clothconfig_version")}")
+    modApi("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    modImplementation("maven.modrinth:sodium:${project.property("sodium_version")}")
 
     // Compat
-    modCompileOnly("maven.modrinth:wilder-wild:${project.property("deps.wilderwild_version")}")
-}
-
-stonecutter {
-    constants {
-        match(loader, "fabric", "neoforge")
-    }
+    modCompileOnly("maven.modrinth:wilder-wild:${project.property("wilderwild_version")}")
+    modCompileOnly("maven.modrinth:frozenlib:${project.property("frozenlib_version")}")
 }
 
 tasks.processResources {
     val replaceProperties = mapOf(
-        "minecraft_range" to project.property("deps.mc_range"),
+        "minecraft_range" to project.property("mc_range"),
         "mod_id" to project.property("mod_id"),
         "mod_name" to project.property("mod_name"),
         "mod_license" to project.property("mod_license"),
         "mod_version" to project.version,
         "mod_authors" to project.property("mod_authors"),
-        "mod_description" to project.property("mod_description"),
-        "sodium_incompat_range" to project.property("deps.sodium_incompat_range"),
-        "mixins" to project.property("deps.mixins")
+        "mod_description" to project.property("mod_description")
     )
     replaceProperties.forEach { (key, value) -> inputs.property(key, value) }
 
-    filesMatching("bettergrass.mixins.json") {
+    filesMatching("fabric.mod.json") {
         expand(replaceProperties)
-    }
-
-    if (isFabric) {
-        filesMatching("fabric.mod.json") {
-            expand(replaceProperties)
-        }
-        exclude("META-INF/neoforge.mods.toml")
-    } else if (isNeo) {
-        filesMatching("META-INF/neoforge.mods.toml") {
-            expand(replaceProperties)
-        }
-        exclude("fabric.mod.json")
     }
 }
 
@@ -129,102 +88,37 @@ publishMods {
     changelog.set("# ${project.version}\n${rootProject.file("CHANGELOG.md").readText()}")
     file.set(tasks.remapJar.get().archiveFile)
     displayName.set("BetterGrassify ${project.version}")
+    modLoaders.addAll("fabric", "quilt")
 
-    var fapi = ""
-    if (isFabric) {
-        fapi = "fabric-api"
-        modLoaders.addAll("fabric", "quilt")
-    } else if (isNeo) {
-        fapi = "forgified-fabric-api"
-        modLoaders.add("neoforge")
-    }
-
-    val mrOptions = modrinthOptions {
+    modrinth {
         projectId.set(project.property("modrinthId") as String)
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
-        requires(fapi)
+        minecraftVersions.addAll("1.21.6", "1.21.7")
+
+        requires("fabric-api")
         optional("yacl")
 
         // Discord
         announcementTitle.set("Download from Modrinth")
     }
 
-    val cfOptions = curseforgeOptions {
+    curseforge {
         projectId.set(project.property("curseforgeId") as String)
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
-        requires(fapi)
+        minecraftVersions.addAll("1.21.6", "1.21.7")
+        javaVersions.add(JavaVersion.VERSION_21)
+
+        clientRequired.set(true)
+        serverRequired.set(false)
+
+        requires("fabric-api")
         optional("yacl")
 
         // Discord
         announcementTitle.set("Download from CurseForge")
         projectSlug.set("bettergrassify")
-    }
-
-    when (project.property("deps.minecraft_version") as String) {
-        "1.21.1" -> {
-            modrinth("m1.21.1") {
-                from(mrOptions)
-                minecraftVersionRange {
-                    start = "1.21"
-                    end = "1.21.1"
-                }
-            }
-            curseforge("c1.21.1") {
-                from(cfOptions)
-                minecraftVersionRange {
-                    start = "1.21"
-                    end = "1.21.1"
-                }
-            }
-        }
-        "1.21.3" -> {
-            modrinth("m1.21.3") {
-                from(mrOptions)
-                minecraftVersionRange {
-                    start = "1.21.2"
-                    end = "1.21.3"
-                }
-            }
-            curseforge("c1.21.3") {
-                from(cfOptions)
-                minecraftVersionRange {
-                    start = "1.21.2"
-                    end = "1.21.3"
-                }
-            }
-        }
-        "1.21.4" -> {
-            modrinth("m1.21.4") {
-                from(mrOptions)
-                minecraftVersions.add("1.21.4")
-            }
-            curseforge("c1.21.4") {
-                from(cfOptions)
-                minecraftVersions.add("1.21.4")
-            }
-        }
-        "1.21.5" -> {
-            modrinth("m1.21.5") {
-                from(mrOptions)
-                minecraftVersions.add("1.21.5")
-            }
-            curseforge("c1.21.5") {
-                from(cfOptions)
-                minecraftVersions.add("1.21.5")
-            }
-        }
-        "1.21.6" -> {
-            modrinth("m1.21.6") {
-                from(mrOptions)
-                minecraftVersions.add("1.21.6")
-            }
-            curseforge("c1.21.6") {
-                from(cfOptions)
-                minecraftVersions.add("1.21.6")
-            }
-        }
     }
 
     github {

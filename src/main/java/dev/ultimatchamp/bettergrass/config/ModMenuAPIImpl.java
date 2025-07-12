@@ -1,4 +1,3 @@
-//? if fabric {
 package dev.ultimatchamp.bettergrass.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
@@ -10,4 +9,3 @@ public class ModMenuAPIImpl implements ModMenuApi {
         return BetterGrassifyConfig::createConfigScreen;
     }
 }
-//?}

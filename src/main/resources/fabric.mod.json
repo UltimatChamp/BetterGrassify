@@ -16,7 +16,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "dev.ultimatchamp.bettergrass.loaders.fabric.BetterGrassifyFabric"
+      "dev.ultimatchamp.bettergrass.BetterGrassify"
     ],
     "modmenu": [
       "dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"
@@ -31,10 +31,7 @@
     "fabric": "*"
   },
   "recommends": {
-    "yet_another_config_lib_v3": "*"
-  },
-  "breaks": {
-    "sodium": "${sodium_incompat_range}"
+    "cloth-config": "*"
   },
   "custom": {
     "modmenu": {

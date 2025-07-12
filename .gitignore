@@ -12,6 +12,7 @@ classes/
 # idea
 
 .idea/
+.fleet/
 *.iml
 *.ipr
 *.iws

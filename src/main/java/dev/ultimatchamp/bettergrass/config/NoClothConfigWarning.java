@@ -5,9 +5,10 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
-public class NoYACLWarning extends Screen {
+public class NoClothConfigWarning extends Screen {
     private final Screen parent;
-    public NoYACLWarning(Screen parent) {
+
+    public NoClothConfigWarning(Screen parent) {
         super(Component.empty());
         this.parent = parent;
     }
@@ -16,7 +17,7 @@ public class NoYACLWarning extends Screen {
     protected void init() {
         super.init();
 
-        if(this.minecraft == null) return;
+        if (this.minecraft == null) return;
 
         Button btn = Button.builder(Component.translatable("dataPack.validation.back"),
                         button -> this.minecraft.setScreen(parent))
@@ -27,15 +28,9 @@ public class NoYACLWarning extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        /*? if <1.21.6 {*//*this.renderBackground(guiGraphics, mouseX, mouseY, partialTick);*//*?}*/
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
-        Component warning = Component.translatable("bettergrass.noyacl.warn");
-        //? if >1.21.3 {
-        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200,
-                             0xFFFFFFFF, true);
-        //?} else {
-        //guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF);
-        //?}
+        Component warning = Component.translatable("bettergrass.labels.noClothConfig");
+        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF, true);
     }
 }
