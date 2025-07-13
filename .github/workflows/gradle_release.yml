@@ -7,6 +7,7 @@ jobs:
   build:
     permissions:
       contents: write
+    if: github.repository_owner == 'UltimatChamp'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
