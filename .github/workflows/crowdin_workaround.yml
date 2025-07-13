@@ -1,6 +1,7 @@
 name: Crowdin Workaround
 
 on:
+  workflow_dispatch:
   push:
     branches: [ l10n_crowdin_translations ]
 
