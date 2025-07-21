@@ -96,7 +96,7 @@ public class OptionsScreen {
                                         .build(),
                                 entryBuilder
                                         .startStrList(Component.translatable("createWorld.tab.more.title"), config.general.blocks.moreBlocks)
-                                        .setDefaultValue(Lists.newArrayList("minecraft:sculk_catalyst"))
+                                        .setDefaultValue(Lists.newArrayList())
                                         .setExpanded(true)
                                         .setSaveConsumer(newValue -> {
                                             config.general.blocks.moreBlocks.clear();

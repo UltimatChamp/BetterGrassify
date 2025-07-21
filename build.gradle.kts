@@ -32,7 +32,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.property("parchment_version")}@zip")
+        parchment("org.parchmentmc.data:parchment-${project.property("minecraft_version")}:${project.property("parchment_version")}@zip")
     })
 
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
@@ -94,7 +94,7 @@ publishMods {
         projectId.set(project.property("modrinthId") as String)
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
-        minecraftVersions.addAll("1.21.6", "1.21.7")
+        minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
 
         requires("fabric-api")
         optional("yacl")
@@ -107,7 +107,7 @@ publishMods {
         projectId.set(project.property("curseforgeId") as String)
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
-        minecraftVersions.addAll("1.21.6", "1.21.7")
+        minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
         javaVersions.add(JavaVersion.VERSION_21)
 
         clientRequired.set(true)

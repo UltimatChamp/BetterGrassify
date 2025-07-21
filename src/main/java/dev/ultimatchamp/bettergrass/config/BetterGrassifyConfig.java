@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.*;
 import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.util.BetterGrassifyCacheUtils;
+import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.util.OptionEnum;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public class BetterGrassifyConfig {
     public GeneralConfig general = new GeneralConfig();
@@ -33,9 +35,7 @@ public class BetterGrassifyConfig {
             public boolean crimsonNylium = true;
             public boolean warpedNylium = true;
 
-            public List<String> moreBlocks = Lists.newArrayList(
-                    "minecraft:sculk_catalyst"
-            );
+            public List<String> moreBlocks = Lists.newArrayList();
         }
     }
 
@@ -131,7 +131,9 @@ public class BetterGrassifyConfig {
                     BetterGrassify.LOGGER.warn("[{}] Config file is empty or invalid. Creating a new one...", BetterGrassify.MOD_NAME);
                     save(config = new BetterGrassifyConfig());
                 } else {
-                    config = GSON.fromJson(configContent, BetterGrassifyConfig.class);
+                    JsonObject configJson = ensureDefaults(JsonParser.parseString(configContent).getAsJsonObject(),
+                            GSON.toJsonTree(new BetterGrassifyConfig()).getAsJsonObject()).first();
+                    config = GSON.fromJson(configJson, BetterGrassifyConfig.class);
                 }
             }
         } catch (Exception e) {
@@ -150,6 +152,35 @@ public class BetterGrassifyConfig {
         } catch (IOException e) {
             BetterGrassify.LOGGER.error("[{}] Failed to write config", BetterGrassify.MOD_NAME, e);
         }
+    }
+
+    private static Pair<JsonObject, Boolean> ensureDefaults(JsonObject configJson, JsonObject defaultJson) {
+        boolean modified = false;
+
+        for (Map.Entry<String, JsonElement> entry : defaultJson.entrySet()) {
+            String key = entry.getKey();
+            JsonElement defaultValue = entry.getValue();
+
+            if (!configJson.has(key)) {
+                BetterGrassify.LOGGER.warn("[{}] Missing config field '{}'. Re-saving as default.", BetterGrassify.MOD_NAME, key);
+                configJson.add(key, defaultValue);
+                modified = true;
+            } else {
+                JsonElement currentValue = configJson.get(key);
+
+                if (defaultValue.isJsonObject() && currentValue.isJsonObject()) {
+                    Pair<JsonObject, Boolean> updated = ensureDefaults(currentValue.getAsJsonObject(), defaultValue.getAsJsonObject());
+                    if (updated.second()) {
+                        configJson.add(key, updated.first());
+                        modified = true;
+                    }
+                }
+            }
+        }
+
+        if (modified) save(GSON.fromJson(configJson, BetterGrassifyConfig.class));
+
+        return Pair.of(configJson, modified);
     }
 
     public static Screen createConfigScreen(Screen parent) {

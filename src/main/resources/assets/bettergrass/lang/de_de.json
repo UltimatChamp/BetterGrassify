@@ -16,7 +16,7 @@
   "bettergrass.general.blocks.warpedNylium.desc": "Verbindet auch Wirr-Nezel!",
   "bettergrass.betterSnow": "Besserer Schnee",
   "bettergrass.betterSnow.betterSnowMode": "Besserer Schnee-Modus",
-  "bettergrass.betterSnow.betterSnowMode.desc": "§4Aus §r- Es wird keine Schneedecke abgebildet.\n§3OptiFine-ähnlich §r- Zeigt eine Schneeschicht unter bestimmten Blöcken an, die mindestens eine Schneeschicht oder einen Schneeblock in ihrer Nähe haben.\n§dLambdaBetterGrass-ähnlich §r- Zeigt eine Schneeschicht unter bestimmten Blöcken an, die mindestens \"zwei\" Schneeschichten oder Schneeblöcke in ihrer Nähe haben.",
+  "bettergrass.betterSnow.betterSnowMode.desc": "§4Aus §r- Es wird keine Schneedecke abgebildet.\n§3OptiFine-ähnlich §r- Zeigt eine Schneeschicht unter bestimmten Blöcken an, die mindestens eine Schneeschicht oder einen Schneeblock in ihrer Nähe haben.\n§dLambdaBetterGrass-ähnlich §r- Zeigt eine Schneeschicht unter bestimmten Blöcken an, die mindestens 'zwei' Schneeschichten oder Schneeblöcke in ihrer Nähe haben.",
   "bettergrass.betterSnow.betterSnowMode.optifine": "OptiFine-ähnlich",
   "bettergrass.betterSnow.betterSnowMode.lambda": "LambdaBetterGrass",
   "bettergrass.betterSnow.snowLayers": "Weitere schneeartige Schichten",
@@ -29,7 +29,7 @@
   "bettergrass.betterSnow.excludedTags.desc": "Tags that should be excluded from Better Snow.",
   "bettergrass.betterSnow.excludedBlocks": "Ausgeschlossene Blöcke",
   "bettergrass.betterSnow.excludedBlocks.desc": "Blocks that should be excluded from Better Snow.",
-  "bettergrass.labels.noClothConfig": "§cBetterGrassify kann keinen Konfigurationsbildschirm anzeigen, da die YetAnotherConfigLib Mod nicht installiert ist. Bitte verwende stattdessen die Konfigurationsdatei. Entschuldigung für die Unannehmlichkeiten!§r\n\nWenn Sodium verwendet wird, können die meisten Einstellungen im \"Grafik Einstellungs-Menü\" geändert werden.",
+  "bettergrass.labels.noClothConfig": "§cBetterGrassify kann keinen Konfigurationsbildschirm anzeigen, da die 'Cloth Config' Mod nicht installiert ist. Bitte verwende stattdessen die Konfigurationsdatei. Entschuldigung für die Unannehmlichkeiten!§r\n\nWenn 'Sodium' verwendet wird, können die meisten Einstellungen im 'Grafik Einstellungs-Menü' geändert werden.",
   "bettergrass.labels.exclusionListMode": "§dExclusion List Mode!§r\nTo enable Whitelist-only Mode, add any entry to 'Whitelisted Tags' or 'Whitelisted Blocks'.",
   "bettergrass.labels.whiteListMode": "§dWhitelist-only Mode Enabled!§r\nTo enable Exclusion List Mode, remove all existing entries from 'Whitelisted Tags' and 'Whitelisted Blocks'."
 }

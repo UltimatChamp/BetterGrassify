@@ -29,7 +29,7 @@
   "bettergrass.betterSnow.excludedTags.desc": "Tags that should be excluded from Better Snow.",
   "bettergrass.betterSnow.excludedBlocks": "Blocos Excluídos",
   "bettergrass.betterSnow.excludedBlocks.desc": "Blocks that should be excluded from Better Snow.",
-  "bettergrass.labels.noClothConfig": "§cBetterGrassify is unable to display a configuration screen because the 'Cloth Config' mod is not installed. You can use the configuration file instead.§r\n\nIf you're using Sodium, you can change most of the configurations in the 'Video Settings Menu'.",
+  "bettergrass.labels.noClothConfig": "§cBetterGrassify is unable to display a configuration screen because the 'Cloth Config' mod is not installed. You can use the configuration file instead.§r\n\nIf you're using 'Sodium', you can change most of the configurations in the 'Video Settings Menu'.",
   "bettergrass.labels.exclusionListMode": "§dExclusion List Mode!§r\nTo enable Whitelist-only Mode, add any entry to 'Whitelisted Tags' or 'Whitelisted Blocks'.",
   "bettergrass.labels.whiteListMode": "§dWhitelist-only Mode Enabled!§r\nTo enable Exclusion List Mode, remove all existing entries from 'Whitelisted Tags' and 'Whitelisted Blocks'."
 }

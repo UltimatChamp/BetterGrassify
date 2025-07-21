@@ -26,20 +26,20 @@ _<small>Gamers can finally touch grass!?</small>_
 
 _OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge!
 
-<img alt="Banner" width="750px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/7b81f0b5a85d97ab9d791d0139319012b5a5d7ec.png" />
-
 </center>
 
+---
+
 ## Features
+
+### **Fancy Better Grass**
+<center><img alt="Preview" width="500px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/3eaeda7d3cc1cec804e5176d9a21d8eb0f7ab8b6.png" /></center>
+
+---
 
 ### **Fast Better Grass**
 
 <center><img alt="Preview" width="500px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/abb96ecf58132c22803bf63af131cacaa19d23f0.png" /></center>
-
----
-
-### **Fancy Better Grass**
-<center><img alt="Preview" width="500px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/3eaeda7d3cc1cec804e5176d9a21d8eb0f7ab8b6.png" /></center>
 
 ---
 
@@ -55,15 +55,9 @@ _OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge!
 
 ### **Fully Configurable**
 <center>
-    <img alt="YACL" width="500px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/04353df9655cb5d933546399bbcb6f36c943292c.png" /><br />
-    <img alt="Reese's" width="250px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/6686b481b056b1be7f57c07b0dada389a8e748b2.png" />
-    <img alt="Xander's" width="250px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/55435e2054339fa70efb934ede682f4754c086ac.png" />
+    <img alt="Cloth Config Screen" width="350px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/f5bacfd30bef7cfe44ff2152d941988870c8f7c3.png" />
+    <img alt="Sodium Options Screen" width="350px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/4bc339797567d1b477a037bd5f13a46131fcfea6.png" />
 </center>
-
----
-
-### **Modded grass blocks** can be added manually!
-<center><img alt="More Blocks" width="500px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/37f7b8d4ad1712710136969e06f78b5458bd6d66.png" /></center>
 
 ---
 
