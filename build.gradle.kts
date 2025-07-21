@@ -97,7 +97,7 @@ publishMods {
         minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
 
         requires("fabric-api")
-        optional("yacl")
+        optional("cloth-config")
 
         // Discord
         announcementTitle.set("Download from Modrinth")
@@ -114,7 +114,7 @@ publishMods {
         serverRequired.set(false)
 
         requires("fabric-api")
-        optional("yacl")
+        optional("cloth-config")
 
         // Discord
         announcementTitle.set("Download from CurseForge")

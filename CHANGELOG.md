@@ -1,18 +1,20 @@
-🗃️**Detailed Changelog: [1.6.1 --> 1.7.0](https://github.com/UltimatChamp/BetterGrassify/compare/1.6.1+fabric.1.21.5...1.7.0+fabric.1.21.6)**
-
----
-
-- Might be the last release for `1.21-1.21.5`. The update priority for these versions is now reserved for _major_ bug-fixes.
+🗃️**Detailed Changelog: [1.7.0 --> 1.8.0](https://github.com/UltimatChamp/BetterGrassify/compare/1.7.0%2bfabric.1.21.6...1.8.0%2bfabric.1.21.8)**
 
 ---
 
 ### 🛠️Changes
 
-- Added support for 1.21.6.
-- Improved **Wilder Wild** compatibility.
-- Fixed crashes with **ModernFix**. [**[#58]**](https://github.com/UltimatChamp/BetterGrassify/issues/58)
-- Fixed [**#59**](https://github.com/UltimatChamp/BetterGrassify/issues/59).
+- Marked as compatible with `1.21.6-1.21.8`.
+  - As already mentioned before, the support for `1.21-1.21.5` has been dropped.
+- Improved config file structure and migrated over to 'Cloth Config'.
+  - The `Whitelist` options are no longer hidden as config-only options, and added a small note explaining the user about the difference between both options.
+  - Your existing options will be reset.
+- Improvements to the `Excluded` and `Whitelisted Blocks` options. You can now specify many more properties/predicates like `chain[axis = y]`, instead of just the boolean ones.
+- Added a separate category for BetterGrassify in Sodium's Options Screen for clarity.
+- Removed 'Jankson' as a bundled dependency, decreasing the mod size by ~50%, which also means no comments in config files.
+- Improved project structure, updated dependencies and fixed many minor bugs.
 
 ---
 
-- Updated **Brazilian Portuguese** Translation. [**[#60]**](https://github.com/UltimatChamp/BetterGrassify/pull/60)
+- Migrated to [**Crowdin**](https://crowdin.com/project/bettergrassify). You can now contribute your translations with more convenience there.
+- Also, some translations have been changed and many added.
