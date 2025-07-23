@@ -6,7 +6,7 @@
   "bettergrass.general.resourcePackCompatibilityMode.desc": "Fixes issues with various resource\npacks like Alacrity.",
   "bettergrass.general.blocks.desc": "Grass-like blocks that should be connected on slopes.",
   "bettergrass.general.blocks.grassBlocks.desc": "Connects grass blocks.",
-  "bettergrass.general.blocks.snowy": "Snowy Grass Block",
+  "bettergrass.general.blocks.snowy": "Snow Grass Block",
   "bettergrass.general.blocks.snowy.desc": "Connects snowy grass.",
   "bettergrass.general.blocks.dirtPaths.desc": "Connects dirt paths.",
   "bettergrass.general.blocks.farmLands.desc": "Connects farmlands.",
