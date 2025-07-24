@@ -1,5 +1,5 @@
 {
-  "bettergrass.title": "BetterGrassify Konfigürasyonu",
+  "bettergrass.title": "BetterGrassify Yapılandırması",
   "bettergrass.general.betterGrassMode": "Daha İyi Çimen Modu",
   "bettergrass.general.betterGrassMode.desc": "§4Kapalı §r- Çimen Blokları normal görünür\n§3Hızlı §r- Üst Çimen dokusu Çimen Bloklarının her tarafına uygulanır\n§dHoş §r- Üst Çimen dokusu, Çimen Bloklarının gerekli taraflarına dinamik olarak uygulanır",
   "bettergrass.general.resourcePackCompatibilityMode": "Uyumluluk Modu",
