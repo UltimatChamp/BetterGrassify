@@ -126,10 +126,12 @@ public class OptionsScreen {
                 .setDefaultValue(Lists.newArrayList(
                         "snow",
                         "moss_carpet",
-                        "pale_moss_carpet",
+                        "pink_petals"
+                        //? if >1.21.1 {
+                        /*, "pale_moss_carpet",
                         "leaf_litter",
-                        "pink_petals",
                         "wildflowers"
+                        *///?}
                 ))
                 .setExpanded(true)
                 .setSaveConsumer(newValue -> {

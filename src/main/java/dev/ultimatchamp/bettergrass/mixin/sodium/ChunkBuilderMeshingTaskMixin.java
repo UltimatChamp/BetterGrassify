@@ -9,7 +9,6 @@ import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRend
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask;
 import net.caffeinemc.mods.sodium.client.util.task.CancellationToken;
 import net.caffeinemc.mods.sodium.client.world.LevelSlice;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,7 +43,7 @@ public class ChunkBuilderMeshingTaskMixin {
                     }
                 }
 
-                BlockStateModel model = cache.getBlockModels().getBlockModel(layerNeighbour);
+                var model = cache.getBlockModels().getBlockModel(layerNeighbour);
                 cache.getBlockRenderer().renderModel(model, layerNeighbour, pos.above(), modelOffset.above());
             }
         }

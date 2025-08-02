@@ -4,11 +4,8 @@ import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.BetterSnowUtils;
 import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
-import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,27 +14,60 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
+import java.util.function.Supplier;
+
+//? if >1.21.1 {
+/*import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;\
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+*///?} else {
+import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.client.resources.model.BakedModel;
+//?}
 
-public class BetterGrassifyBlockStateModel extends WrapperBlockStateModel implements BlockStateModel {
+public class BetterGrassifyBlockStateModel extends
+        //? if >1.21.1 {
+        /*WrapperBlockStateModel implements BlockStateModel {
+        *///?} else {
+        ForwardingBakedModel implements BakedModel {
+        //?}
     private BetterGrassifyConfig config;
 
-    public BetterGrassifyBlockStateModel(BlockStateModel wrapped) {
-        super(wrapped);
+    public BetterGrassifyBlockStateModel(/*? if >1.21.1 {*//*BlockStateModel*//*else {*/BakedModel/*?}*/ wrapped) {
+        //? if >1.21.1 {
+        /*super(wrapped);
+        *///?} else {
+        this.wrapped = wrapped;
+        //?}
         this.config = BetterGrassifyConfig.load();
     }
 
     @Override
-    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
+    public boolean isVanillaAdapter() {
+        return false;
+    }
+
+    @Override
+    //? if >1.21.1 {
+    /*public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
+    *///?} else {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext emitter) {
+    //?}
         if (config.general.betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
-            super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+            //? if >1.21.1 {
+            /*super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+            *///?} else {
+            super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
+            //?}
             return;
         }
 
-        Supplier<RandomSource> randomSupplier = () -> random;
+        /*? if >1.21.1 {*//*Supplier<RandomSource> randomSupplier = () -> random;/*?}*/
         emitter.pushTransform(quad -> {
             this.config = BetterGrassifyConfig.load();
 
@@ -52,7 +82,11 @@ public class BetterGrassifyBlockStateModel extends WrapperBlockStateModel implem
             return true;
         });
 
-        super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+        //? if >1.21.1 {
+        /*super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+        *///?} else {
+        super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
+        //?}
         emitter.popTransform();
     }
 

@@ -24,7 +24,7 @@ _<small>Gamers can finally touch grass!?</small>_
 
 ---
 
-_OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge!
+_OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge*!
 
 </center>
 
@@ -58,6 +58,14 @@ _OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge!
     <img alt="Cloth Config Screen" width="350px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/f5bacfd30bef7cfe44ff2152d941988870c8f7c3.png" />
     <img alt="Sodium Options Screen" width="350px" src="https://cdn.modrinth.com/data/m5T5xmUy/images/4bc339797567d1b477a037bd5f13a46131fcfea6.png" />
 </center>
+
+---
+
+## FAQs
+
+> Where's ***NeoForge**?
+
+While there are some older builds present for **NeoForge**, you should use [**Sinytra Connector**](https://modrinth.com/mod/connector) instead to use the ***Fabric*** builds on **NeoForge**.
 
 ---
 

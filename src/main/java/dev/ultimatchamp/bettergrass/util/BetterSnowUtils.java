@@ -44,10 +44,12 @@ public class BetterSnowUtils {
                 if (layer instanceof SnowLayerBlock && (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)))
                     return layer.defaultBlockState();
                 else if (state.is(layer)) {
-                    if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
-                        return state.setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
-                    else if (state.getOptionalValue(BlockStateProperties.FLOWER_AMOUNT).isPresent())
+                    if (state.getOptionalValue(BlockStateProperties.FLOWER_AMOUNT).isPresent())
                         return state.setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
+                    //? if >1.21.1 {
+                    /*else if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
+                        return state.setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
+                    *///?}
                     else return state;
                 }
             }

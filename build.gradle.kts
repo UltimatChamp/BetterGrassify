@@ -4,7 +4,7 @@ plugins {
 }
 
 var isSnapshot = false
-var mcVer = project.property("minecraft_version") as String
+var mcVer = stonecutter.current.project
 if (mcVer.contains("-") || mcVer.contains("w")) {
     isSnapshot = true
     mcVer = mcVer.replace("-", "")
@@ -29,27 +29,27 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
+    minecraft("com.mojang:minecraft:${stonecutter.current.project}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.property("minecraft_version")}:${project.property("parchment_version")}@zip")
+        parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${project.property("mc.parchment_version")}@zip")
     })
 
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fapi_version")}")
+    modImplementation("net.fabricmc:fabric-loader:${project.property("mc.loader_version")}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("clothconfig_version")}")
-    modApi("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    modImplementation("maven.modrinth:sodium:${project.property("sodium_version")}")
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("deps.clothconfig_version")}")
+    modApi("com.terraformersmc:modmenu:${project.property("deps.modmenu_version")}")
+    modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
 
     // Compat
-    modCompileOnly("maven.modrinth:wilder-wild:${project.property("wilderwild_version")}")
-    modCompileOnly("maven.modrinth:frozenlib:${project.property("frozenlib_version")}")
+    modCompileOnly("maven.modrinth:wilder-wild:${project.property("compat.wilderwild_version")}")
+    modCompileOnly("maven.modrinth:frozenlib:${project.property("compat.frozenlib_version")}")
 }
 
 tasks.processResources {
     val replaceProperties = mapOf(
-        "minecraft_range" to project.property("mc_range"),
+        "minecraft_range" to project.property("mc.range"),
         "mod_id" to project.property("mod_id"),
         "mod_name" to project.property("mod_name"),
         "mod_license" to project.property("mod_license"),
@@ -61,6 +61,13 @@ tasks.processResources {
 
     filesMatching("fabric.mod.json") {
         expand(replaceProperties)
+    }
+}
+
+loom {
+    runConfigs.all {
+        ideConfigGenerated(true)
+        runDir = "../../run"
     }
 }
 
@@ -94,7 +101,14 @@ publishMods {
         projectId.set(project.property("modrinthId") as String)
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
-        minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
+        when (stonecutter.current.project) {
+            "1.21.8" -> {
+                minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
+            }
+            "1.21.1" -> {
+                minecraftVersions.addAll("1.21", "1.21.1")
+            }
+        }
 
         requires("fabric-api")
         optional("cloth-config")
@@ -107,7 +121,14 @@ publishMods {
         projectId.set(project.property("curseforgeId") as String)
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
-        minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
+        when (stonecutter.current.project) {
+            "1.21.8" -> {
+                minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8")
+            }
+            "1.21.1" -> {
+                minecraftVersions.addAll("1.21", "1.21.1")
+            }
+        }
         javaVersions.add(JavaVersion.VERSION_21)
 
         clientRequired.set(true)

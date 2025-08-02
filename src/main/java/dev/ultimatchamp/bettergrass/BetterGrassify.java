@@ -2,7 +2,6 @@ package dev.ultimatchamp.bettergrass;
 
 import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
-import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
@@ -13,13 +12,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirtPathBlock;
 import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//? if >1.21.1 {
+/*import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+*///?} else {
+import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+//?}
 
 public class BetterGrassify implements ClientModInitializer {
     public static final String MOD_NAME = "BetterGrassify";
@@ -40,24 +46,52 @@ public class BetterGrassify implements ClientModInitializer {
             BetterGrassify.LOGGER.warn("[{}] 'WilderWild' detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.", MOD_NAME);
         }
 
-        ModelLoadingPlugin.register(pluginContext -> pluginContext.modifyBlockModelOnLoad().register(ModelModifier.WRAP_LAST_PHASE, (model, context) -> {
-            BlockState state = context.state();
+        ModelLoadingPlugin.register(pluginContext -> pluginContext./*? if >1.21.1 {*//*modifyBlockModelOnLoad()*//*?} else {*/modifyModelOnLoad()/*?}*/.register(ModelModifier.WRAP_LAST_PHASE, (model, context) -> {
+            //? if >1.21.1 {
+            //BlockState state = context.state();
+            //?} else {
+            ModelResourceLocation modelId = context.topLevelId();
+            if (modelId == null || modelId.getVariant().equals("inventory")) return model;
+            Block self = BuiltInRegistries.BLOCK.getOptional(modelId.id()).orElse(null);
+            if (self == null) return model;
+            //?}
             List<String> blocks = BetterGrassify.getBlocks();
 
             for (String blockId : blocks) {
                 Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.tryParse(blockId)).orElse(null);
 
-                if (state.is(block)) {
+                //? if >1.21.1 {
+                /*if (state.is(block)) {
                     if (state.getOptionalValue(BlockStateProperties.SNOWY).orElse(false)) {
+                *///?} else {
+                if (self.equals(block)) {
+                    if (modelId.getVariant().contains("snowy=true")) {
+                        //?}
                         if (BetterGrassifyConfig.load().general.blocks.snowy) {
-                            return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                            //? if >1.21.1 {
+                            //return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                            //?} else {
+                            return new BetterGrassifyUnbakedModel(model);
+                            //?}
                         }
                     } else {
-                        return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                        //? if >1.21.1 {
+                        //return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                        //?} else {
+                        return new BetterGrassifyUnbakedModel(model);
+                        //?}
                     }
-                } else if (state.is(Blocks.DIRT)) {
+                //? if >1.21.1 {
+                //} else if (state.is(Blocks.DIRT)) {
+                //?} else {
+                } else if (self.equals(Blocks.DIRT)) {
+                //?}
                     if (block instanceof DirtPathBlock || block instanceof FarmBlock) {
-                        return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                        //? if >1.21.1 {
+                        //return new BetterGrassifyUnbakedRootBlockStateModel(model);
+                        //?} else {
+                        return new BetterGrassifyUnbakedModel(model);
+                        //?}
                     }
                 }
             }

@@ -1,4 +1,5 @@
-package dev.ultimatchamp.bettergrass.model;
+//? if >1.21.1 {
+/*package dev.ultimatchamp.bettergrass.model;
 
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedGroupedBlockStateModel;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
@@ -28,3 +29,4 @@ public class BetterGrassifyUnbakedRootBlockStateModel extends WrapperUnbakedGrou
         this.wrapped.resolveDependencies(resolver);
     }
 }
+*///?}
