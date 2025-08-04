@@ -18,56 +18,58 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import java.util.function.Supplier;
 
 //? if >1.21.1 {
-/*import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;\
+import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
-*///?} else {
-import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
+//?} else {
+/*import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
-//?}
+*///?}
 
 public class BetterGrassifyBlockStateModel extends
         //? if >1.21.1 {
-        /*WrapperBlockStateModel implements BlockStateModel {
-        *///?} else {
-        ForwardingBakedModel implements BakedModel {
-        //?}
+        WrapperBlockStateModel implements BlockStateModel {
+        //?} else {
+        /*ForwardingBakedModel implements BakedModel {
+        *///?}
     private BetterGrassifyConfig config;
 
-    public BetterGrassifyBlockStateModel(/*? if >1.21.1 {*//*BlockStateModel*//*else {*/BakedModel/*?}*/ wrapped) {
+    public BetterGrassifyBlockStateModel(/*? if >1.21.1 {*/BlockStateModel/*?} else {*//*BakedModel*//*?}*/ wrapped) {
         //? if >1.21.1 {
-        /*super(wrapped);
-        *///?} else {
-        this.wrapped = wrapped;
-        //?}
+        super(wrapped);
+        //?} else {
+        /*this.wrapped = wrapped;
+        *///?}
         this.config = BetterGrassifyConfig.load();
     }
 
-    @Override
+    //? if 1.21.1 {
+    /*@Override
     public boolean isVanillaAdapter() {
         return false;
     }
+    *///?}
 
     @Override
     //? if >1.21.1 {
-    /*public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
-    *///?} else {
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext emitter) {
-    //?}
+    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
+    //?} else {
+    /*public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext emitter) {
+    *///?}
         if (config.general.betterGrassMode == BetterGrassifyConfig.BetterGrassMode.OFF) {
             //? if >1.21.1 {
-            /*super.emitQuads(emitter, blockView, pos, state, random, cullTest);
-            *///?} else {
-            super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
-            //?}
+            super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+            //?} else {
+            /*super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
+            *///?}
             return;
         }
 
-        /*? if >1.21.1 {*//*Supplier<RandomSource> randomSupplier = () -> random;/*?}*/
+        /*? if >1.21.1 {*/Supplier<RandomSource> randomSupplier = () -> random;/*?}*/
         emitter.pushTransform(quad -> {
             this.config = BetterGrassifyConfig.load();
 
@@ -83,10 +85,10 @@ public class BetterGrassifyBlockStateModel extends
         });
 
         //? if >1.21.1 {
-        /*super.emitQuads(emitter, blockView, pos, state, random, cullTest);
-        *///?} else {
-        super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
-        //?}
+        super.emitQuads(emitter, blockView, pos, state, random, cullTest);
+        //?} else {
+        /*super.emitBlockQuads(blockView, state, pos, randomSupplier, emitter);
+        *///?}
         emitter.popTransform();
     }
 

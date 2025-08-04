@@ -47,9 +47,9 @@ public class BetterSnowUtils {
                     if (state.getOptionalValue(BlockStateProperties.FLOWER_AMOUNT).isPresent())
                         return state.setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
                     //? if >1.21.1 {
-                    /*else if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
+                    else if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
                         return state.setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
-                    *///?}
+                    //?}
                     else return state;
                 }
             }

@@ -1,5 +1,5 @@
 //? if 1.21.1 {
-package dev.ultimatchamp.bettergrass.model;
+/*package dev.ultimatchamp.bettergrass.model;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBaker;
@@ -36,4 +36,4 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
         return new BetterGrassifyBlockStateModel(this.baseModel.bake(loader, textureGetter, rotationContainer));
     }
 }
-//?}
+*///?}

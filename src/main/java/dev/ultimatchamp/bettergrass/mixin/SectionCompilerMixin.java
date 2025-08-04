@@ -25,16 +25,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Map;
 
 //? if >1.21.1 {
-/*import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.renderer.block.model.BlockModelPart;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.chunk.RenderSectionRegion;
 
 import java.util.List;
-*///?} else {
-import net.minecraft.client.renderer.RenderType;
+//?} else {
+/*import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.chunk.RenderChunkRegion;
-//?}
+*///?}
 
 @Mixin(value = SectionCompiler.class)
 public abstract class SectionCompilerMixin {
@@ -44,37 +44,37 @@ public abstract class SectionCompilerMixin {
 
     @Shadow
     protected abstract BufferBuilder getOrBeginLayer(
-            Map</*? if >1.21.1 {*//*ChunkSectionLayer*//*?} else {*/RenderType/*?}*/,
+            Map</*? if >1.21.1 {*/ChunkSectionLayer/*?} else {*//*RenderType*//*?}*/,
                     BufferBuilder> map, SectionBufferBuilderPack sectionBufferBuilderPack,
-            /*? if >1.21.1 {*//*ChunkSectionLayer*//*?} else {*/RenderType/*?}*/ chunkSectionLayer);
+            /*? if >1.21.1 {*/ChunkSectionLayer/*?} else {*//*RenderType*//*?}*/ chunkSectionLayer);
 
     @Inject(method = "compile",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/renderer/chunk/" +
-                            /*? if >1.21.1 {*//*"RenderSectionRegion"*//*?} else {*/"RenderChunkRegion"/*?}*/ +
+                            /*? if >1.21.1 {*/"RenderSectionRegion"/*?} else {*//*"RenderChunkRegion"*//*?}*/ +
                             ";getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
             )
     )
     private void bettergrass$render(SectionPos sectionPos,
-                                    /*? if >1.21.1 {*//*RenderSectionRegion*//*?} else {*/RenderChunkRegion/*?}*/ region,
+                                    /*? if >1.21.1 {*/RenderSectionRegion/*?} else {*//*RenderChunkRegion*//*?}*/ region,
                                     VertexSorting vertexSorting,
                                     SectionBufferBuilderPack sectionBufferBuilderPack,
                                     CallbackInfoReturnable<SectionCompiler.Results> cir,
                                     @Local(ordinal = 2) BlockPos blockPos, @Local PoseStack matrixStack,
-                                    @Local Map</*? if >1.21.1 {*//*ChunkSectionLayer*//*?} else {*/RenderType/*?}*/,
+                                    @Local Map</*? if >1.21.1 {*/ChunkSectionLayer/*?} else {*//*RenderType*//*?}*/,
                                     BufferBuilder> map) {
         BlockState layerNeighbour = BetterSnowUtils.getLayerNeighbour(region, blockPos);
 
         if (layerNeighbour != null) {
             if (BetterSnowUtils.canHaveGhostLayer(region, blockPos)) {
                 RandomSource random = RandomSource.create();
-                /*? if >1.21.1 {*//*List<BlockModelPart> list = new ObjectArrayList<>();*//*?}*/
+                /*? if >1.21.1 {*/List<BlockModelPart> list = new ObjectArrayList<>();/*?}*/
                 var renderLayer = ItemBlockRenderTypes.getChunkRenderType(layerNeighbour);
                 BufferBuilder bufferBuilder = this.getOrBeginLayer(map, sectionBufferBuilderPack, renderLayer);
 
                 random.setSeed(layerNeighbour.getSeed(blockPos));
-                /*? if >1.21.1 {*//*this.blockRenderer.getBlockModel(layerNeighbour).collectParts(random, list);*//*?}*/
+                /*? if >1.21.1 {*/this.blockRenderer.getBlockModel(layerNeighbour).collectParts(random, list);/*?}*/
 
                 matrixStack.pushPose();
                 matrixStack.translate(
@@ -82,17 +82,17 @@ public abstract class SectionCompilerMixin {
                         (float) SectionPos.sectionRelative(blockPos.getY()),
                         (float) SectionPos.sectionRelative(blockPos.getZ())
                 );
-                this.blockRenderer.renderBatched(layerNeighbour, blockPos, region, matrixStack, bufferBuilder, true, /*? if >1.21.1 {*//*list*//*?} else {*/random/*?}*/);
+                this.blockRenderer.renderBatched(layerNeighbour, blockPos, region, matrixStack, bufferBuilder, true, /*? if >1.21.1 {*/list/*?} else {*//*random*//*?}*/);
                 matrixStack.popPose();
 
-                /*? if >1.21.1 {*//*list.clear();*//*?}*/
+                /*? if >1.21.1 {*/list.clear();/*?}*/
             }
         }
     }
 
     @ModifyVariable(method = "compile", at = @At("STORE"), ordinal = 0)
     private BlockState bettergrass$setGrassState(BlockState state, @Local(ordinal = 2) BlockPos blockPos, @Local(argsOnly = true)
-                                                 /*? if >1.21.1 {*//*RenderSectionRegion*//*?} else {*/RenderChunkRegion/*?}*/ region) {
+                                                 /*? if >1.21.1 {*/RenderSectionRegion/*?} else {*//*RenderChunkRegion*//*?}*/ region) {
         if (state.getOptionalValue(BlockStateProperties.SNOWY).isEmpty() ||
                 !BetterSnowUtils.isLayerNeighbourSnow(region, blockPos.above())) return state;
 

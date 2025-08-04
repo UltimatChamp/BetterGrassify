@@ -23,7 +23,7 @@ public final class SpriteCalculator {
         var model = MODELS.getBlockModel(state);
 
         //? if >1.21.1 {
-        /*List<BakedQuad> quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(face);
+        List<BakedQuad> quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(face);
         if (!quads.isEmpty()) {
             return quads.getFirst().sprite();
         }
@@ -34,8 +34,8 @@ public final class SpriteCalculator {
                 if (quad.direction() == face) return quad.sprite();
             }
         }
-        *///?} else {
-        List<BakedQuad> quads = model.getQuads(state, face, randomSupplier.get());
+        //?} else {
+        /*List<BakedQuad> quads = model.getQuads(state, face, randomSupplier.get());
         if (!quads.isEmpty()) {
             return quads.getFirst().getSprite();
         }
@@ -46,7 +46,7 @@ public final class SpriteCalculator {
                 if (quad.getDirection() == face) return quad.getSprite();
             }
         }
-        //?}
+        *///?}
 
         return null;
     }

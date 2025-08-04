@@ -128,10 +128,10 @@ public class OptionsScreen {
                         "moss_carpet",
                         "pink_petals"
                         //? if >1.21.1 {
-                        /*, "pale_moss_carpet",
+                        , "pale_moss_carpet",
                         "leaf_litter",
                         "wildflowers"
-                        *///?}
+                        //?}
                 ))
                 .setExpanded(true)
                 .setSaveConsumer(newValue -> {

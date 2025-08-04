@@ -31,6 +31,6 @@ public class NoClothConfigWarning extends Screen {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
 
         Component warning = Component.translatable("bettergrass.labels.noClothConfig");
-        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF/*? if >1.21.1 {*//*, true*//*?}*/);
+        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF/*? if >1.21.1 {*/, true/*?}*/);
     }
 }
