@@ -67,6 +67,10 @@ _OptiFine's Fancy_ and _Fast **better grass**_ for Fabric and NeoForge*!
 
 While there are some older builds present for **NeoForge**, you should use [**Sinytra Connector**](https://modrinth.com/mod/connector) instead to use the ***Fabric*** builds on **NeoForge**.
 
+> Where can I translate the mod?
+
+In [Crowdin](https://crowdin.com/project/bettergrassify/).
+
 ---
 
 ## Credits!
