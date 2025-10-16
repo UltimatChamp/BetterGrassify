@@ -43,6 +43,7 @@ public class BetterGrassify implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("wilderwild") && WilderWildCompat.isSnowloggingOn()) {
             config.general.blocks.snowy = false;
             config.betterSnow.betterSnowMode = BetterGrassifyConfig.BetterSnowMode.OFF;
+            BetterGrassifyConfig.save(config);
             BetterGrassify.LOGGER.warn("[{}] 'WilderWild' detected. 'Better Snowy Grass' and 'Better Snow' features have been disabled.", MOD_NAME);
         }
 
