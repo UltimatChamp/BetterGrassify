@@ -14,6 +14,8 @@ modrinth:
 
 [![Discord](https://img.shields.io/badge/Discord-Server-%2300AF5C?style=for-the-badge&logo=discord&logoColor=%23fff&color=%235865F2)](https://discord.gg/kfKjjhv3pn)
 [![GitHub](https://img.shields.io/badge/On-GitHub-%230D1117?style=for-the-badge&logo=github)](https://github.com/UltimatChamp/BetterGrassify)
+[![Crowdin](https://img.shields.io/badge/HELP%20TRANSLATE%20ON-CROWDIN-%2321252b?style=for-the-badge&logo=crowdin)](https://crowdin.com/project/bettergrassify)
+
 [![Modrinth](https://img.shields.io/badge/On-Modrinth-%2300AF5C?style=for-the-badge&logo=modrinth)](https://modrinth.com/mod/bettergrassify)
 [![CurseForge](https://img.shields.io/badge/On-CurseForge-%23f16436?style=for-the-badge&logo=curseforge)](https://www.curseforge.com/minecraft/mc-mods/bettergrassify)
 [![Modpack](https://img.shields.io/badge/modpack-%2300AF5C?style=for-the-badge&logo=modrinth&label=my)](https://modrinth.com/modpack/optimum-fuse)
