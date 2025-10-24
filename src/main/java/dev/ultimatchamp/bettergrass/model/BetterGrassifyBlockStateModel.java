@@ -73,8 +73,8 @@ public class BetterGrassifyBlockStateModel extends
         emitter.pushTransform(quad -> {
             this.config = BetterGrassifyConfig.load();
 
-            Direction face = quad.lightFace();
-            if (face.getAxis().isVertical() || state.hasBlockEntity() || !isFullQuad(quad)) return true;
+            Direction face = quad.nominalFace();
+            if (face == null || face.getAxis().isVertical() || state.hasBlockEntity() || !isFullQuad(quad)) return true;
 
             if (state.is(Blocks.DIRT)) { // Fix dirt paths connection, only if on a dirt block
                 if (isBelowNonFullBlock(blockView, pos, face))
