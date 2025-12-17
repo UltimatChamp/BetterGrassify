@@ -30,7 +30,7 @@ public class OptionsScreen {
 
         general.addEntry(entryBuilder
                 .startEnumSelector(Component.translatable("bettergrass.general.betterGrassMode"), BetterGrassifyConfig.BetterGrassMode.class, config.general.betterGrassMode)
-                .setEnumNameProvider(mode -> ((BetterGrassifyConfig.BetterGrassMode) mode).getCaption())
+                .setEnumNameProvider(mode -> ((BetterGrassifyConfig.BetterGrassMode) mode).getLocalizedName())
                 .setTooltip(Component.translatable("bettergrass.general.betterGrassMode.desc"))
                 .setDefaultValue(BetterGrassifyConfig.BetterGrassMode.FANCY)
                 .setSaveConsumer(newValue -> config.general.betterGrassMode = newValue)
@@ -113,7 +113,7 @@ public class OptionsScreen {
 
         betterSnow.addEntry(entryBuilder
                 .startEnumSelector(Component.translatable("bettergrass.betterSnow.betterSnowMode"), BetterGrassifyConfig.BetterSnowMode.class, config.betterSnow.betterSnowMode)
-                .setEnumNameProvider(mode -> ((BetterGrassifyConfig.BetterSnowMode) mode).getCaption())
+                .setEnumNameProvider(mode -> ((BetterGrassifyConfig.BetterSnowMode) mode).getLocalizedName())
                 .setTooltip(Component.translatable("bettergrass.betterSnow.betterSnowMode.desc"))
                 .setDefaultValue(BetterGrassifyConfig.BetterSnowMode.LAMBDA)
                 .setRequirement(() -> !FabricLoader.getInstance().isModLoaded("wilderwild") || !WilderWildCompat.isSnowloggingOn())

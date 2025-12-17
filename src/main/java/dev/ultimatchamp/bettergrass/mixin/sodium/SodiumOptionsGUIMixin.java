@@ -1,4 +1,5 @@
-package dev.ultimatchamp.bettergrass.mixin.sodium;
+//? if <1.21.11 {
+/*package dev.ultimatchamp.bettergrass.mixin.sodium;
 
 import dev.ultimatchamp.bettergrass.config.SodiumOptionsScreen;
 import net.caffeinemc.mods.sodium.client.gui.SodiumOptionsGUI;
@@ -24,3 +25,4 @@ public class SodiumOptionsGUIMixin {
         SodiumOptionsScreen.addOptionsPage(this.pages);
     }
 }
+*///?}

@@ -3,12 +3,6 @@
   "package": "dev.ultimatchamp.bettergrass.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
-  "mixins": [
-    "SectionCompilerMixin",
-    "VideoSettingsScreenMixin",
-    "sodium.ChunkBuilderMeshingTaskMixin",
-    "sodium.SodiumOptionsGUIMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

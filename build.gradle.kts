@@ -1,6 +1,10 @@
 plugins {
-    id("fabric-loom") version "1.11-SNAPSHOT"
-    id("me.modmuss50.mod-publish-plugin") version "0.8.4"
+    id("fabric-loom") version "1.14-SNAPSHOT"
+    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
+
+    kotlin("jvm") version "2.2.10"
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
+    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
 }
 
 var isSnapshot = false
@@ -32,19 +36,23 @@ dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.project}")
     mappings(loom.layered {
         officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${project.property("mc.parchment_version")}@zip")
+        /*parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${project.property("mc.parchment_version")}@zip")*/
     })
 
     modImplementation("net.fabricmc:fabric-loader:${project.property("mc.loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("deps.clothconfig_version")}")
-    modApi("com.terraformersmc:modmenu:${project.property("deps.modmenu_version")}")
-    modImplementation("maven.modrinth:sodium:${project.property("deps.sodium_version")}")
+
+    var vers = "" // TODO: remove this later
+    if (stonecutter.eval(stonecutter.current.project, ">1.21.10")) vers = " + 1.21.11-rc3"
+    modApi(fletchingTable.modrinth("modmenu", stonecutter.current.project + vers, "fabric"))
+
+    modImplementation(fletchingTable.modrinth("sodium", stonecutter.current.project, "fabric"))
 
     // Compat
-    modCompileOnly("maven.modrinth:wilder-wild:${project.property("compat.wilderwild_version")}")
-    modCompileOnly("maven.modrinth:frozenlib:${project.property("compat.frozenlib_version")}")
+    modCompileOnly(fletchingTable.modrinth("wilder-wild", stonecutter.current.project, "fabric"))
+    modCompileOnly(fletchingTable.modrinth("frozenlib", stonecutter.current.project, "fabric"))
 }
 
 tasks.processResources {
@@ -61,6 +69,12 @@ tasks.processResources {
 
     filesMatching("fabric.mod.json") {
         expand(replaceProperties)
+    }
+}
+
+fletchingTable {
+    mixins.create("main") {
+        mixin("default", "bettergrass.mixins.json")
     }
 }
 
@@ -102,12 +116,9 @@ publishMods {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
         when (stonecutter.current.project) {
-            "1.21.10" -> {
-                minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
-            }
-            "1.21.1" -> {
-                minecraftVersions.addAll("1.21", "1.21.1")
-            }
+            "1.21.11" -> minecraftVersions.add("1.21.11")
+            "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
+            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
         }
 
         requires("fabric-api")
@@ -122,13 +133,11 @@ publishMods {
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
         when (stonecutter.current.project) {
-            "1.21.10" -> {
-                minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
-            }
-            "1.21.1" -> {
-                minecraftVersions.addAll("1.21", "1.21.1")
-            }
+            "1.21.11" -> minecraftVersions.add("1.21.11")
+            "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
+            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
         }
+
         javaVersions.add(JavaVersion.VERSION_21)
 
         clientRequired.set(true)

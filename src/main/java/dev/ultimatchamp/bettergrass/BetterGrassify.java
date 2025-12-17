@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirtPathBlock;
@@ -17,6 +16,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//? if >1.21.10 {
+import net.minecraft.resources.Identifier;
+//?} else {
+/*import net.minecraft.resources.ResourceLocation;
+*///?}
 
 //? if >1.21.1 {
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
@@ -59,10 +64,10 @@ public class BetterGrassify implements ClientModInitializer {
             List<String> blocks = BetterGrassify.getBlocks();
 
             for (String blockId : blocks) {
-                Block block = BuiltInRegistries.BLOCK.getOptional(ResourceLocation.tryParse(blockId)).orElse(null);
+                Block block = BuiltInRegistries.BLOCK.getOptional(/*? if >1.21.10 {*/Identifier/*?} else {*//*ResourceLocation*//*?}*/.tryParse(blockId)).orElse(null);
 
                 //? if >1.21.1 {
-                if (state.is(block)) {
+                if (block != null && state.is(block)) {
                     if (state.getOptionalValue(BlockStateProperties.SNOWY).orElse(false)) {
                 //?} else {
                 /*if (self.equals(block)) {

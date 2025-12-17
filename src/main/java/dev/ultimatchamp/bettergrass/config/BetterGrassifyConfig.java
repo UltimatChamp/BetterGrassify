@@ -7,7 +7,6 @@ import dev.ultimatchamp.bettergrass.util.BetterGrassifyCacheUtils;
 import it.unimi.dsi.fastutil.Pair;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.util.OptionEnum;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -65,21 +64,15 @@ public class BetterGrassifyConfig {
         );
     }
 
-    public enum BetterGrassMode implements OptionEnum {
-        OFF(0, "options.off"),
-        FAST(1, "options.graphics.fast"),
-        FANCY(2, "options.graphics.fancy");
+    public enum BetterGrassMode implements TranslatableOption {
+        OFF("options.off"),
+        FAST("options.graphics.fast"),
+        FANCY("options.graphics.fancy");
 
-        private final int id;
         private final String key;
 
-        BetterGrassMode(final int id, final String key) {
-            this.id = id;
+        BetterGrassMode(final String key) {
             this.key = key;
-        }
-
-        public int getId() {
-            return this.id;
         }
 
         public @NotNull String getKey() {
@@ -87,22 +80,15 @@ public class BetterGrassifyConfig {
         }
     }
 
-    public enum BetterSnowMode implements OptionEnum {
-        OFF(0, "options.off"),
-        OPTIFINE(1, "bettergrass.betterSnow.betterSnowMode.optifine"),
-        LAMBDA(2, "bettergrass.betterSnow.betterSnowMode.lambda");
+    public enum BetterSnowMode implements TranslatableOption {
+        OFF("options.off"),
+        OPTIFINE("bettergrass.betterSnow.betterSnowMode.optifine"),
+        LAMBDA("bettergrass.betterSnow.betterSnowMode.lambda");
 
-        private final int id;
         private final String key;
 
-        BetterSnowMode(final int id, final String key) {
-            this.id = id;
+        BetterSnowMode(final String key) {
             this.key = key;
-        }
-
-        @Override
-        public int getId() {
-            return this.id;
         }
 
         @Override

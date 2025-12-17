@@ -20,6 +20,9 @@
     ],
     "modmenu": [
       "dev.ultimatchamp.bettergrass.config.ModMenuAPIImpl"
+    ],
+    "sodium:config_api_user": [
+      "dev.ultimatchamp.bettergrass.config.SodiumOptionsScreenBuilder"
     ]
   },
   "mixins": [

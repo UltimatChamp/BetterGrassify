@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.client.renderer.block.model.BlockStateModel;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -56,7 +57,7 @@ public class BetterGrassifyBlockStateModel extends
 
     @Override
     //? if >1.21.1 {
-    public void emitQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockPos pos, BlockState state, RandomSource random, Predicate<@Nullable Direction> cullTest) {
+    public void emitQuads(@NotNull QuadEmitter emitter, @NotNull BlockAndTintGetter blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull RandomSource random, @NotNull Predicate<@Nullable Direction> cullTest) {
     //?} else {
     /*public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext emitter) {
     *///?}

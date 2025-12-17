@@ -15,17 +15,17 @@ public class BetterGrassifyUnbakedRootBlockStateModel extends WrapperUnbakedGrou
     }
 
     @Override
-    public @NotNull BlockStateModel bake(BlockState blockState, ModelBaker modelBaker) {
+    public @NotNull BlockStateModel bake(@NotNull BlockState blockState, @NotNull ModelBaker modelBaker) {
         return new BetterGrassifyBlockStateModel(this.wrapped.bake(blockState, modelBaker));
     }
 
     @Override
-    public @NotNull Object visualEqualityGroup(BlockState state) {
+    public @NotNull Object visualEqualityGroup(@NotNull BlockState state) {
         return this.wrapped.visualEqualityGroup(state);
     }
 
     @Override
-    public void resolveDependencies(Resolver resolver) {
+    public void resolveDependencies(@NotNull Resolver resolver) {
         this.wrapped.resolveDependencies(resolver);
     }
 }

@@ -23,7 +23,7 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/components/OptionsList;addBig(Lnet/minecraft/client/OptionInstance;)V",
-                    ordinal = 0
+                    ordinal = 0 /*? if >1.21.10 {*/+ 1/*?}*/
             )
     )
     private void bettergrass$addConfigButton(CallbackInfo ci) {

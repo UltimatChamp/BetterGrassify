@@ -1,4 +1,5 @@
-package dev.ultimatchamp.bettergrass.config;
+//? if <1.21.11 {
+/*package dev.ultimatchamp.bettergrass.config;
 
 import com.google.common.collect.ImmutableList;
 import dev.ultimatchamp.bettergrass.BetterGrassify;
@@ -146,3 +147,4 @@ public class SodiumOptionsScreen {
         pages.add(new OptionPage(Component.literal(BetterGrassify.MOD_NAME), ImmutableList.copyOf(groups)));
     }
 }
+*///?}
