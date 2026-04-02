@@ -1,81 +1,32 @@
+@file:Suppress("UnstableApiUsage")
+
 plugins {
-    id("fabric-loom") version "1.14-SNAPSHOT"
-    id("me.modmuss50.mod-publish-plugin") version "1.1.0"
-
-    kotlin("jvm") version "2.2.10"
-    id("com.google.devtools.ksp") version "2.2.10-2.0.2"
-    id("dev.kikugie.fletching-table.fabric") version "0.1.0-alpha.22"
-}
-
-var isSnapshot = false
-var mcVer = stonecutter.current.project
-if (mcVer.contains("-") || mcVer.contains("w")) {
-    isSnapshot = true
-    mcVer = mcVer.replace("-", "")
-}
-
-version = "${project.property("mod_version")}+fabric.$mcVer"
-group = project.property("maven_group") as String
-
-base {
-    archivesName.set(project.property("mod_name") as String)
+    id("project-base")
+    id("net.fabricmc.fabric-loom-remap")
 }
 
 repositories {
-    exclusiveContent {
-        forRepository { maven("https://api.modrinth.com/maven") }
-        filter { includeGroup("maven.modrinth") }
-    }
     maven("https://maven.parchmentmc.org")
-    maven("https://maven.shedaniel.me/")
-    maven("https://maven.terraformersmc.com/releases/")
-    mavenCentral()
 }
 
 dependencies {
     minecraft("com.mojang:minecraft:${stonecutter.current.project}")
     mappings(loom.layered {
         officialMojangMappings()
-        /*parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${project.property("mc.parchment_version")}@zip")*/
+        parchment("org.parchmentmc.data:parchment-${stonecutter.current.project}:${project.property("mc.parchment_version")}@zip")
     })
 
     modImplementation("net.fabricmc:fabric-loader:${project.property("mc.loader_version")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("deps.fapi_version")}")
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("deps.clothconfig_version")}")
-
-    var vers = "" // TODO: remove this later
-    if (stonecutter.eval(stonecutter.current.project, ">1.21.10")) vers = " + 1.21.11-rc3"
-    modApi(fletchingTable.modrinth("modmenu", stonecutter.current.project + vers, "fabric"))
+    modApi(fletchingTable.modrinth("mOgUt4GM", stonecutter.current.project, "fabric"))
 
     modImplementation(fletchingTable.modrinth("sodium", stonecutter.current.project, "fabric"))
 
     // Compat
     modCompileOnly(fletchingTable.modrinth("wilder-wild", stonecutter.current.project, "fabric"))
     modCompileOnly(fletchingTable.modrinth("frozenlib", stonecutter.current.project, "fabric"))
-}
-
-tasks.processResources {
-    val replaceProperties = mapOf(
-        "minecraft_range" to project.property("mc.range"),
-        "mod_id" to project.property("mod_id"),
-        "mod_name" to project.property("mod_name"),
-        "mod_license" to project.property("mod_license"),
-        "mod_version" to project.version,
-        "mod_authors" to project.property("mod_authors"),
-        "mod_description" to project.property("mod_description")
-    )
-    replaceProperties.forEach { (key, value) -> inputs.property(key, value) }
-
-    filesMatching("fabric.mod.json") {
-        expand(replaceProperties)
-    }
-}
-
-fletchingTable {
-    mixins.create("main") {
-        mixin("default", "bettergrass.mixins.json")
-    }
 }
 
 loom {
@@ -85,89 +36,7 @@ loom {
     }
 }
 
-java {
-    withSourcesJar()
-
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
-}
-
-tasks.jar {
-    from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}" }
-    }
-}
-
 publishMods {
-    val modVersion = project.property("mod_version") as String
-    type = when {
-        modVersion.contains("alpha") -> ALPHA
-        modVersion.contains("beta") || modVersion.contains("rc") || isSnapshot -> BETA
-        else -> STABLE
-    }
-
-    changelog.set("# ${project.version}\n${rootProject.file("CHANGELOG.md").readText()}")
-    file.set(tasks.remapJar.get().archiveFile)
-    displayName.set("BetterGrassify ${project.version}")
-    modLoaders.addAll("fabric", "quilt")
-
-    modrinth {
-        projectId.set(project.property("modrinthId") as String)
-        accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
-
-        when (stonecutter.current.project) {
-            "1.21.11" -> minecraftVersions.add("1.21.11")
-            "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
-            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
-        }
-
-        requires("fabric-api")
-        optional("cloth-config")
-
-        // Discord
-        announcementTitle.set("Download from Modrinth")
-    }
-
-    curseforge {
-        projectId.set(project.property("curseforgeId") as String)
-        accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
-
-        when (stonecutter.current.project) {
-            "1.21.11" -> minecraftVersions.add("1.21.11")
-            "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
-            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
-        }
-
-        javaVersions.add(JavaVersion.VERSION_21)
-
-        clientRequired.set(true)
-        serverRequired.set(false)
-
-        requires("fabric-api")
-        optional("cloth-config")
-
-        // Discord
-        announcementTitle.set("Download from CurseForge")
-        projectSlug.set("bettergrassify")
-    }
-
-    github {
-        accessToken.set(providers.environmentVariable("GITHUB_TOKEN"))
-        repository.set("UltimatChamp/BetterGrassify")
-        commitish.set("main")
-
-        // Discord
-        announcementTitle.set("Download from GitHub")
-    }
-
-    discord {
-        webhookUrl.set(providers.environmentVariable("DISCORD_WEBHOOK"))
-        username.set("BetterGrassify Releases")
-        avatarUrl.set("https://cdn.modrinth.com/data/m5T5xmUy/c67c1f900e8344e462bb5c21fb512579f3b0be46.png")
-
-        style {
-            look.set("MODERN")
-            thumbnailUrl.set("https://cdn.modrinth.com/data/m5T5xmUy/images/3eaeda7d3cc1cec804e5176d9a21d8eb0f7ab8b6.png")
-        }
-    }
+    file.set(tasks.remapJar.flatMap { it.archiveFile })
+    additionalFiles.from(tasks.remapSourcesJar.flatMap { it.archiveFile })
 }

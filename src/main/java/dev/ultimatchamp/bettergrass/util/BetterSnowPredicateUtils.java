@@ -38,8 +38,13 @@ public class BetterSnowPredicateUtils {
         }
 
         String attr = attribute;
-        return self.getValues().entrySet().stream()
+        //? if >1.21.11 {
+        return self.getValues()
+                .anyMatch(p -> (p.property().getName() + "=" + p.value()).equalsIgnoreCase(attr));
+        //?} else {
+        /*return self.getValues().entrySet().stream()
                 .anyMatch(p -> (p.getKey().getName() + "=" + p.getValue()).equalsIgnoreCase(attr));
+        *///?}
     }
 
     public static String withoutAttribute(String block) {

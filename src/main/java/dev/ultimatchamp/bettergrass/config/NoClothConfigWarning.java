@@ -1,6 +1,6 @@
 package dev.ultimatchamp.bettergrass.config;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -28,10 +28,22 @@ public class NoClothConfigWarning extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
+    //? if >1.21.11 {
+    public void extractBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    //?} else {
+    /*public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    *///?}
+        //? if >1.21.11 {
+        super.extractBackground(graphics, mouseX, mouseY, partialTick);
+        //?} else {
+        /*super.render(graphics, mouseX, mouseY, partialTick);
+        *///?}
 
         Component warning = Component.translatable("bettergrass.labels.noClothConfig");
-        guiGraphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF/*? if >1.21.1 {*/, true/*?}*/);
+        //? if >1.21.11 {
+        graphics.textWithWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF/*? if >1.21.1 {*/, true/*?}*/);
+        //?} else {
+        /*graphics.drawWordWrap(this.font, warning, this.width / 2 - 100, this.height / 2 - 50, 200, 0xFFFFFFFF/^? if >1.21.1 {^/, true/^?}^/);
+        *///?}
     }
 }

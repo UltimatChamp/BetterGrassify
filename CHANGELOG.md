@@ -1,14 +1,13 @@
-🗃️**Detailed Changelog: [1.8.2 --> 1.8.3](https://github.com/UltimatChamp/BetterGrassify/compare/1.8.2%2bfabric.1.21.10...1.8.3%2bfabric.1.21.11)**
+🗃️**Detailed Changelog: [1.8.3 --> 1.8.4](https://github.com/UltimatChamp/BetterGrassify/compare/1.8.3%2bfabric.1.21.11...1.8.4%2bfabric.26.1.1)**
 
 ---
 
 ### ⚠️Note
 
-- Doesn't currently work with **Sodium**. Wait for this to be fixed from **Sodium**'s end _(with `0.8.1`?)_.
+- Requires, a currently, unreleased version of **Sodium** for the mod to work with it.
 
 ---
 
 ### 💡Added
 
-- Support for **Minecraft** `1.21.11`.
-- Support for **Sodium**'s new _Video Settings Menu_.
+- Support for **Minecraft** `26.1`-`26.1.1`.

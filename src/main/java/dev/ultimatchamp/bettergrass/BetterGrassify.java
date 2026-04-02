@@ -7,21 +7,20 @@ import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DirtPathBlock;
-import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.block.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-//? if >1.21.10 {
-import net.minecraft.resources.Identifier;
-//?} else {
-/*import net.minecraft.resources.ResourceLocation;
-*///?}
+//? if >1.21.11 {
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
+import net.minecraft.server.packs.PackType;
+import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
+//?}
 
 //? if >1.21.1 {
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
@@ -29,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 //?} else {
 /*import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.ModelIdentifier;
 *///?}
 
 public class BetterGrassify implements ClientModInitializer {
@@ -39,6 +38,11 @@ public class BetterGrassify implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
+        //? if >1.21.11 {
+        ResourceLoader resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        resourceLoader.registerReloadListener(SpriteCalculator.ReloadListener.ID, SpriteCalculator.ReloadListener.INSTANCE);
+        resourceLoader.addListenerOrdering(ResourceReloaderKeys.Client.ATLAS, SpriteCalculator.ReloadListener.ID);
+        //?}
 
         if (config.general.betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF))
             BetterGrassify.LOGGER.info("[{}] Better Grass is disabled! ;(", MOD_NAME);
@@ -56,7 +60,7 @@ public class BetterGrassify implements ClientModInitializer {
             //? if >1.21.1 {
             BlockState state = context.state();
             //?} else {
-            /*ModelResourceLocation modelId = context.topLevelId();
+            /*ModelIdentifier modelId = context.topLevelId();
             if (modelId == null || modelId.getVariant().equals("inventory")) return model;
             Block self = BuiltInRegistries.BLOCK.getOptional(modelId.id()).orElse(null);
             if (self == null) return model;
@@ -64,7 +68,7 @@ public class BetterGrassify implements ClientModInitializer {
             List<String> blocks = BetterGrassify.getBlocks();
 
             for (String blockId : blocks) {
-                Block block = BuiltInRegistries.BLOCK.getOptional(/*? if >1.21.10 {*/Identifier/*?} else {*//*ResourceLocation*//*?}*/.tryParse(blockId)).orElse(null);
+                Block block = BuiltInRegistries.BLOCK.getOptional(/*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.tryParse(blockId)).orElse(null);
 
                 //? if >1.21.1 {
                 if (block != null && state.is(block)) {
@@ -92,7 +96,7 @@ public class BetterGrassify implements ClientModInitializer {
                 //?} else {
                 /*} else if (self.equals(Blocks.DIRT)) {
                 *///?}
-                    if (block instanceof DirtPathBlock || block instanceof FarmBlock) {
+                    if (block instanceof DirtPathBlock || block instanceof /*? if >1.21.11 {*/FarmlandBlock/*?} else {*//*FarmBlock*//*?}*/) {
                         //? if >1.21.1 {
                         return new BetterGrassifyUnbakedRootBlockStateModel(model);
                         //?} else {

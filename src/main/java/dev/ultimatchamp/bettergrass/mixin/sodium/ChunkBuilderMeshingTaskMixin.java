@@ -22,7 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ChunkBuilderMeshingTaskMixin {
     @Inject(method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
             at = @At(value = "INVOKE",
-                    target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderCache;getBlockModels()Lnet/minecraft/client/renderer/block/BlockModelShaper;"
+                    //? if >1.21.11 {
+                    target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderCache;getBlockModels()Lnet/minecraft/client/renderer/block/BlockStateModelSet;"
+                    //?} else {
+                    /*target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderCache;getBlockModels()Lnet/minecraft/client/renderer/block/BlockModelShaper;"
+                    *///?}
             )
     )
     private void bettergrass$execute(ChunkBuildContext buildContext,
@@ -43,7 +47,12 @@ public class ChunkBuilderMeshingTaskMixin {
                     }
                 }
 
-                var model = cache.getBlockModels().getBlockModel(layerNeighbour);
+                //? if >1.21.11 {
+                var model = cache.getBlockModels().get(layerNeighbour);
+                //?} else {
+                /*var model = cache.getBlockModels().getBlockModel(layerNeighbour);
+                *///?}
+
                 cache.getBlockRenderer().renderModel(model, layerNeighbour, pos.above(), modelOffset.above());
             }
         }

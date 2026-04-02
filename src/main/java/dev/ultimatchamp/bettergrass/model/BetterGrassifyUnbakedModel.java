@@ -7,7 +7,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -21,12 +21,12 @@ public class BetterGrassifyUnbakedModel implements UnbakedModel {
     }
 
     @Override
-    public @NotNull Collection<ResourceLocation> getDependencies() {
+    public @NotNull Collection<Identifier> getDependencies() {
         return this.baseModel.getDependencies();
     }
 
     @Override
-    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<Identifier, UnbakedModel> modelLoader) {
         this.baseModel.resolveParents(modelLoader);
     }
 

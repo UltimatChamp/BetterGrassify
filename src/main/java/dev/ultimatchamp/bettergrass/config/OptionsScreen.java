@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import java.util.List;
 
 public class OptionsScreen {
+    @SuppressWarnings("UnstableApiUsage")
     public static Screen createConfigScreen(Screen parent) {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
 

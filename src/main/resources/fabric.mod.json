@@ -31,7 +31,10 @@
   "depends": {
     "minecraft": "${minecraft_range}",
     "fabricloader": "*",
-    "fabric": "*"
+    "fabric-api": "*"
+  },
+  "breaks": {
+    ${breaks_range}
   },
   "recommends": {
     "cloth-config": "*"

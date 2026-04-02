@@ -5,13 +5,18 @@ import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SnowLayerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+//? if >1.21.11 {
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+//?} else {
+/*import net.minecraft.world.level.BlockAndTintGetter;
+*///?}
 
 public class BetterSnowUtils {
     public static BlockState getLayerNeighbour(BlockAndTintGetter world, BlockPos selfPos) {

@@ -1,13 +1,25 @@
 //? if >1.21.1 {
 package dev.ultimatchamp.bettergrass.model;
 
-import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedGroupedBlockStateModel;
-import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class BetterGrassifyUnbakedRootBlockStateModel extends WrapperUnbakedGroupedBlockStateModel implements BlockStateModel.UnbakedRoot {
+//? if >1.21.11 {
+import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedRootBlockStateModel;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModel;
+//?} else {
+/*import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperUnbakedGroupedBlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+*///?}
+
+public class BetterGrassifyUnbakedRootBlockStateModel extends
+        //? if >1.21.11 {
+        WrapperUnbakedRootBlockStateModel
+        //?} else {
+        /*WrapperUnbakedGroupedBlockStateModel
+        *///?}
+        implements BlockStateModel.UnbakedRoot {
     private final BlockStateModel.UnbakedRoot wrapped;
 
     public BetterGrassifyUnbakedRootBlockStateModel(BlockStateModel.UnbakedRoot wrapped) {
