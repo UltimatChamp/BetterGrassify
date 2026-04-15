@@ -4,13 +4,12 @@ import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.minecraft.resources./*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/;
 
 public class BetterGrassifyCacheUtils {
     public static List<Block> BETTER_SNOW_CACHE = new CopyOnWriteArrayList<>();
@@ -37,27 +36,27 @@ public class BetterGrassifyCacheUtils {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
 
         for (String identifier : config.betterSnow.snowLayers) {
-            /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/ id = /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.tryParse(identifier);
+            Identifier id = Identifier.tryParse(identifier);
             BuiltInRegistries.BLOCK.getOptional(id).ifPresent(BETTER_SNOW_CACHE::add);
         }
 
         for (String block : config.betterSnow.whitelistedBlocks) {
-            /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/ id = /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.parse(BetterSnowPredicateUtils.withoutAttribute(block));
+            Identifier id = Identifier.parse(BetterSnowPredicateUtils.withoutAttribute(block));
             BuiltInRegistries.BLOCK.getOptional(id).ifPresent(b -> WHITELISTED_BLOCKS_CACHE.add(Pair.of(b, block)));
         }
 
         for (String tag : config.betterSnow.whitelistedTags) {
-            /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/ id = /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.parse(tag);
+            Identifier id = Identifier.parse(tag);
             WHITELISTED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, id));
         }
 
         for (String block : config.betterSnow.excludedBlocks) {
-            /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/ id = /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.parse(BetterSnowPredicateUtils.withoutAttribute(block));
+            Identifier id = Identifier.parse(BetterSnowPredicateUtils.withoutAttribute(block));
             BuiltInRegistries.BLOCK.getOptional(id).ifPresent(b -> EXCLUDED_BLOCKS_CACHE.add(Pair.of(b, block)));
         }
 
         for (String tag : config.betterSnow.excludedTags) {
-            /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/ id = /*? if >1.21.10 {*/Identifier/*?} else {*//*Identifier*//*?}*/.parse(tag);
+            Identifier id = Identifier.parse(tag);
             EXCLUDED_TAGS_CACHE.add(TagKey.create(Registries.BLOCK, id));
         }
     }

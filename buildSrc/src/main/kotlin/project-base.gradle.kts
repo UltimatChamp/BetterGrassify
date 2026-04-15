@@ -115,7 +115,7 @@ publishMods {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
         when (stonecutter.current.project) {
-            "26.1.1" -> minecraftVersions.addAll("26.1", "26.1.1")
+            "26.1.2" -> minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
             "1.21.11" -> minecraftVersions.add("1.21.11")
             "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
             "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
@@ -133,7 +133,7 @@ publishMods {
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
         when (stonecutter.current.project) {
-            "26.1.1" -> minecraftVersions.addAll("26.1", "26.1.1")
+            "26.1.2" -> minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
             "1.21.11" -> minecraftVersions.add("1.21.11")
             "1.21.10" -> minecraftVersions.addAll("1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10")
             "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")

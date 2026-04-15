@@ -1,5 +1,6 @@
 package dev.ultimatchamp.bettergrass.model;
 
+import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.BetterSnowUtils;
@@ -82,7 +83,7 @@ public class BetterGrassifyBlockStateModel extends
             return;
         }
 
-        /*? if >1.21.1 {*/Supplier<RandomSource> randomSupplier = () -> random;/*?}*/
+        /*? if 1.21.1 {*//*RandomSource random = randomSupplier.get();*//*?}*/
         emitter.pushTransform(quad -> {
             this.config = BetterGrassifyConfig.load();
 
@@ -91,8 +92,8 @@ public class BetterGrassifyBlockStateModel extends
 
             if (state.is(Blocks.DIRT)) { // Fix dirt paths connection, only if on a dirt block
                 if (isBelowNonFullBlock(blockView, pos, face))
-                    spriteBake(emitter, quad, blockView.getBlockState(pos.above()), randomSupplier);
-            } else betterGrassify(emitter, quad, blockView, state, pos, face, randomSupplier);
+                    spriteBake(quad, blockView.getBlockState(pos.above()), random);
+            } else betterGrassify(quad, blockView, state, pos, face, random);
 
             return true;
         });
@@ -105,34 +106,34 @@ public class BetterGrassifyBlockStateModel extends
         emitter.popTransform();
     }
 
-    public void betterGrassify(/*? if >1.21.1 {*/QuadEmitter/*?} else {*//*RenderContext*//*?}*/ emitter, MutableQuadView quad, BlockAndTintGetter world, BlockState state, BlockPos pos, Direction face, Supplier<RandomSource> randomSupplier) {
+    public void betterGrassify(MutableQuadView quad, BlockAndTintGetter world, BlockState state, BlockPos pos, Direction face, RandomSource random) {
         if (this.config.general.betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FANCY)) {
             if (canFullyConnect(world, state, pos, face))
-                spriteBake(emitter, quad, isSnowy(world, pos) ? world.getBlockState(pos.above()) : state, randomSupplier);
-            else betterSnowyGrass(emitter, quad, world, pos, face, randomSupplier);
+                spriteBake(quad, isSnowy(world, pos) ? world.getBlockState(pos.above()) : state, random);
+            else betterSnowyGrass(quad, world, pos, face, random);
         } else if (this.config.general.betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.FAST)) {
             if (isSnowy(world, pos))
-                spriteBake(emitter, quad, world.getBlockState(pos.above()), randomSupplier);
+                spriteBake(quad, world.getBlockState(pos.above()), random);
             else if (BetterSnowUtils.canHaveGhostSnowLayer(world, pos.above()) && this.config.general.blocks.snowy) // Better Snow Mode check, as block has ghost snow
-                spriteBake(emitter, quad, BetterSnowUtils.getLayerNeighbour(world, pos.above()), randomSupplier);
-            else spriteBake(emitter, quad, world.getBlockState(pos), randomSupplier);
+                spriteBake(quad, BetterSnowUtils.getLayerNeighbour(world, pos.above()), random);
+            else spriteBake(quad, world.getBlockState(pos), random);
         }
     }
 
-    public void betterSnowyGrass(/*? if >1.21.1 {*/QuadEmitter/*?} else {*//*RenderContext*//*?}*/ emitter, MutableQuadView quad, BlockAndTintGetter world, BlockPos pos, Direction face, Supplier<RandomSource> randomSupplier) {
+    public void betterSnowyGrass(MutableQuadView quad, BlockAndTintGetter world, BlockPos pos, Direction face, RandomSource random) {
         BlockPos adjacentPos = pos.relative(face);
 
         if (isSnowy(world, pos) && BetterSnowUtils.canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Snowy Grass | Below: Ghost Snow
-            spriteBake(emitter, quad, world.getBlockState(pos.above()), randomSupplier);
+            spriteBake(quad, world.getBlockState(pos.above()), random);
         } else if (BetterSnowUtils.canHaveGhostSnowLayer(world, pos.above()) && isSnowy(world, adjacentPos.below())) {
             // Self: Ghost Snow | Below: Snowy Grass
-            spriteBake(emitter, quad, world.getBlockState(adjacentPos), randomSupplier);
+            spriteBake(quad, world.getBlockState(adjacentPos), random);
         } else if (BetterSnowUtils.canHaveGhostSnowLayer(world, pos.above()) && BetterSnowUtils.canHaveGhostSnowLayer(world, adjacentPos)) {
             // Self: Ghost Snow | Below: Ghost Snow
             if (!this.config.general.blocks.snowy)
                 return; // Better Snow Mode check, as both self and below have ghost snow
-            spriteBake(emitter, quad, BetterSnowUtils.getLayerNeighbour(world, pos.above()), randomSupplier);
+            spriteBake(quad, BetterSnowUtils.getLayerNeighbour(world, pos.above()), random);
         }
     }
 
@@ -188,22 +189,15 @@ public class BetterGrassifyBlockStateModel extends
         return self.getOptionalValue(BlockStateProperties.SNOWY).orElse(false) && !world.getBlockState(selfPos.above()).isAir();
     }
 
-    private static void spriteBake(/*? if >1.21.1 {*/QuadEmitter/*?} else {*//*RenderContext*//*?}*/ emitter, MutableQuadView quad, BlockState state, Supplier<RandomSource> randomSupplier) {
-        //? if >1.21.11 {
-        Direction face = quad.nominalFace();
-        if (face == null) return;
-        //?}
-
-        TextureAtlasSprite sprite = SpriteCalculator.calculateSprite(emitter, state, Direction.UP, randomSupplier);
+    private static void spriteBake(MutableQuadView quad, BlockState state, RandomSource random) {
+        TextureAtlasSprite sprite = SpriteCalculator.calculateSprite(state, Direction.UP, random);
 
         if (sprite != null) {
             //? if >1.21.11 {
-            quad.square(face, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f);
-            quad.tintIndex(0);
             quad.materialBake(new Material.Baked(sprite, false), MutableQuadView.BAKE_LOCK_UV);
             //?} else {
             /*quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
             *///?}
-        }
+        } else BetterGrassify.LOGGER.error("[{}] No sprite found for {}", BetterGrassify.MOD_NAME, state);
     }
 }

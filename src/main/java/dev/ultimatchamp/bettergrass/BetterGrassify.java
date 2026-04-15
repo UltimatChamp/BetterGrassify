@@ -15,13 +15,6 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-//? if >1.21.11 {
-import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
-import net.minecraft.server.packs.PackType;
-import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
-//?}
-
 //? if >1.21.1 {
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,11 +31,6 @@ public class BetterGrassify implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
-        //? if >1.21.11 {
-        ResourceLoader resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
-        resourceLoader.registerReloadListener(SpriteCalculator.ReloadListener.ID, SpriteCalculator.ReloadListener.INSTANCE);
-        resourceLoader.addListenerOrdering(ResourceReloaderKeys.Client.ATLAS, SpriteCalculator.ReloadListener.ID);
-        //?}
 
         if (config.general.betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF))
             BetterGrassify.LOGGER.info("[{}] Better Grass is disabled! ;(", MOD_NAME);

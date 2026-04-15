@@ -171,143 +171,69 @@
 
 package dev.ultimatchamp.bettergrass.util;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.function.Supplier;
+import java.util.List;
 
 //? if >1.21.11 {
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.fabricmc.fabric.api.client.renderer.v1.mesh.MutableQuadView;
-import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadTransform;
-import net.fabricmc.fabric.api.client.renderer.v1.sprite.SpriteFinder;
-import net.minecraft.client.renderer.block.BlockAndTintGetter;
 import net.minecraft.client.renderer.block.BlockStateModelSet;
-import net.minecraft.core.BlockPos;
-import net.minecraft.data.AtlasIds;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Set;
+import net.minecraft.client.resources.model.geometry.BakedQuad;
 //?} else {
 /*import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-
-import java.util.List;
 *///?}
 
 //? if >1.21.11 {
-import net.fabricmc.fabric.api.client.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 //?} else if >1.21.1 {
-/*import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-*///?} else {
-/*import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+/*import net.minecraft.client.renderer.block.model.BlockModelPart;
 *///?}
 
 public final class SpriteCalculator {
-    //? if >1.21.11 {
-    public static SpriteFinder blockAtlasSpriteFinder;
-    //?}
-
     //? if >1.21.11 {
     private static final BlockStateModelSet MODELS = Minecraft.getInstance().getModelManager().getBlockStateModelSet();
     //?} else {
     /*private static final BlockModelShaper MODELS = Minecraft.getInstance().getModelManager().getBlockModelShaper();
     *///?}
 
-    @Unmodifiable
-    public static TextureAtlasSprite calculateSprite(/*? if >1.21.1 {*/QuadEmitter/*?} else {*//*RenderContext*//*?}*/ emitter, BlockState state, Direction face, Supplier<RandomSource> randomSupplier) {
+    public static TextureAtlasSprite calculateSprite(BlockState state, Direction face, RandomSource random) {
         //? if >1.21.11 {
         var model = MODELS.get(state);
-
-        CollectingQuadTransform quadTransform = new CollectingQuadTransform(face);
-
-        quadTransform.clear();
-        emitter.pushTransform(quadTransform);
-        randomSupplier.get().setSeed(42);
-        model.emitQuads(emitter, BlockAndTintGetter.EMPTY, BlockPos.ZERO, state, randomSupplier.get(), cullFace -> false);
-        emitter.popTransform();
-
-        Set<TextureAtlasSprite> sprites = quadTransform.result();
-        return !sprites.isEmpty() ? sprites.iterator().next() : null;
         //?} else {
         /*var model = MODELS.getBlockModel(state);
+        *///?}
+
+        //? if >1.21.11 {
+        List<BlockStateModelPart> parts = new ObjectArrayList<>();
+        //?} else if >1.21.1 {
+        /*List<BlockModelPart> parts = new ObjectArrayList<>();
+        *///?}
+        //? if >1.21.1 {
+        model.collectParts(random, parts);
+        var quads = parts.getFirst().getQuads(face);
+        //?} else {
+        /*var quads = model.getQuads(state, face, random);
+        *///?}
+        if (!quads.isEmpty()) {
+            return quads.getFirst()/*? if >1.21.11 {*/.materialInfo()/*?}*/./*? if >1.21.1 {*/sprite/*?} else {*//*getSprite*//*?}*/();
+        }
 
         //? if >1.21.1 {
-        List<BakedQuad> quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(face);
-        if (!quads.isEmpty()) {
-            return quads.getFirst().sprite();
-        }
-
-        quads = model.collectParts(randomSupplier.get()).getFirst().getQuads(null);
-        if (!quads.isEmpty()) {
-            for (BakedQuad quad : quads) {
-                if (quad.direction() == face) return quad.sprite();
-            }
-        }
+        quads = parts.getFirst().getQuads(null);
         //?} else {
-        /^List<BakedQuad> quads = model.getQuads(state, face, randomSupplier.get());
-        if (!quads.isEmpty()) {
-            return quads.getFirst().getSprite();
-        }
-
-        quads = model.getQuads(state, null, randomSupplier.get());
+        /*quads = model.getQuads(state, null, random);
+        *///?}
         if (!quads.isEmpty()) {
             for (BakedQuad quad : quads) {
-                if (quad.getDirection() == face) return quad.getSprite();
+                if (quad./*? if >1.21.1 {*/direction/*?} else {*//*getDirection*//*?}*/() == face) return quad/*? if >1.21.11 {*/.materialInfo()/*?}*/./*? if >1.21.1 {*/sprite/*?} else {*//*getSprite*//*?}*/();
             }
         }
-        ^///?}
 
         return null;
-        *///?}
     }
-
-    //? if >1.21.11 {
-    public static class ReloadListener implements ResourceManagerReloadListener {
-        public static final Identifier ID = Identifier.fromNamespaceAndPath("bettergrass", "render_util");
-        public static final ReloadListener INSTANCE = new ReloadListener();
-
-        @Override
-        public void onResourceManagerReload(@NotNull ResourceManager manager) {
-            //? if >1.21.1 {
-            blockAtlasSpriteFinder = Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).spriteFinder();
-            //?} else {
-            /*blockAtlasSpriteFinder = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS));
-            *///?}
-        }
-    }
-
-    private static class CollectingQuadTransform implements QuadTransform {
-        private final Direction face;
-        private final Set<TextureAtlasSprite> sprites = new ObjectOpenHashSet<>();
-
-        private CollectingQuadTransform(Direction face) {
-            this.face = face;
-        }
-
-        @Override
-        public boolean transform(MutableQuadView quad) {
-            if (quad.lightFace() == face) {
-                sprites.add(blockAtlasSpriteFinder.find(quad));
-            }
-            return false;
-        }
-
-        public void clear() {
-            sprites.clear();
-        }
-
-        @Unmodifiable
-        public Set<TextureAtlasSprite> result() {
-            return Set.copyOf(sprites);
-        }
-    }
-    //?}
 }

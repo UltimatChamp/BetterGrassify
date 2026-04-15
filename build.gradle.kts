@@ -22,7 +22,7 @@ dependencies {
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.property("deps.clothconfig_version")}")
     modApi(fletchingTable.modrinth("mOgUt4GM", stonecutter.current.project, "fabric"))
 
-    modImplementation(fletchingTable.modrinth("sodium", stonecutter.current.project, "fabric"))
+    modCompileOnly(fletchingTable.modrinth("sodium", stonecutter.current.project, "fabric"))
 
     // Compat
     modCompileOnly(fletchingTable.modrinth("wilder-wild", stonecutter.current.project, "fabric"))

@@ -1,7 +1,13 @@
-name: Gradle Release
+name: Gradle Release Selected
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release'
+        required: true
+        type: string
+
 
 jobs:
   build:
@@ -35,7 +41,7 @@ jobs:
         run: chmod +x ./gradlew
 
       - name: Build and Publish with Gradle
-        run: ./gradlew publishMods
+        run: ./gradlew :${{ inputs.version }}:publishMods
         env:
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
