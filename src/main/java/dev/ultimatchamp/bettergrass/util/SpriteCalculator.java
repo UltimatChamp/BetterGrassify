@@ -195,18 +195,8 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 *///?}
 
 public final class SpriteCalculator {
-    //? if >1.21.11 {
-    private static final BlockStateModelSet MODELS = Minecraft.getInstance().getModelManager().getBlockStateModelSet();
-    //?} else {
-    /*private static final BlockModelShaper MODELS = Minecraft.getInstance().getModelManager().getBlockModelShaper();
-    *///?}
-
     public static TextureAtlasSprite calculateSprite(BlockState state, Direction face, RandomSource random) {
-        //? if >1.21.11 {
-        var model = MODELS.get(state);
-        //?} else {
-        /*var model = MODELS.getBlockModel(state);
-        *///?}
+        var model = Minecraft.getInstance().getModelManager()./*? if >1.21.11 {*/getBlockStateModelSet().get/*?} else {*//*getBlockModelShaper().getBlockModel*//*?}*/(state);
 
         //? if >1.21.11 {
         List<BlockStateModelPart> parts = new ObjectArrayList<>();
