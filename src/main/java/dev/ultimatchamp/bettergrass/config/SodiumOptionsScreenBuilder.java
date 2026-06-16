@@ -1,4 +1,3 @@
-//? if >1.21.10 {
 package dev.ultimatchamp.bettergrass.config;
 
 import dev.ultimatchamp.bettergrass.BetterGrassify;
@@ -22,7 +21,7 @@ public class SodiumOptionsScreenBuilder implements ConfigEntryPoint {
     public void registerConfigLate(ConfigBuilder builder) {
         builder.registerOwnModOptions()
                 .setName(BetterGrassify.MOD_NAME)
-                .setIcon(Identifier.fromNamespaceAndPath("bettergrass", "textures/gui/icon.png"))
+                .setNonTintedIcon(Identifier.fromNamespaceAndPath("bettergrass", "textures/gui/icon.png"))
                 .setColorTheme(builder.createColorTheme().setBaseThemeRGB(0x72e9ae))
                 .addPage(builder.createOptionPage()
                         .setName(Component.translatable("stat.generalButton"))
@@ -127,9 +126,8 @@ public class SodiumOptionsScreenBuilder implements ConfigEntryPoint {
                 .addPage(builder.createExternalPage()
                         .setName(Component.translatable("sodium.options.pages.advanced"))
                         .setScreenConsumer(parent ->
-                                Minecraft.getInstance().setScreenAndShow(BetterGrassifyConfig.createConfigScreen(parent))
+                                Minecraft.getInstance()./*? if >1.21.8 {*/setScreenAndShow/*?} else {*//*setScreen*//*?}*/(BetterGrassifyConfig.createConfigScreen(parent))
                         )
                 );
     }
 }
-//?}

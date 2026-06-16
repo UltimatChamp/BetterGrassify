@@ -1,6 +1,6 @@
 plugins {
     id("project-base")
-    id("net.fabricmc.fabric-loom") version "1.15-SNAPSHOT"
+    id("net.fabricmc.fabric-loom")
 }
 
 dependencies {
@@ -12,13 +12,13 @@ dependencies {
     api("me.shedaniel.cloth:cloth-config-fabric:${project.property("deps.clothconfig_version")}") {
         exclude(group = "net.fabricmc.fabric-api")
     }
-    api(fletchingTable.modrinth("mOgUt4GM", stonecutter.current.project + " + 26.1", "fabric"))
+    api(fletchingTable.modrinth("modmenu", stonecutter.current.project + " + 26.2-rc-2", "fabric"))
 
-    compileOnly(fletchingTable.modrinth("sodium", stonecutter.current.project + " + 26.1", "fabric"))
+    compileOnly(fletchingTable.modrinth("sodium", stonecutter.current.project + " + 26.1.2", "fabric"))
 
     // Compat
-    compileOnly(fletchingTable.modrinth("wilder-wild", stonecutter.current.project + " + 26.1", "fabric"))
-    compileOnly(fletchingTable.modrinth("frozenlib", stonecutter.current.project + " + 26.1", "fabric"))
+    compileOnly(fletchingTable.modrinth("wilder-wild", stonecutter.current.project + " + 26.1.2", "fabric"))
+    compileOnly(fletchingTable.modrinth("frozenlib", stonecutter.current.project + " + 26.1.2", "fabric"))
 }
 
 loom {

@@ -1,6 +1,5 @@
 package dev.ultimatchamp.bettergrass.model;
 
-import dev.ultimatchamp.bettergrass.BetterGrassify;
 import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
 import dev.ultimatchamp.bettergrass.util.BetterSnowUtils;
@@ -198,6 +197,6 @@ public class BetterGrassifyBlockStateModel extends
             //?} else {
             /*quad.spriteBake(sprite, MutableQuadView.BAKE_LOCK_UV);
             *///?}
-        } else BetterGrassify.LOGGER.error("[{}] No sprite found for {}", BetterGrassify.MOD_NAME, state);
+        }
     }
 }

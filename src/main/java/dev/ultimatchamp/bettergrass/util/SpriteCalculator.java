@@ -171,21 +171,25 @@
 
 package dev.ultimatchamp.bettergrass.util;
 
+import dev.ultimatchamp.bettergrass.BetterGrassify;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 //? if >1.21.11 {
-import net.minecraft.client.renderer.block.BlockStateModelSet;
 import net.minecraft.client.resources.model.geometry.BakedQuad;
 //?} else {
-/*import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.client.renderer.block.model.BakedQuad;
+/*import net.minecraft.client.renderer.block.model.BakedQuad;
 *///?}
 
 //? if >1.21.11 {
@@ -194,7 +198,22 @@ import net.minecraft.client.renderer.block.dispatch.BlockStateModelPart;
 /*import net.minecraft.client.renderer.block.model.BlockModelPart;
 *///?}
 
+//? if >1.21.1 {
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+//?} else {
+/*import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
+
+import java.util.Collection;
+*///?}
+
 public final class SpriteCalculator {
+    private static final Set<BlockState> MISSING_SPRITES = Collections.newSetFromMap(new ConcurrentHashMap<>());
+
     public static TextureAtlasSprite calculateSprite(BlockState state, Direction face, RandomSource random) {
         var model = Minecraft.getInstance().getModelManager()./*? if >1.21.11 {*/getBlockStateModelSet().get/*?} else {*//*getBlockModelShaper().getBlockModel*//*?}*/(state);
 
@@ -224,6 +243,46 @@ public final class SpriteCalculator {
             }
         }
 
+        if (MISSING_SPRITES.add(state))
+            BetterGrassify.LOGGER.error("[{}] No sprite found for {}", BetterGrassify.MOD_NAME, state);
+
         return null;
     }
+
+    //? if >1.21.1 {
+    public static class ReloadListener implements ResourceManagerReloadListener {
+        public static final Identifier ID = Identifier.fromNamespaceAndPath("bettergrass", "resource_util");
+        public static final ReloadListener INSTANCE = new ReloadListener();
+
+        @Override
+        public void onResourceManagerReload(@NotNull ResourceManager manager) {
+            MISSING_SPRITES.clear();
+        }
+    }
+    //?} else {
+    /*public static class ReloadListener implements SimpleSynchronousResourceReloadListener {
+        public static final Identifier ID = Identifier.fromNamespaceAndPath("bettergrass", "resource_util");
+        public static final List<Identifier> DEPENDENCIES = List.of(ResourceReloadListenerKeys.MODELS);
+        private static final ReloadListener INSTANCE = new ReloadListener();
+
+        public static void init() {
+            ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(INSTANCE);
+        }
+
+        @Override
+        public void onResourceManagerReload(ResourceManager manager) {
+            MISSING_SPRITES.clear();
+        }
+
+        @Override
+        public Identifier getFabricId() {
+            return ID;
+        }
+
+        @Override
+        public Collection<Identifier> getFabricDependencies() {
+            return DEPENDENCIES;
+        }
+    }
+    *///?}
 }

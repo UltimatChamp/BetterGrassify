@@ -2,6 +2,7 @@ package dev.ultimatchamp.bettergrass;
 
 import dev.ultimatchamp.bettergrass.compat.WilderWildCompat;
 import dev.ultimatchamp.bettergrass.config.BetterGrassifyConfig;
+import dev.ultimatchamp.bettergrass.util.SpriteCalculator;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
@@ -17,8 +18,11 @@ import java.util.List;
 
 //? if >1.21.1 {
 import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedRootBlockStateModel;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
+import net.fabricmc.fabric.api.resource.v1.reloader.ResourceReloaderKeys;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.server.packs.PackType;
 //?} else {
 /*import dev.ultimatchamp.bettergrass.model.BetterGrassifyUnbakedModel;
 import net.minecraft.client.resources.model.ModelIdentifier;
@@ -31,6 +35,14 @@ public class BetterGrassify implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         BetterGrassifyConfig config = BetterGrassifyConfig.load();
+
+        //? if >1.21.1 {
+        ResourceLoader resourceLoader = ResourceLoader.get(PackType.CLIENT_RESOURCES);
+        resourceLoader./*? if >1.21.11 {*/registerReloadListener/*?} else {*//*registerReloader*//*?}*/(SpriteCalculator.ReloadListener.ID, SpriteCalculator.ReloadListener.INSTANCE);
+        resourceLoader./*? if >1.21.11 {*/addListenerOrdering/*?} else {*//*addReloaderOrdering*//*?}*/(ResourceReloaderKeys.Client.ATLAS, SpriteCalculator.ReloadListener.ID);
+        //?} else {
+        /*SpriteCalculator.ReloadListener.init();
+        *///?}
 
         if (config.general.betterGrassMode.equals(BetterGrassifyConfig.BetterGrassMode.OFF))
             BetterGrassify.LOGGER.info("[{}] Better Grass is disabled! ;(", MOD_NAME);

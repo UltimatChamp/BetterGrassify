@@ -34,7 +34,7 @@ public abstract class VideoSettingsScreenMixin extends OptionsSubScreen {
                 OptionInstance.cachedConstantTooltip(Component.empty()),
                 (arg, object) -> Component.empty(),
                 OptionInstance.BOOLEAN_VALUES, true,
-                (parent) -> this.minecraft.setScreen(BetterGrassifyConfig.createConfigScreen(this))
+                (parent) -> this.minecraft/*? if >26.1.2 {*/.gui/*?}*/.setScreen(BetterGrassifyConfig.createConfigScreen(this))
         ));
     }
 }

@@ -21,7 +21,7 @@ public class NoClothConfigWarning extends Screen {
         if (this.minecraft == null) return;
 
         Button btn = Button.builder(Component.translatable("dataPack.validation.back"),
-                        button -> this.minecraft.setScreen(parent))
+                        button -> this.minecraft/*? if >26.1.2 {*/.gui/*?}*/.setScreen(parent))
                 .bounds(this.width / 2 - 100, this.height / 2 + 50, 200, 20)
                 .build();
         this.addRenderableWidget(btn);
