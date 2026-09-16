@@ -31,8 +31,8 @@ dependencies {
 
 loom {
     runConfigs.all {
-        ideConfigGenerated(true)
-        runDir = "../../run"
+        generateRunConfig.set(true)
+        runDirectory.set(this.project.file("../../run"))
     }
 }
 

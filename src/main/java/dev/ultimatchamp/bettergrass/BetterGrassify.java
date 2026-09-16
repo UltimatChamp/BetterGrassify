@@ -96,7 +96,7 @@ public class BetterGrassify implements ClientModInitializer {
                 //?} else {
                 /*} else if (self.equals(Blocks.DIRT)) {
                 *///?}
-                    if (block instanceof DirtPathBlock || block instanceof /*? if >1.21.11 {*/FarmlandBlock/*?} else {*//*FarmBlock*//*?}*/) {
+                    if (block instanceof /*? if >26.2 {*/PathBlock/*?} else {*//*DirtPathBlock*//*?}*/ || block instanceof /*? if >1.21.11 {*/FarmlandBlock/*?} else {*//*FarmBlock*//*?}*/) {
                         //? if >1.21.1 {
                         return new BetterGrassifyUnbakedRootBlockStateModel(model);
                         //?} else {
