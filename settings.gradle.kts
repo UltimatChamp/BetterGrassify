@@ -20,7 +20,7 @@ stonecutter {
                 else version(it).buildscript = "build.gradle.kts"
             }
 
-        register("1.21.1", "1.21.11", "26.1.2", "26.2", "26.3")
+        register(/*!FIXME"1.21.1", "1.21.11", "26.1.2", "26.2", */"26.3")
         vcsVersion = "26.3"
     }
 }
