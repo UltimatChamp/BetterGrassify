@@ -115,10 +115,11 @@ publishMods {
         accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 
         when (stonecutter.current.project) {
-            "26.2" -> minecraftVersions.addAll("26.2")
+            "26.3" -> minecraftVersions.addAll("26.3")
+            /*!FIXME"26.2" -> minecraftVersions.addAll("26.2")
             "26.1.2" -> minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
             "1.21.11" -> minecraftVersions.add("1.21.11")
-            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
+            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")*/
         }
 
         requires("fabric-api")
@@ -133,10 +134,11 @@ publishMods {
         accessToken.set(providers.environmentVariable("CURSEFORGE_API_KEY"))
 
         when (stonecutter.current.project) {
-            "26.2" -> minecraftVersions.addAll("26.2")
+            "26.3" -> minecraftVersions.addAll("26.3")
+            /*"26.2" -> minecraftVersions.addAll("26.2")
             "26.1.2" -> minecraftVersions.addAll("26.1", "26.1.1", "26.1.2")
             "1.21.11" -> minecraftVersions.add("1.21.11")
-            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")
+            "1.21.1" -> minecraftVersions.addAll("1.21", "1.21.1")*/
         }
 
         javaVersions.add(javaVer)
