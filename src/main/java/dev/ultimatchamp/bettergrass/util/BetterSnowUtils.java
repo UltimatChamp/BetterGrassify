@@ -19,45 +19,62 @@ import net.minecraft.client.renderer.block.BlockAndTintGetter;
 *///?}
 
 public class BetterSnowUtils {
+    // getLayerNeighbour runs for every rendered block of every chunk section being built, on the chunk builder
+    // threads, so it reuses one position per thread instead of allocating new ones.
+    private static final ThreadLocal<BlockPos.MutableBlockPos> NEIGHBOUR_POS =
+            ThreadLocal.withInitial(BlockPos.MutableBlockPos::new);
+
     public static BlockState getLayerNeighbour(BlockAndTintGetter world, BlockPos selfPos) {
         BetterGrassifyCacheUtils.initCaches();
 
+        int minLayerNeighbours = switch (BetterGrassifyConfig.load().betterSnow.betterSnowMode) {
+            case OPTIFINE -> 1;
+            case LAMBDA -> 2;
+            default -> 0;
+        };
+
+        if (minLayerNeighbours == 0 || BetterGrassifyCacheUtils.BETTER_SNOW_CACHE.isEmpty()) return null;
+
+        // The four neighbours are read once and checked against every layer.
+        BlockPos.MutableBlockPos neighbourPos = NEIGHBOUR_POS.get();
+        BlockState north = world.getBlockState(neighbourPos.setWithOffset(selfPos, Direction.NORTH));
+        BlockState south = world.getBlockState(neighbourPos.setWithOffset(selfPos, Direction.SOUTH));
+        BlockState east = world.getBlockState(neighbourPos.setWithOffset(selfPos, Direction.EAST));
+        BlockState west = world.getBlockState(neighbourPos.setWithOffset(selfPos, Direction.WEST));
+
         for (Block layer : BetterGrassifyCacheUtils.BETTER_SNOW_CACHE) {
-            BlockPos[] directions = {selfPos.north(), selfPos.south(), selfPos.east(), selfPos.west()};
-            boolean[] isLayer = new boolean[4];
+            int layerNeighbours = (isLayer(north, layer) ? 1 : 0) + (isLayer(south, layer) ? 1 : 0) +
+                    (isLayer(east, layer) ? 1 : 0) + (isLayer(west, layer) ? 1 : 0);
 
-            for (int i = 0; i < 4; i++) {
-                BlockState state = world.getBlockState(directions[i]);
-                isLayer[i] = state.is(layer) ||
-                        (layer.equals(Blocks.SNOW) &&
-                                (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)));
-            }
+            if (layerNeighbours < minLayerNeighbours) continue;
 
-            boolean layerCheck = switch (BetterGrassifyConfig.load().betterSnow.betterSnowMode) {
-                case OPTIFINE -> isLayer[0] || isLayer[1] || isLayer[2] || isLayer[3];
-                case LAMBDA -> ((isLayer[0] || isLayer[1]) && (isLayer[2] || isLayer[3])) ||
-                        (isLayer[0] && isLayer[1]) ||
-                        (isLayer[2] && isLayer[3]);
-                default -> false;
-            };
+            BlockState layerState = getLayerState(north, layer);
+            if (layerState == null) layerState = getLayerState(south, layer);
+            if (layerState == null) layerState = getLayerState(east, layer);
+            if (layerState == null) layerState = getLayerState(west, layer);
+            if (layerState != null) return layerState;
+        }
 
-            if (!layerCheck) continue;
+        return null;
+    }
 
-            for (BlockPos direction : directions) {
-                BlockState state = world.getBlockState(direction);
+    private static boolean isLayer(BlockState state, Block layer) {
+        return state.is(layer) ||
+                (layer.equals(Blocks.SNOW) &&
+                        (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)));
+    }
 
-                if (layer instanceof SnowLayerBlock && (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)))
-                    return layer.defaultBlockState();
-                else if (state.is(layer)) {
-                    if (state.getOptionalValue(BlockStateProperties.FLOWER_AMOUNT).isPresent())
-                        return state.setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
-                    //? if >1.21.1 {
-                    else if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
-                        return state.setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
-                    //?}
-                    else return state;
-                }
-            }
+    private static BlockState getLayerState(BlockState state, Block layer) {
+        if (layer instanceof SnowLayerBlock && (state.is(Blocks.SNOW_BLOCK) || state.is(Blocks.POWDER_SNOW)))
+            return layer.defaultBlockState();
+        else if (state.is(layer)) {
+            if (state.getOptionalValue(BlockStateProperties.FLOWER_AMOUNT).isPresent())
+                return state.setValue(BlockStateProperties.FLOWER_AMOUNT, 4);
+            //? if >1.21.1 {
+            else if (state.getOptionalValue(BlockStateProperties.SEGMENT_AMOUNT).isPresent())
+                return state.setValue(BlockStateProperties.SEGMENT_AMOUNT, 4);
+            //?}
+            else return state;
         }
 
         return null;
